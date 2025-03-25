@@ -1,5 +1,5 @@
 # CMON 20250309 CSCI 375 db_setup.py
-# create and initalize the database
+# initalizes the database for Blueprint by creating tables
 # run once to create database.db
 
 import sqlite3
@@ -14,23 +14,19 @@ def create_tables():
     # for single-line, a single pair of enclosing double quotation marks is fine
     # for multi-line, triplets of double quotation marks is required
 
-    # turn on SQLite FK constraints
-    cursor.execute("PRAGMA foreign_keys = ON;")
-        
-    # note: SQLite doesn't really support adding/removing constraints after building the db like this
-    # so we gotta be sure our FK/PK and any CHECK constraints (if we end up using them) are in from the get
-    # otherwise, we need to DROP and re-CREATE (so, it's possible to fix this, just a pita)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Students (
-            UserID INTEGER PRIMARY KEY,
-            Username TEXT NOT NULL,
-            password TEXT NOT NULL
-        );
-    """)
+    # turn on SQLite FK cacultyt to DROP and re-CREATE (so, it's possible to fix this, just a pita)
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS FacultyMembers (
             facultyID INTEGER PRIMARY KEY,
+            username TEXT NOT NULL,
+            password TEXT NOT NULL
+        );
+    """)
+    
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS Students (
+            studentID INTEGER PRIMARY KEY,
             username TEXT NOT NULL,
             password TEXT NOT NULL
         );
@@ -45,16 +41,16 @@ def create_tables():
             recommendedHours REAL,
             courseDifficulty REAL,
             sections TEXT,
-            facultyID INTEGER,
-            FOREIGN KEY (facultyID) REFERENCES FacultyMembers(facultyID)
+            recommendedYear INTEGER,
+            term TEXT
         );
     """)
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Announcements (
             announcementID INTEGER PRIMARY KEY,
-            announcementText TEXT NOT NULL,
-            announcementDate TEXT,
+            announcementText TEXT,
+            announcementDate TEXT NOT NULL,
             courseID TEXT,
             facultyID INTEGER,
             FOREIGN KEY (courseID) REFERENCES Courses(courseID),
@@ -66,15 +62,48 @@ def create_tables():
         CREATE TABLE IF NOT EXISTS Reviews (
             reviewID INTEGER PRIMARY KEY,
             reviewText TEXT,
-            difficulty REAL,
-            recommendedHours INTEGER,
-            reviewDate TEXT,
+            difficulty REAL NOT NULL,
+            recommendedHours INTEGER NOT NULL,
+            reviewDate TEXT NOT NULL,
             courseID TEXT,
             studentID INTEGER,
             FOREIGN KEY (courseID) REFERENCES Courses(courseID),
-            FOREIGN KEY (studentID) REFERENCES Students(UserID)
+            FOREIGN KEY (studentID) REFERENCES Students(studentID)
         );
     """)
+    
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS CoursesTaught (
+            courseID TEXT,
+            facultyID INTEGER,
+            PRIMARY KEY (courseID, facultyID),
+            FOREIGN KEY (courseID) REFERENCES Courses(courseID),
+            FOREIGN KEY (facultyID) REFERENCES FacultyMembers(facultyID)
+        );
+    """) 
+       
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS CourseEditHistory (
+            courseID TEXT,
+            facultyID INTEGER,
+            editDate DATE,
+            changeDescription TEXT,
+            PRIMARY KEY (courseID, facultyID, editDate),
+            FOREIGN KEY (courseID) REFERENCES Courses(courseID),
+            FOREIGN KEY (facultyID) REFERENCES FacultyMembers(facultyID)
+        );
+    """) 
+             
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS AnmouncementReactions (
+            announcementID INTEGER,
+            studentID INTEGER,
+            reaction INTEGER,
+            PRIMARY KEY (announcementID, studentID),
+            FOREIGN KEY (announcementID) REFERENCES Announcements(announcementID),
+            FOREIGN KEY (studentID) REFERENCES Students(studentID)
+        );
+    """) 
     
     conn.commit()
     conn.close()

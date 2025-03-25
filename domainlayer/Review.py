@@ -72,15 +72,15 @@ class Review():
             else:
                 print("Text is an invalid character size, must be between 0 and 500 characters.")
         
+        # Set the date to current day
         self.setDate(str(datetime.today().date()))
+        
         print("Writing review to database...")
-        r = ReviewDate()
-        r.writeReview()
 
 
 if __name__ == '__main__':
     r = Review()
     r.createReview()
-    print(r.getDifficulty(), r.getHours(), r.getText(), r.getDate())
+    print("Difficulty:", r.getDifficulty(), "\nRecommended Hours:", r.getHours(), "\nReview Text:\n", r.getText(), "\nDate:", r.getDate())
     
     
