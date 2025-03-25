@@ -9,7 +9,7 @@ from db_queries import fetch_query
 usernames = fetch_query("SELECT userename FROM USERS;")
 print(usernames)
 """
-# team is only has to sask for SQL statements
+# team only has to ask for SQL statements
 # no overhead of API routing, Flask, or ORM
 
 import sqlite3
