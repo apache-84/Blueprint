@@ -16,14 +16,25 @@ import sqlite3
 
 DB_FILE = "csci375team3b.db"
 
-def execute_query(query, params=()):
+def execute_query(query, *params):
+    """Executes a given SQL query with parameters and commits."""
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
     cursor.execute(query, params)
     conn.commit()
     conn.close()
+    
+def executemany_query(query, *params):
+    """Executes a given SQL query with parameters many times and commits.
+    Parameters must be an iterable."""
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    cursor.executemany(query, params)
+    conn.commit()
+    conn.close()
 
-def fetch_query(query, params=()):
+def fetch_query(query, *params):
+    """Executes a given SQL query with parameters and returns the results."""
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
     cursor.execute(query, params)
@@ -37,3 +48,4 @@ if __name__ == "__main__":
     query = "SELECT username FROM users;"
     users = fetch_query(query)
     print (users) # should output [('user1',), ('user2',)]
+    
