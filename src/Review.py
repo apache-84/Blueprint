@@ -1,16 +1,29 @@
+
+
 from datetime import datetime
 
 class Review():
     """
     Creates a review object that can be written to the database or displayed to the frontend.
     """
+
     def __init__(self, id: int = 0, text: str = "", diff: float = 0.0, hours: int = 0, date: str = ""):
+        """
+        Instantiates a Review object with the given values: id, text, diff, hours, date. Otherwise, will use default values.
+
+        :param id: The review's ID.
+        :param text: The review's descriptive text.
+        :param diff: The review's difficulty rating.
+        :param hours: The review's hours per week recommendation.
+        :param date: The date the review was created.
+        """
        self.__reviewID = id
        self.__reviewText = text
        self.__difficulty = diff
        self.__recHours = hours
        self.__reviewDate = date
     
+    # Getter methods:
     def getID(self) -> int:
         return self.__reviewID
     
@@ -29,6 +42,7 @@ class Review():
     def setID(self, id):
         self.__reviewID = id
 
+    # Setter methods:
     def setText(self, text):
         self.__reviewText = text
 
@@ -45,6 +59,7 @@ class Review():
         """
         Creates a review object from the command line. (FOR DEVELOPMENT PURPOSES)
 
+        Has several command line prompts and input fields asking the user for the review's difficulty, recommended hours, and descriptive text.
         :return: Returns true if review object is successfully created.
         """
         # Get difficulty section
@@ -71,7 +86,7 @@ class Review():
             except ValueError:
                 print("Value is of incorrect data type, try again.")
         
-        # Get Text Section
+        # Get text Section
         while True:
             text = str(input("Enter text for your review: \n"))
             if (len(text) > 0 and len(text) <= 500):
@@ -86,10 +101,8 @@ class Review():
         print("Writing review to database...")
         return True
 
-
+# Run this to create a review and see the object's values!
 if __name__ == '__main__':
-    # r = Review()
-    # r.createReview()
-    # print("Difficulty:", r.getDifficulty(), "\nRecommended Hours:", r.getHours(), "\nReview Text:\n", r.getText(), "\nDate:", r.getDate())
-    
-    print(sys.path)
+    r = Review()
+    r.createReview()
+    print("Difficulty:", r.getDifficulty(), "\nRecommended Hours:", r.getHours(), "\nReview Text:\n", r.getText(), "\nDate:", r.getDate())

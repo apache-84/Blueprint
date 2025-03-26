@@ -1,6 +1,6 @@
 # CMON 20250309 CSCI 375 db_setup.py
-# initalizes the database for Blueprint by creating tables
-# run once to create csci375team3.db
+# Initalizes the database for Blueprint by creating tables
+# Run once to create csci375team3.db
 
 import sqlite3
 
@@ -22,8 +22,6 @@ def drop_tables():
     cursor.execute("DROP TABLE IF EXISTS CourseTaught;")
     cursor.execute("DROP TABLE IF EXISTS CourseEditHistory;")
     cursor.execute("DROP TABLE IF EXISTS AnnouncementReactions;")
-
-
 
     conn.commit()
     conn.close()
@@ -134,7 +132,7 @@ def create_tables():
     conn.commit()
     conn.close()
 
-# note: basic command-line test for table existence: `sqlite3 database.db ".tables"`
+# note: basic command-line test for table existence: `sqlite3 csci375team3.db ".tables"`
 if __name__ == "__main__":
     drop_tables()
     create_tables()
