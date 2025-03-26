@@ -2,24 +2,39 @@ import sqlite3
 
 from db_queries import fetch_query, execute_query
 from Review import Review
+from CourseData import checkCourseID, getCourse, updateCourse
+from Course import Course
 
-def writeReview(r: Review): # Student s and Course c
+def writeReview(r: Review, cid: str): # Student s and Course c
     """
-    Writes a review to the database given a Review object.
+    Writes a review to the database given a Review object and a valid course ID. Also updates course values.
 
+
+    First checks if the course ID is for an existing course. If the course exists, then it inserts the review into the database.
+    After database insertion, the course's difficulty and hours values are updated and written to the database as well.
     :param r: The review to be written to the database.
+    :param cid" The course ID of the review.
     """
+    if checkCourseID(cid) == False:
+        print{"Course with the given ID doesn't exist in the database."}
+        return
+
     id = findNextID()
     difficulty = r.getDifficulty()
     hours = r.getHours()
     date = r.getDate()
     text = r.getText()
     # student = s.getID()
-    # course = c.getID()
-    
-    sql = "insert into Reviews values (?, ?, ?, ?, ?)" # ?, ?
-    execute_query(sql, id, text, difficulty, hours, date) # student, course
-    
+
+    sql = "insert into Reviews values (?, ?, ?, ?, ?, ?)" # ?
+    execute_query(sql, id, text, difficulty, hours, date, cid) # student
+    print("Review for", cid, "submitted succesfully with ID", id)
+
+    # After review has been inserted, update course difficulty and hours values:
+    course = getCourse(cid)
+    course.calculateAverages()
+    course.updateCourse()
+
     
 def deleteReview(id: int): # deletes a review given an id
     """

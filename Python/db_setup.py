@@ -88,7 +88,9 @@ def create_tables():
             reviewText TEXT,
             difficulty REAL NOT NULL,
             recommendedHours INTEGER NOT NULL,
-            reviewDate TEXT NOT NULL
+            reviewDate TEXT NOT NULL,
+            courseID TEXT,
+            FOREIGN KEY (courseID) REFERENCES Courses(courseID)
         );
     """)
             # courseID TEXT,

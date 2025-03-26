@@ -1,15 +1,52 @@
 from db_queries import fetch_query, execute_query
-from Course import Course
 from Review import Review
 from ReviewData import getReview
+from Course import Course
 
 def updateCourse(cid: str):
-    pass
+    """
+    Given a course ID, all current values of the course object will be written to the database.
 
-def addCourse(course: Course):
+    This method should be called when:
+    1. A faculty member edits information about an existing course.
+    2. A new review of the course has been submitted by a student (changes to the average difficulty and hours).
+    :param cid: The course ID of the course to be updated
+    """
+    c = getCourse(cid)
+
+    sql = """update Courses set
+    courseName = ?,
+    description = ?,
+    recommendedHours = ?,
+    courseDifficulty = ?,
+    sections = ?,
+    recommendedYear = ?,
+    term = ?,
+    where courseID = ?"""
+
+    execute_query(sql, c.getName(), c.getDescription(), c.getHours(), c.getDifficulty(), c.getSections(), c.getRecYear(), c.getTerm(), cid)
+    print("Course information updated in database successfully!")
+
+def addCourse(c: Course):
+    """
+    Given a Course object, adds the course to the database.
+
+    :param c: The Course object to write to the database.
+    """
+    cid = c.getID()
+    if checkCourseID(cid) == True:
+        print("Course with ID", cid, "already exists within the database, can't add it.")
+        print("Please use updateCourse() instead.")
+        return
     
-    pass
-    
+    sql = "insert into Courses values (?, ?, ?, ?, ?, ?, ?, ?)"
+    try:
+        execute_query(sql, cid, c.getName(), c.getDescription(), c.getHours(), c.getDifficulty(), c.getSections(), c.getRecYear(), c.getTerm())
+        print(cid, "written to the database successfully!")
+    except Exception as e:
+        print("Error writing", cid, "to the database.")
+        print(e)
+
 def getReviewData(cid: str) -> list[Review]:
     """
     Gets all the reviews for a course given the course ID (cid).
@@ -27,11 +64,11 @@ def getReviewData(cid: str) -> list[Review]:
     for review in courseReviews:
         reviewList.append(getReview(review[0]))
         
-    return reviewList
-        
+    return reviewList 
     
-def getCourse(cid: str):
-    """Gets all data for the course given a course ID, retrieves it from the database, and constructs the course object.
+def getCourse(cid: str) -> Course:
+    """
+    Gets all data for the course given a course ID, retrieves it from the database, and constructs a Course object.
 
     :param cid: The course ID of the course to construct.
     :return: The constructed Course class object.
@@ -41,3 +78,18 @@ def getCourse(cid: str):
     data = fetch_query(sql, cid)[0] # There should only be one course with an ID.
     c = Course(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
     return c
+
+def checkCourseID(cid: str) -> bool:
+    """
+    Checks if a given course ID already exists within the database.
+
+    :param cid: The given course ID to check
+    :return: True if the course ID already exists within the database, false if it does not.
+    """
+    sql = "select courseID from Courses where courseID = ?"
+    res = fetch_query(sql, cid)[0]
+
+    if res[0] = None:
+        return False
+    
+    return True

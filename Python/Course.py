@@ -1,7 +1,3 @@
-from Review import Review
-from ReviewData import getReview
-from CourseData import *
-
 class Course():
     """
     Creates a course object that can be added to the database or displayed to the frontend.
@@ -41,11 +37,11 @@ class Course():
     def getDescription(self) -> str:
         return self.__description
         
-    def getDifficulty(self) -> float:
-        return self.__difficulty
-    
     def getHours(self) -> float:
         return self.__recHours
+        
+    def getDifficulty(self) -> float:
+        return self.__difficulty
     
     def getSections(self) -> str:
         return self.__sections
@@ -65,13 +61,13 @@ class Course():
   
     def setDescription(self, desc: str):
         self.__description = desc
-        
-    def setDifficulty(self, diff: float):
-        self.__difficulty = diff
     
     def setHours(self, hours: float):
         self.__recHours = hours
-    
+        
+    def setDifficulty(self, diff: float):
+        self.__difficulty = diff
+
     def setSections(self, sections: str):
         self.__sections = sections
     
@@ -81,5 +77,37 @@ class Course():
     def setTerm(self, term: str):
         self.__term = term
             
-    def calcAvgDifficulty(self, rs: list):
+    def calculateAverages(self, rs: list):
+        """
+        Calculates and updates a course's difficulty and recommended hours per week.
         
+        Gets the average difficulty and recommendend hours from all reviews for a course.
+        Updates the Course object's attributes with the newly calculated values.
+        This function should be used when instantiating a course or whenever a review of the course is written.
+        :param rs: The list of all reviews for a course.
+        """
+
+        # Get difficulty
+        dsum = 0.0
+        for review in rs:
+            dsum += review.getDifficulty()
+        
+        diff = dsum / len(rs)
+
+        # Get hours
+        hsum = 0.0
+        for review in rs:
+            hsum += review.getHours()
+        
+        hours = hsum / len(rs)
+
+        self.setDifficulty(diff)
+        self.setHours(hours)
+        
+    def createCourse(self):
+        """TO BE USED FOR TESTING:
+
+        A command line interface way of making courses where you are promptign to fill in each data field.
+        """
+
+if __name__ == '__main__':
