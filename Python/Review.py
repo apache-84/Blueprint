@@ -17,11 +17,11 @@ class Review():
         :param hours: The review's hours per week recommendation.
         :param date: The date the review was created.
         """
-       self.__reviewID = id
-       self.__reviewText = text
-       self.__difficulty = diff
-       self.__recHours = hours
-       self.__reviewDate = date
+        self.__reviewID = id
+        self.__reviewText = text
+        self.__difficulty = diff
+        self.__recHours = hours
+        self.__reviewDate = date
     
     # Getter methods:
     def getID(self) -> int:
