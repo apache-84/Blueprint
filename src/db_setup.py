@@ -1,12 +1,38 @@
 # CMON 20250309 CSCI 375 db_setup.py
 # initalizes the database for Blueprint by creating tables
-# run once to create database.db
+# run once to create csci375team3.db
 
 import sqlite3
 
-DB_FILE = "csci375team3b.db"
+DB_FILE = "csci375team3.db"
+
+
+def drop_tables():
+    """
+    FOR TESTING PURPOSES ONLY: Drops all tables in the database so they can be remade if small modifications are needed for tests to work.
+    """
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+
+    cursor.execute("DROP TABLE IF EXISTS FacultyMembers;")
+    cursor.execute("DROP TABLE IF EXISTS Students;")
+    cursor.execute("DROP TABLE IF EXISTS Courses;")
+    cursor.execute("DROP TABLE IF EXISTS Announcements;")
+    cursor.execute("DROP TABLE IF EXISTS Reviews;")
+    cursor.execute("DROP TABLE IF EXISTS CourseTaught;")
+    cursor.execute("DROP TABLE IF EXISTS CourseEditHistory;")
+    cursor.execute("DROP TABLE IF EXISTS AnnouncementReactions;")
+
+
+
+    conn.commit()
+    conn.close()
+
 
 def create_tables():
+    """
+    Initializes all tables in the database, should only be executed one time to create the database file `csci375team3.db`
+    """
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
@@ -64,13 +90,13 @@ def create_tables():
             reviewText TEXT,
             difficulty REAL NOT NULL,
             recommendedHours INTEGER NOT NULL,
-            reviewDate TEXT NOT NULL,
-            courseID TEXT,
-            studentID INTEGER,
-            FOREIGN KEY (courseID) REFERENCES Courses(courseID),
-            FOREIGN KEY (studentID) REFERENCES Students(studentID)
+            reviewDate TEXT NOT NULL
         );
     """)
+            # courseID TEXT,
+            # studentID INTEGER,
+            # FOREIGN KEY (courseID) REFERENCES Courses(courseID),
+            # FOREIGN KEY (studentID) REFERENCES Students(studentID)
     
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS CoursesTaught (
@@ -110,5 +136,6 @@ def create_tables():
 
 # note: basic command-line test for table existence: `sqlite3 database.db ".tables"`
 if __name__ == "__main__":
+    drop_tables()
     create_tables()
     print("Database initialized. Have a nice day.")
