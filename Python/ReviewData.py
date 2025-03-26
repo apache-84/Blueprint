@@ -41,9 +41,7 @@ def getReview(id: int) -> Review:
     sql = "select * from Reviews where reviewID = ?"
     print(fetch_query(sql, id))
     res = fetch_query(sql, id)[0] # first row of result set
-    review = Review()
-    print(res[0], res[1], res[2], res[3], res[4])
-    review.__init__(res[0], res[1], res[2], res[3], res[4]) # first 5 column values
+    review = Review(res[0], res[1], res[2], res[3], res[4]) # first 5 column values
     return review
 
 def findNextID() -> int:

@@ -31,4 +31,13 @@ def getReviewData(cid: str) -> list[Review]:
         
     
 def getCourse(cid: str):
-    pass
+    """Gets all data for the course given a course ID, retrieves it from the database, and constructs the course object.
+
+    :param cid: The course ID of the course to construct.
+    :return: The constructed Course class object.
+    """
+    
+    sql = "select * from Courses where courseID = ?"
+    data = fetch_query(sql, cid)[0] # There should only be one course with an ID.
+    c = Course(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
+    return c
