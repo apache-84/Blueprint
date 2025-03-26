@@ -1,6 +1,9 @@
 from datetime import datetime
 
 class Review():
+    """
+    Creates a review object that can be written to the database or displayed to the frontend.
+    """
     def __init__(self, id: int = 0, text: str = "", diff: float = 0.0, hours: int = 0, date: str = ""):
        self.__reviewID = id
        self.__reviewText = text
@@ -38,7 +41,12 @@ class Review():
     def setDate(self, date):
         self.__reviewDate = date
         
-    def createReview(self):
+    def createReview(self) -> bool:
+        """
+        Creates a review object from the command line. (FOR DEVELOPMENT PURPOSES)
+
+        :return: Returns true if review object is successfully created.
+        """
         # Get difficulty section
         while True:
             try:
@@ -76,11 +84,12 @@ class Review():
         self.setDate(str(datetime.today().date()))
         
         print("Writing review to database...")
+        return True
 
 
 if __name__ == '__main__':
-    r = Review()
-    r.createReview()
-    print("Difficulty:", r.getDifficulty(), "\nRecommended Hours:", r.getHours(), "\nReview Text:\n", r.getText(), "\nDate:", r.getDate())
+    # r = Review()
+    # r.createReview()
+    # print("Difficulty:", r.getDifficulty(), "\nRecommended Hours:", r.getHours(), "\nReview Text:\n", r.getText(), "\nDate:", r.getDate())
     
-    
+    print(sys.path)
