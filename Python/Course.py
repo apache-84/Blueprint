@@ -1,3 +1,6 @@
+from Review import Review
+from ReviewData import *
+
 class Course():
     """
     Creates a course object that can be added to the database or displayed to the frontend.
@@ -5,7 +8,7 @@ class Course():
     This object gets all reviews for a given class, calculates appropriate values, and stores them.
     """
     
-    def __init__(self, id: int = 0, name: str = "", desc: str="", hours: float = 0.0, diff: float = 0.0, sections: str = "N/A", year: int = 0, term: str = "N/A" ):
+    def __init__(self, id: str = "", name: str = "", desc: str = "", hours: float = 0.0, diff: float = 0.0, sections: str = "N/A", year: int = 0, term: str = "N/A" ):
         """
         Instantiates a Course object with the given values: id, name, desc, diff, hours, sections, year, term. Otherwise, will use default values.
 
@@ -52,16 +55,13 @@ class Course():
     def getTerm(self) -> str:
         return self.__term
     
-    # Setter methods:
-    def setID(self, cid: str):
-        self.__id = cid
-    
+    # Setter methods:    
     def setName(self, name: str):
         self.__name = name
-  
+        
     def setDescription(self, desc: str):
         self.__description = desc
-    
+        
     def setHours(self, hours: float):
         self.__recHours = hours
         
@@ -106,8 +106,81 @@ class Course():
         
     def createCourse(self):
         """TO BE USED FOR TESTING:
-
+        
         A command line interface way of making courses where you are promptign to fill in each data field.
         """
+        
+        # Get course ID
+        while True:
+            cid = input("Enter a course ID (e.g. CSCI 260): ")
+            if (len(cid) < 1 or len(cid) > 10):
+                print("Course ID is not of the correct format.")
+            else:
+                self.__id = cid
+                break
+        
+        # Get course name
+        while True:
+            name = input("Enter the name of the course in full (e.g. Topics in Computer Science): ")
+            if (len(name) < 1 or len(name) > 50 ):
+                print("Course name is empty or too long, please retry.")
+            
+            else:
+                self.setName(name)
+                break
+        
+        # Get course description      
+        while True:
+            desc = input("Enter a description of the course: ")
+            if (len(cid) > 1000):
+                print("Description is too long, description should be less than 1000 characters.")
+            else:
+                self.setDescription(desc)
+                break  
+        
+        # Get course sections                
+        while True:
+            sections = input("Enter the sections and schedule of a course (E.g. S25N01 - Mo We 11:30-13:00): ")
+            if (len(sections) < 1):
+                print("You must enter atleast one section.")
+            else:
+                self.setSections(sections)
+                break 
 
-if __name__ == '__main__':
+        # Get Recommended year
+        while True:
+            try:
+                year = int(input("Enter the recommended year that this course be taken by students (1,2,3,4): "))
+                if (year >= 4 or year <= 4):
+                    self.setRecYear(year)
+                    break
+                else:
+                    print("Invalid input, please enter a single digit number between 1-4.")
+            except ValueError:
+                print("Value is of incorrect data type, try again.")
+        
+        # Get course term                
+        while True:
+            try:
+                term = int(input("""Enter the term this course is offered in:
+                                1 - Fall
+                                2 - Spring
+                                3 - Both
+                                """))
+                if (term < 1 or term > 3):
+                    print("Please select either 1, 2, or 3")
+                else:
+                    match term:
+                        case 1:
+                            self.setTerm("Fall")
+                        case 2:
+                            self.setTerm("Spring")
+                        case 3:
+                            self.setTerm("Both") 
+                    break      
+            except ValueError:
+                print("Value is of incorrect data type, try again.")
+        
+        print("Course creation successful!")
+        
+        

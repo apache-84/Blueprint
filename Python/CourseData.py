@@ -1,7 +1,35 @@
 from db_queries import fetch_query, execute_query
 from Review import Review
-from ReviewData import getReview
+from ReviewData import getReview, findNextID
 from Course import Course
+
+def writeReview(r: Review, cid: str): # Student s and Course c
+    """
+    Writes a review to the database given a Review object and a valid course ID. Also updates course values.
+
+
+    First checks if the course ID is for an existing course. If the course exists, then it inserts the review into the database.
+    After database insertion, the course's difficulty and hours values are updated and written to the database as well.
+    :param r: The review to be written to the database.
+    :param cid" The course ID of the review.
+    """
+    if checkCourseID(cid) == False:
+        print("Course with the given ID doesn't exist in the database.")
+        return
+
+    id = findNextID()
+    difficulty = r.getDifficulty()
+    hours = r.getHours()
+    date = r.getDate()
+    text = r.getText()
+    # student = s.getID()
+
+    sql = "insert into Reviews values (?, ?, ?, ?, ?, ?)" # ?
+    execute_query(sql, id, text, difficulty, hours, date, cid) # student
+    print("Review for", cid, "submitted succesfully with ID", id)
+
+    # After review has been inserted, update course difficulty and hours values:
+    updateCourse(cid)
 
 def updateCourse(cid: str):
     """
@@ -23,6 +51,8 @@ def updateCourse(cid: str):
     recommendedYear = ?,
     term = ?,
     where courseID = ?"""
+    
+    c.calculateAverages(getReviewData(cid))
 
     execute_query(sql, c.getName(), c.getDescription(), c.getHours(), c.getDifficulty(), c.getSections(), c.getRecYear(), c.getTerm(), cid)
     print("Course information updated in database successfully!")
@@ -86,10 +116,23 @@ def checkCourseID(cid: str) -> bool:
     :param cid: The given course ID to check
     :return: True if the course ID already exists within the database, false if it does not.
     """
-    sql = "select courseID from Courses where courseID = ?"
+    sql = "select * from Courses where courseID = ?"
     res = fetch_query(sql, cid)[0]
+    print(res)
 
-    if res[0] = None:
+    if res == None:
         return False
     
     return True
+
+if __name__ == '__main__':
+    course = Course()
+    course.createCourse()
+    addCourse(course)
+    
+    r = Review()
+    r.createReview()
+    
+    writeReview(r, course.getID())
+    
+    print(course)
