@@ -90,13 +90,11 @@ def create_tables():
             recommendedHours INTEGER NOT NULL,
             reviewDate TEXT NOT NULL,
             courseID TEXT,
-            FOREIGN KEY (courseID) REFERENCES Courses(courseID)
+            studentID INTEGER,
+            FOREIGN KEY (courseID) REFERENCES Courses(courseID),
+            FOREIGN KEY (studentID) REFERENCES Students(studentID)
         );
     """)
-            # courseID TEXT,
-            # studentID INTEGER,
-            # FOREIGN KEY (courseID) REFERENCES Courses(courseID),
-            # FOREIGN KEY (studentID) REFERENCES Students(studentID)
     
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS CoursesTaught (

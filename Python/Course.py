@@ -112,7 +112,7 @@ class Course():
         
         # Get course ID
         while True:
-            cid = input("Enter a course ID (e.g. CSCI 260): ")
+            cid = input("Enter a course ID (e.g. CSCI 260): ").upper()
             if (len(cid) < 1 or len(cid) > 10):
                 print("Course ID is not of the correct format.")
             else:

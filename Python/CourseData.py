@@ -3,10 +3,9 @@ from Review import Review
 from ReviewData import getReview, findNextID
 from Course import Course
 
-def writeReview(r: Review, cid: str): # Student s and Course c
+def writeReview(r: Review, cid: str, stuID: int):
     """
     Writes a review to the database given a Review object and a valid course ID. Also updates course values.
-
 
     First checks if the course ID is for an existing course. If the course exists, then it inserts the review into the database.
     After database insertion, the course's difficulty and hours values are updated and written to the database as well.
@@ -22,10 +21,9 @@ def writeReview(r: Review, cid: str): # Student s and Course c
     hours = r.getHours()
     date = r.getDate()
     text = r.getText()
-    # student = s.getID()
 
-    sql = "insert into Reviews values (?, ?, ?, ?, ?, ?)" # ?
-    execute_query(sql, id, text, difficulty, hours, date, cid) # student
+    sql = "insert into Reviews values (?, ?, ?, ?, ?, ?, ?)" 
+    execute_query(sql, id, text, difficulty, hours, date, cid, stuID)
     print("Review for", cid, "submitted succesfully with ID", id)
 
     # After review has been inserted, update course difficulty and hours values:
@@ -42,17 +40,17 @@ def updateCourse(cid: str):
     """
     c = getCourse(cid)
 
-    sql = """update Courses set
-    courseName = ?,
+    sql = """update Courses 
+    set courseName = ?,
     description = ?,
     recommendedHours = ?,
     courseDifficulty = ?,
     sections = ?,
     recommendedYear = ?,
-    term = ?,
+    term = ?
     where courseID = ?"""
     
-    c.calculateAverages(getReviewData(cid))
+    c.calculateAverages(getReviewData(cid)) # Updates hours and difficulty
 
     execute_query(sql, c.getName(), c.getDescription(), c.getHours(), c.getDifficulty(), c.getSections(), c.getRecYear(), c.getTerm(), cid)
     print("Course information updated in database successfully!")
@@ -117,10 +115,10 @@ def checkCourseID(cid: str) -> bool:
     :return: True if the course ID already exists within the database, false if it does not.
     """
     sql = "select * from Courses where courseID = ?"
-    res = fetch_query(sql, cid)[0]
+    res = fetch_query(sql, cid)
     print(res)
 
-    if res == None:
+    if len(res) == 0: # If list is empty
         return False
     
     return True
@@ -129,10 +127,10 @@ if __name__ == '__main__':
     course = Course()
     course.createCourse()
     addCourse(course)
-    
+
     r = Review()
     r.createReview()
-    
+
     writeReview(r, course.getID())
-    
+
     print(course)

@@ -36,11 +36,11 @@ class Review():
     
     def getDate(self) -> str:
         return self.__reviewDate
-
+    
+    # Setter methods:
     def setID(self, id):
         self.__reviewID = id
 
-    # Setter methods:
     def setText(self, text):
         self.__reviewText = text
 
@@ -53,13 +53,13 @@ class Review():
     def setDate(self, date):
         self.__reviewDate = date
         
-    def createReview(self) -> bool:
+    def createReview(self):
         """
         Creates a review object from the command line. (FOR DEVELOPMENT PURPOSES)
 
         Has several command line prompts and input fields asking the user for the review's difficulty, recommended hours, and descriptive text.
-        :return: Returns true if review object is successfully created.
         """
+
         # Get difficulty section
         while True:
             try:
@@ -96,8 +96,6 @@ class Review():
         # Set the date to current day
         self.setDate(str(datetime.today().date()))
         
-        print("Writing review to database...")
-        return True
 
 # Run this to create a review and see the object's values!
 if __name__ == '__main__':
