@@ -36,9 +36,6 @@ class Student():
     def setPassword(self, pWord: int):
         self.__password = pWord
 
-    def encryptPassword(self, password: str = ""):
-        pass
-
     def calculateSemesterData(self):
         """
         Calculates the semester data from a student's selected courses list.
@@ -72,7 +69,9 @@ class Student():
 
     
     def makeReview(self):
-
+        """
+        FOR TESTING PURPOSES ONLY: Allows student to input a course ID and write a review for the course.
+        """
         # Get course section
         while True:
             cid = input("What course is this review for (e.g. CSCI 260)? ").upper()
@@ -86,6 +85,35 @@ class Student():
         review = Review()
         if (review.createReview()):
             writeReview(review, cid, self.getID())
-            
-            
+                
+    def register(self):
+
+        #Get the username
+        while True:
+            user = input("Enter a username between 1-20 digits:")
+            if (len(user) == 0 or len(user) > 20):
+                print("Username is not between 1-20, please try again")
+            else:
+                self.__username = user
+                break
+                
+        while True:
+            pWord = hash(input("Enter a password:"))
+            print(pWord) # REMOVE LATER PLEASE GOD REMOVE REMOVE THIS PLEASE PLEASE PLEASE DONT LEAVE THIS REMOVE IT AT ALL COSTS
+            if (len(pWord == 0)):
+                print("Password must be longer than 0 characters!")
+            else:
+                self.__password = pWord
+                break
+    """  
+    def login(self):
+        user = input("Enter your username:")
+        if (user != self.__username):
+            return False
         
+        pWord = hash(input("Enter your password:"))
+        if (pWord != self.__password):
+            return False
+        
+        return True
+    """

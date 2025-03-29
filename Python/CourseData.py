@@ -106,7 +106,7 @@ def getCourse(cid: str) -> Course:
     data = fetch_query(sql, cid)[0] # There should only be one course with an ID.
     c = Course(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
     return c
-
+    
 def checkCourseID(cid: str) -> bool:
     """
     Checks if a given course ID already exists within the database.
