@@ -26,9 +26,12 @@ class Student():
     def getPassword(self) -> str:
         return self.__password
 
+    def getSelCourses(self) -> list:
+        return self.selectedCourses
+
     # Setter methods:
-    def setID(self, sid: str):
-        self.__stuID = sid
+    def setID(self, stuID: str):
+        self.__stuID = stuID
 
     def setUsername(self, user: str):
         self.__username = user

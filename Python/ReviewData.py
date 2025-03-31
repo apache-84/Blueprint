@@ -42,6 +42,3 @@ def findNextID() -> int:
         id = res[0] + 1
 
     return id
-
-# [(None,)]
-# []
