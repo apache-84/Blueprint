@@ -51,11 +51,12 @@ def checkIfReacted(stuID: int, aid: int) -> int:
     """
     Checks if a student has already reacted to an announcement.
 
+    Note that the reaction column will have the value '2' if the student reacted to an announcement and then unreacted.
     :return: -1 if the student hasn't reacted to the announcement, 0 if they reacted with a downvote, 1 if they reacted with an upvote.
     """
     sql = "select reaction from AnnouncementReactions where studentID = ? and announcementID = ?"
     res = fetch_query(sql, stuID, aid)
-    if (len(res) == 0):
+    if (len(res) == 0 or res[0] == 2):
         return -1
     
     return res[0]

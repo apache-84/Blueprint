@@ -9,7 +9,7 @@ class Student():
 
         :param stuID: The student's unique ID.
         :param username: The student's account username.
-        :param pssword: The student's encrypted password.
+        :param password: The student's encrypted password.
         """
         self.__stuID = stuID
         self.__username = username
