@@ -2,6 +2,7 @@ from Student import Student
 from db_queries import *
 from ReviewData import getReview
 from Review import Review
+import hashlib
 
 def registerStudent():
     """
@@ -81,3 +82,42 @@ def updateReaction(stuID: int, annID: int, reaction: int):
             execute_query(unreactSQL)
     else:
         execute_query(insertSQL)
+        
+
+def loginStudent() -> Student:
+    user = input("Enter your username: ")
+    sql = "select * from Students where username = ?"
+    res = fetch_query(sql, user)
+    
+    if (len(res) == 0):
+        print("An account with this username doesn't exist, want to register an account?")
+        while True:
+            ans = input("Y/N: ").upper()
+            if ans == "Y":
+                registerStudent()
+                loginStudent()
+                break
+            elif ans == "N":
+                break
+    res = res[0]
+    
+    id = res[0]
+    username = res[1]
+    password = res[2]
+    
+    pWord = input("Enter your password: ")
+    p = hashlib.sha256()
+    p.update(pWord)
+    pWord = hash
+    print(pWord)
+    
+    if pWord != password:
+        print("Incorrect password, please try again.")
+        return
+    
+    s = Student(id, username, password)
+    
+    return s
+
+if __name__ == '__main__':
+    loginStudent()

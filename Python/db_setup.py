@@ -43,7 +43,7 @@ def create_tables():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS FacultyMembers (
             facultyID INTEGER PRIMARY KEY,
-            username TEXT NOT NULL,
+            username TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL
         );
     """)
@@ -51,7 +51,7 @@ def create_tables():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS Students (
             studentID INTEGER PRIMARY KEY,
-            username TEXT NOT NULL,
+            username TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL
         );
     """)
