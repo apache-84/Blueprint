@@ -1,4 +1,4 @@
-from db_queries import fetch_query, execute_query
+from db_queries import *
 from Review import Review
 from ReviewData import getReview, findNextID
 from Course import Course
@@ -122,15 +122,3 @@ def checkCourseID(cid: str) -> bool:
         return False
     
     return True
-
-if __name__ == '__main__':
-    course = Course()
-    course.createCourse()
-    addCourse(course)
-
-    r = Review()
-    r.createReview()
-
-    writeReview(r, course.getID())
-
-    print(course)

@@ -3,7 +3,7 @@ from CourseData import getCourse, updateCourse
 
 class FacultyMember():
 
-    def __init__(self, id: int = 0, username: str = "", password: str = "", courses: list[Course]):
+    def __init__(self, id: int = 0, username: str = "", password: str = "", courses: list[Course] = []):
         """
         Instantiates a FaculyMember user object with the given values: facID, username, password (hashed), and a list of courses taught. Otherwise, will use default values.
 
@@ -41,6 +41,7 @@ class FacultyMember():
         self.__username = username
     
     def setPassword(self, password: int):
+        self.__password = password
         
     def setCourses(self, courses: list[Course]):
         self.__coursesTaughts = courses
@@ -55,4 +56,23 @@ class FacultyMember():
         :param cid: The ID of the course whose information is being edited.
         """
 
+    def register(self):
+
+        #Get the username
+        while True:
+            user = input("Enter a username between 1-20 digits:")
+            if (len(user) == 0 or len(user) > 20):
+                print("Username is not between 1-20, please try again")
+            else:
+                self.__username = user
+                break
+                
+        while True:
+            pWord = hash(input("Enter a password:"))
+            print(pWord) # REMOVE LATER PLEASE GOD REMOVE REMOVE THIS PLEASE PLEASE PLEASE DONT LEAVE THIS REMOVE IT AT ALL COSTS
+            if (len(pWord == 0)):
+                print("Password must be longer than 0 characters!")
+            else:
+                self.__password = pWord
+                break
         

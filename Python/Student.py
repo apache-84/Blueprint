@@ -1,6 +1,6 @@
 from Course import Course
 from Review import Review
-from CourseData import writeReview, getCourse  #for writeReview function,getCourse for semesterData
+from CourseData import writeReview, getCourse, checkCourseID  #for writeReview function,getCourse for semesterData
 
 class Student():
     def __init__(self, stuID: int = 0, username: str = "", password: str = ""):
@@ -55,7 +55,7 @@ class Student():
             semesterData[2] += course.getHours()
             semesterData[0].append(course)
         
-        semesterData[1] = dsum / len(selectedCourses)
+        semesterData[1] = dsum / len(self.selectedCourses)
         return semesterData
 
     def selectCourse(self): # In final version, cid will be a param

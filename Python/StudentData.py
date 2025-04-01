@@ -1,6 +1,7 @@
 from Student import Student
-from db_queries import fetch_query, execute_query
+from db_queries import *
 from ReviewData import getReview
+from Review import Review
 
 def registerStudent():
     """
@@ -38,7 +39,7 @@ def getNextID() -> int:
     the Students table in the database.
     :return: The studentID to be used for the next student.
     """
-    sql = "select max(studentID) from Students:
+    sql = "select max(studentID) from Students"
     res = fetch_query(sql)[0]
     if res[0] == None:
         id = 1
@@ -47,16 +48,36 @@ def getNextID() -> int:
 
     return id
 
-def checkIfReacted(stuID: int, aid: int) -> int:
+def checkIfReacted(stuID: int, annID: int) -> int:
     """
     Checks if a student has already reacted to an announcement.
 
-    Note that the reaction column will have the value '2' if the student reacted to an announcement and then unreacted.
-    :return: -1 if the student hasn't reacted to the announcement, 0 if they reacted with a downvote, 1 if they reacted with an upvote.
+    :return: -1 if the student hasn't reacted to the announcement. 0 if they downvoted, 1 if they upvoted the announcement.
     """
     sql = "select reaction from AnnouncementReactions where studentID = ? and announcementID = ?"
-    res = fetch_query(sql, stuID, aid)
-    if (len(res) == 0 or res[0] == 2):
+    res = fetch_query(sql, stuID, annID)
+    if (len(res) == 0):
         return -1
     
     return res[0]
+
+def updateReaction(stuID: int, annID: int, reaction: int):
+    status = checkIfReacted(stuID, annID)
+    
+    unreactSQL = "delete from AnnouncementReactions where studentID = ? and AnnouncementID = ?"
+    reactSQL = "update reaction from AnnouncementReactions where studentID = ? and AnnouncementID = ?"
+    
+    insertSQL = "insert into AnnouncementReactions"
+    
+    if status == 0:
+        if reaction == 0:
+            execute_query(unreactSQL)
+        elif reaction == 1:
+            execute_query(reactSQL, reaction)
+    elif status == 1:
+        if reaction == 0:
+            execute_query(reactSQL, reaction)
+        elif reaction == 1:
+            execute_query(unreactSQL)
+    else:
+        execute_query(insertSQL)
