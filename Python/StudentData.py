@@ -2,6 +2,7 @@ from Student import Student
 from db_queries import *
 from ReviewData import getReview
 from Review import Review
+from AnnouncementData import getReactions, getAnnouncement
 import hashlib
 
 def registerStudent():
@@ -63,6 +64,17 @@ def checkIfReacted(stuID: int, annID: int) -> int:
     return res[0]
 
 def updateReaction(stuID: int, annID: int, reaction: int):
+    """
+    Allows a student to react to an announcement and updates their reaction to that specific announcement.
+
+    If they have already reacted with an upvote/downvote, reacting the same way again will unreact them.
+    When unreacting, student's reaction record is removed from the AnnouncementReactions table. 
+    When reacting, student's reaction record is added to the AnnouncementReactions table, or if they are already in the table, their reaction has changed.
+    Each time this function is called, the relevant announcement is retrieved and their reactions are updated.
+    :param stuID:
+    :param annID:
+    :param reaction:
+    """
     status = checkIfReacted(stuID, annID)
     
     unreactSQL = "delete from AnnouncementReactions where studentID = ? and AnnouncementID = ?"
@@ -70,21 +82,33 @@ def updateReaction(stuID: int, annID: int, reaction: int):
     
     insertSQL = "insert into AnnouncementReactions"
     
+    # If reacted wth downvote before.
     if status == 0:
         if reaction == 0:
             execute_query(unreactSQL)
         elif reaction == 1:
             execute_query(reactSQL, reaction)
+    # If reacted with upvote before.
     elif status == 1:
         if reaction == 0:
             execute_query(reactSQL, reaction)
         elif reaction == 1:
             execute_query(unreactSQL)
+    # If haven't reacted before.
     else:
         execute_query(insertSQL)
-        
 
+    # Update announcement's reactions by reconstructing the object.
+    a = getAnnouncement(annID)
+
+    
+        
 def loginStudent() -> Student:
+    """
+    Interactive login for a student. Prompts student for their username and password. If student doesn't have a username in database, prompts them to register a new account.
+    
+    :return s: The student object of the logged in student.
+    """
     user = input("Enter your username: ")
     sql = "select * from Students where username = ?"
     res = fetch_query(sql, user)
@@ -108,7 +132,7 @@ def loginStudent() -> Student:
     pWord = input("Enter your password: ")
     p = hashlib.sha256()
     p.update(pWord)
-    pWord = hash
+    pWord = p.hexdigest()
     print(pWord)
     
     if pWord != password:

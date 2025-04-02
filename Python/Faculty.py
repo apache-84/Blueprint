@@ -1,5 +1,7 @@
 from Course import Course
 from CourseData import getCourse, updateCourse
+from Announcement import Announcement
+from AnnouncementData import postAnnouncement, getAnnouncement
 
 class FacultyMember():
 
@@ -76,3 +78,7 @@ class FacultyMember():
                 self.__password = pWord
                 break
         
+    def makeAnnouncement(self):
+        """
+        Faculty member makes announcement and it gets posted to database.
+        """
