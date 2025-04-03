@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/css/styles.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
         <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
         <title>Test</title>
     </head>
@@ -24,20 +24,28 @@
 
         <header class="section__container header__container">
             <h1 class="section__header">Choose your own path <br>with Blueprint.VIU.CS!</h1>
-            <img src="/Images/Woojacklogo4.png" alt="header" height="150px" width="500px" />
+            <img src="{{ url_for('static', filename='Images/Woojacklogo4.png') }}" alt="header" height="150px" width="500px" />
         </header>
 
         <div class="container">
-            <form>
+            <form onsubmit="searchItems(event); return false;">
                 <i class="ri-search-line"></i>
-                <input type="text" placeholder="What class would like to view? (eg. CSCI159)">
-                <button type="submit">Search</button>
+                <input type="text" id="search-input" placeholder="What class would like to view? (eg. CSCI159)" onkeypress="handleKeyPress(event)">
+                <button onclick="searchItems()">Search</button>
             </form>
         </div>
+            
 
-        <div style="text-align: center; margin-top: 20px;">
-             <a class="advanced__link" href="advancedindex.html" >Click for advanced search!</a>
-        </div>
+        <ul id="results"></ul>
 
+        <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+
+        <script>
+        function handleKeyPress(event){
+            if (event.key == "Enter"){
+                searchItems();
+            }
+        }
+        </script>
     </body>
 </html>

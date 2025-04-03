@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Dynamic Fields</title>
-    <link rel="stylesheet" type="text/css" href="/css/copy.css" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='copy.css') }}" />
     <link
       rel="stylesheet"
       type="text/css"
@@ -44,7 +44,7 @@
       </div>
     </div>
 
-    <script src="/js/script.js"></script>
+    <script src="{{ url_for('static', filename='/js/script.js') }}"></script>
 
   </body>
 </html>

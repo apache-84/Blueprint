@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up!</title>
-    <link rel="stylesheet" href="/css/signup.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='signup.css') }}">
 </head>
 <body>
 
-    <img src="/Images/Woojacklogo4.png" alt="header" height="150px" width="500px" style="margin-right: 100px;"/>
+    <img src="{{ url_for('static', filename='Images/Woojacklogo4.png)'' }}" alt="header" height="150px" width="500px" style="margin-right: 100px;"/>
     <div class="container">
         <div class="title">Registration</div>
         <form action="#">
