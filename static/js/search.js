@@ -1,5 +1,5 @@
 function searchItems() {
-    if (event) event.preventDefault();
+    event.preventDefault();
 
     const query = document.getElementById("search-input").value.trim();
     const resultsList = document.getElementById("results");
@@ -23,12 +23,12 @@ function searchItems() {
             }
             data.forEach(item => {
                 const li = document.createElement("li");
-                li.textContent = `${item.title} - $${item.category}`;
+                li.innerHTML = `<a href="${item.class}">${item.name}</a>`;
                 resultsList.appendChild(li);
             });
 
             if (data.length === 0) {
-                resultsList.innerHTML = "<li>No products found</li>";
+                resultsList.innerHTML = "<li>No class found</li>";
                 return;
             }
         })
