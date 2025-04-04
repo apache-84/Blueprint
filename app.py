@@ -28,7 +28,7 @@ def index():
 
 @app.route('/CSCI159')
 def csci159():
-    return "<h1>test</h1>"
+    return render_template("course.html", classes=classes)
 
 if __name__ == '__main__':
     app.run(debug=True)
