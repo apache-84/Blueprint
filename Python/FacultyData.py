@@ -24,8 +24,20 @@ def registerFaculty():
     print("Faculty member registered to database!")
 
 def getCoursesTaught(facID: int) -> list[Course]:
-    pass
+    """
+    Gets all of the courses taught for a specific faculty member account.
 
+    :param facID: The faculty member's ID.
+    :return: A list of Course objects that the faculty member has added to their 'courses taught'.
+    """
+    coursesTaught = []
+    sql = "select courseID from CoursesTaught where facultyID = ?"
+    res = fetch_query(sql, facID)
+    for course in res:
+        c = getCourse(course[0])
+        coursesTaught.append(c)
+    
+    return coursesTaught
 
 def addCoursesTaught(facID: int, cid: str):
     """
@@ -47,7 +59,6 @@ def delCoursesTaught(facID: int, cid: str):
     """
     sql = "delete from CoursesTaught where courseID = ? and facultyID = ?"
     execute_query(sql, cid, facID)
-
 
 def getNextID() -> int:
     """
@@ -88,8 +99,8 @@ def loginFaculty() -> FacultyMember:
             elif ans == "N":
                 return
     
+    # Get faculty information
     res = res[0]
-    
     id = res[0]
     username = res[1]
     password = res[2]
@@ -100,11 +111,9 @@ def loginFaculty() -> FacultyMember:
     if p != password:
         print("Incorrect password, login failed.")
         return
-    
-    # getCoursesTaught()
 
     print("Login for", username, "successful!")
-    f = FacultyMember(id, username, password)
+    f = FacultyMember(id, username, password, getCoursesTaught(id))
     
     return f
 

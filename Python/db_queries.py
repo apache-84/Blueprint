@@ -23,15 +23,6 @@ def execute_query(query, *params):
     cursor.execute(query, params)
     conn.commit()
     conn.close()
-    
-def executemany_query(query, *params):
-    """Executes a given SQL query with parameters many times and commits.
-    Parameters must be an iterable."""
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-    cursor.executemany(query, params)
-    conn.commit()
-    conn.close()
 
 def fetch_query(query, *params):
     """Executes a given SQL query with parameters and returns the results."""

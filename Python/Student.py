@@ -91,6 +91,9 @@ class Student():
             writeReview(review, cid, self.getID())
                 
     def register(self):
+        """
+        Allows a student to input their username and password for account registration.
+        """
 
         # Get the username
         while True:

@@ -1,5 +1,5 @@
 from Course import Course
-from CourseData import getCourse, updateCourse, checkCourseID
+from CourseData import getCourse, updateCourse, checkCourseID, addCoursesTaught, delCoursesTaught
 from Announcement import Announcement
 from AnnouncementData import postAnnouncement, getAnnouncement
 import hashlib
@@ -58,9 +58,43 @@ class FacultyMember():
         
         :param cid: The ID of the course whose information is being edited.
         """
+        command = -1
+        while command != 0:
+            command = input("""Course editor: Type the following number to do the following action:
+            1 - Edit the course ID
+            2 - Edit the course name
+            3 - Edit the course description
+            4 - Edit the course sections
+            5 - Edit the recommended year for the course
+            6 - Edit the offered terms for the course
+            0 - Leave the course editor
+            """)
+
+            match command:
+                case 0:
+                    print("Leaving the course editor.")
+                    break
+
+                case 1:
+
+                case 2:
+
+                case 3:
+                
+                case 4:
+
+                case 5:
+                
+                case 6:
+
+                case _:
+                    print("Invalid input, try again!")
+
 
     def register(self):
-
+        """
+        Allows a faculty member to input their username and password for account registration.
+        """
         # Get the username
         while True:
             user = input("Enter a username between 1-20 digits: ")
@@ -81,7 +115,7 @@ class FacultyMember():
         
     def makeAnnouncement(self):
         """
-        Faculty member can make an announcement and it gets posted to database.
+        Allows a faculty member to make an announcement. Announcement gets posted to database.
         """
         a = Announcement()    
         a.createAnnouncement()
@@ -89,7 +123,7 @@ class FacultyMember():
 
     def addCourseProfile(self):
         """
-        Faculty member can add a course to their profile under 'courses taught'. Gets added to CoursesTaught table in database.
+        Allows a faculty member to add a course to their profile under 'courses taught'. Gets added to CoursesTaught table in database.
         """
         cid = input("Enter the course ID of the course you want to add to your taught courses: ")
         if checkCourseID(cid) == False:
@@ -101,11 +135,12 @@ class FacultyMember():
         
     def removeCourseProfile(self):
         """
-        Faculty member can remove a course from their profile if it is already in their profile. Gets removed from CoursesTaught table in database.
+        Allows a faculty member to remove a course from their profile if it is already in their profile. Gets removed from CoursesTaught table in database.
         """
         
         cid = input("Enter the course ID of the course you want to remove: ")
         
+        # Checks if course ID is in their coursesTaught already.
         courseCheck = False
         for course in self.getCourses():
             if cid == course.getID():
@@ -116,6 +151,4 @@ class FacultyMember():
             print("Course", cid, "is not in your courses tauught!")
             return
         
-        el
-e            delCoursesTaught(self.getID(), cid)
-        
+        delCoursesTaught(self.getID(), cid)
