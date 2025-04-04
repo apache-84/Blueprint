@@ -70,12 +70,12 @@ class Student():
             self.selectedCourses.append(getCourse(cid))
         else:
             print("Course doesn't exist within the database! Try again..")
-
     
     def makeReview(self):
         """
         FOR TESTING PURPOSES ONLY: Allows student to input a course ID and write a review for the course.
         """
+        # REMOVE THIS SECTION LATER
         # Get course section
         while True:
             cid = input("What course is this review for (e.g. CSCI 260)? ").upper()
@@ -92,7 +92,7 @@ class Student():
                 
     def register(self):
 
-        #Get the username
+        # Get the username
         while True:
             user = input("Enter a username between 1-20 digits: ")
             if len(user) == 0 or len(user) > 20:
@@ -100,13 +100,12 @@ class Student():
             else:
                 self.__username = user
                 break
-                
+        # Get the password        
         while True:
             pWord = input("Enter a password: ")
             if len(pWord) == 0:
                 print("Password must be longer than 0 characters!")
             else:
                 self.__password = hashlib.sha256(pWord.encode()).hexdigest()
-                print(self.getPassword()) # remove later
                 break
       

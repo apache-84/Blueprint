@@ -1,7 +1,8 @@
 from Course import Course
-from CourseData import getCourse, updateCourse
+from CourseData import getCourse, updateCourse, checkCourseID
 from Announcement import Announcement
 from AnnouncementData import postAnnouncement, getAnnouncement
+import hashlib
 
 class FacultyMember():
 
@@ -60,25 +61,61 @@ class FacultyMember():
 
     def register(self):
 
-        #Get the username
+        # Get the username
         while True:
-            user = input("Enter a username between 1-20 digits:")
-            if (len(user) == 0 or len(user) > 20):
+            user = input("Enter a username between 1-20 digits: ")
+            if len(user) == 0 or len(user) > 20:
                 print("Username is not between 1-20, please try again")
             else:
                 self.__username = user
                 break
-                
+
+        # Get the password 
         while True:
-            pWord = hash(input("Enter a password:"))
-            print(pWord) # REMOVE LATER PLEASE GOD REMOVE REMOVE THIS PLEASE PLEASE PLEASE DONT LEAVE THIS REMOVE IT AT ALL COSTS
-            if (len(pWord == 0)):
+            pWord = input("Enter a password: ")
+            if len(pWord) == 0:
                 print("Password must be longer than 0 characters!")
             else:
-                self.__password = pWord
+                self.__password = hashlib.sha256(pWord.encode()).hexdigest()
                 break
         
     def makeAnnouncement(self):
         """
-        Faculty member makes announcement and it gets posted to database.
+        Faculty member can make an announcement and it gets posted to database.
         """
+        a = Announcement()    
+        a.createAnnouncement()
+        postAnnouncement(a, self.getID())
+
+    def addCourseProfile(self):
+        """
+        Faculty member can add a course to their profile under 'courses taught'. Gets added to CoursesTaught table in database.
+        """
+        cid = input("Enter the course ID of the course you want to add to your taught courses: ")
+        if checkCourseID(cid) == False:
+            print("Course", cid, "does not exist")
+            return
+        
+        addCoursesTaught(self.getID(), cid)
+        print ("Course succesfully added to your profile!!!")
+        
+    def removeCourseProfile(self):
+        """
+        Faculty member can remove a course from their profile if it is already in their profile. Gets removed from CoursesTaught table in database.
+        """
+        
+        cid = input("Enter the course ID of the course you want to remove: ")
+        
+        courseCheck = False
+        for course in self.getCourses():
+            if cid == course.getID():
+                courseCheck = True
+                break
+
+        if courseCheck == False:
+            print("Course", cid, "is not in your courses tauught!")
+            return
+        
+        el
+e            delCoursesTaught(self.getID(), cid)
+        

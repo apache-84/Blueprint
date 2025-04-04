@@ -8,7 +8,7 @@ def postAnnouncement(ann: Announcement, facID: int):
     :param ann: The Announcement object to write to the database.
     :param facID: The faculty ID of the faculty member who made the announcement.
     """
-    aid = ann.getAnnID()
+    aid = getNextID()
     text = ann.getAnnText()
     date = ann.getAnnDate()
     cid = ann.getCourse()

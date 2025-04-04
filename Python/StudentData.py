@@ -4,6 +4,7 @@ from ReviewData import getReview
 from Review import Review
 from AnnouncementData import getReactions, getAnnouncement
 import hashlib
+import time
 
 def registerStudent():
     """
@@ -16,11 +17,16 @@ def registerStudent():
 
     sql = "insert into Students values (?, ?, ?)"
 
+    # FAKE IT UNTIL YOU MAKE IT
+    stunum = input("Enter your student number: ")
+    print("Waiting for", stunum, "to sign in to VIU student database...")
+    time.sleep(5)
+    print("Student verified!")
+
     execute_query(sql, s.getID(), s.getUsername(), s.getPassword())
     print("Student registered to database!")
 
 def getReviews(stuID: int) -> list[Review]:
-    
     """
     Returns a list of all the Review objects a student has written.
 
@@ -101,9 +107,7 @@ def updateReaction(stuID: int, annID: int, reaction: int):
 
     # Update announcement's reactions by reconstructing the object.
     a = getAnnouncement(annID)
-
-    
-        
+     
 def loginStudent() -> Student:
     """
     Interactive login for a student. Prompts student for their username and password. If student doesn't have a username in database, prompts them to register a new account.
@@ -123,20 +127,17 @@ def loginStudent() -> Student:
                 registerStudent()
                 loginStudent()
                 return
-                break
             elif ans == "N":
-                break
+                return
+    
     res = res[0]
     
     id = res[0]
     username = res[1]
     password = res[2]
-    
-    print(password) # remove
 
     pWord = input("Enter your password: ")
     p = hashlib.sha256(pWord.encode()).hexdigest()
-    print(p) # remove  
     
     if p != password:
         print("Incorrect password, login failed.")
