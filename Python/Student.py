@@ -1,6 +1,7 @@
 from Course import Course
 from Review import Review
 from CourseData import writeReview, getCourse, checkCourseID  #for writeReview function,getCourse for semesterData
+import hashlib
 
 class Student():
     def __init__(self, stuID: int = 0, username: str = "", password: str = ""):
@@ -105,7 +106,7 @@ class Student():
             if len(pWord) == 0:
                 print("Password must be longer than 0 characters!")
             else:
-                self.__password = hash(pWord)
-                self.getPassword()
+                self.__password = hashlib.sha256(pWord.encode()).hexdigest()
+                print(self.getPassword()) # remove later
                 break
       

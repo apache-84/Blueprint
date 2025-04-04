@@ -20,6 +20,7 @@ def registerStudent():
     print("Student registered to database!")
 
 def getReviews(stuID: int) -> list[Review]:
+    
     """
     Returns a list of all the Review objects a student has written.
 
@@ -112,7 +113,8 @@ def loginStudent() -> Student:
     user = input("Enter your username: ")
     sql = "select * from Students where username = ?"
     res = fetch_query(sql, user)
-    
+    print(res)
+
     if (len(res) == 0):
         print("An account with this username doesn't exist, want to register an account?")
         while True:
@@ -120,6 +122,7 @@ def loginStudent() -> Student:
             if ans == "Y":
                 registerStudent()
                 loginStudent()
+                return
                 break
             elif ans == "N":
                 break
@@ -129,16 +132,17 @@ def loginStudent() -> Student:
     username = res[1]
     password = res[2]
     
+    print(password) # remove
+
     pWord = input("Enter your password: ")
-    p = hashlib.sha256()
-    p.update(pWord)
-    pWord = p.hexdigest()
-    print(pWord)
+    p = hashlib.sha256(pWord.encode()).hexdigest()
+    print(p) # remove  
     
-    if pWord != password:
-        print("Incorrect password, please try again.")
+    if p != password:
+        print("Incorrect password, login failed.")
         return
     
+    print("Login for", username, "successful!")
     s = Student(id, username, password)
     
     return s
