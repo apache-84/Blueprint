@@ -59,13 +59,14 @@ class Announcement():
         """
         # Get course section
         while True:
-            cid = input("What course is this review for (e.g. CSCI 260)?").upper()
+            cid = input("What course is this announcement for (e.g. CSCI 260)?").upper()
 
             if checkCourseID(cid):
                 self.setCourse(cid)
                 break
             else:
-                print("Course doesn't exist within the database! Try again..")
+                print("Course doesn't exist within the database! Try again.")
+                return
         while True:
             text = input("Enter the text to your announcement post, between 1-500 characters: ")
             if (len(text) < 1 or len(text) > 500):

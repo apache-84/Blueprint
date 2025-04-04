@@ -1,5 +1,5 @@
 from Course import Course
-from CourseData import getCourse, updateCourse, checkCourseID
+from CourseData import getCourse, updateCourse, checkCourseID, addCourse
 from Announcement import Announcement
 from AnnouncementData import postAnnouncement, getAnnouncement, updateEditHistory
 from CoursesTaughtData import addCoursesTaught, delCoursesTaught
@@ -50,6 +50,14 @@ class FacultyMember():
     def setCourses(self, courses: list[Course]):
         self.__coursesTaughts = courses
 
+    def addCourse(self):
+        """
+        Allows a faculty member to create a course object. Adds the course to the database as well.
+        """
+        c = Course()
+        c.createCourse()
+        addCourse(c)
+
     def editCourse(self, cid: str):
         """
         From a given course ID, allows faculty to alter one (per call) of the following 
@@ -61,7 +69,7 @@ class FacultyMember():
         """
         command = -1
         c = getCourse(cid)
-        while command != 0:
+        while command != '0':
             command = input("""Course editor: Type the following number to do the following action:
             0 - Leave the course editor
             1 - Edit the course ID
@@ -72,44 +80,44 @@ class FacultyMember():
             6 - Edit the offered terms for the course
             """)
             match command:
-                case 0: # Leave the course editor
+                case '0': # Leave the course editor
                     print("Leaving the course editor.")
-                case 1: # Edit the course ID
-                    cid = input("Enter a course ID (e.g. CSCI 260): ").upper()      
-                    if checkCourseID(cid) == False:
+                case '1': # Edit the course ID
+                    newCid = input("Enter a course ID (e.g. CSCI 260): ").upper()      
+                    if checkCourseID(newCid) == True:
                         print("Course with that ID already exists within database. Can't change ID to that!")
-                    elif len(cid) < 1 or len(cid) > 10:
+                    elif len(newCid) < 1 or len(newCid) > 10:
                         print("Course ID is not of the correct format.")
                     else:
-                        c.setID(cid)
-                case 2: # Edit the course name
+                        c.setID(newCid)
+                case '2': # Edit the course name
                     name = input("Enter the name of the course in full (e.g. Topics in Computer Science): ")
                     if len(name) < 1 or len(name) > 50:
                         print("Course name is empty or too long, please retry.")  
                     else:
-                        self.setName(name)
-                case 3: # Edit the course description
+                        c.setName(name)
+                case '3': # Edit the course description
                     desc = input("Enter a description of the course: ")
                     if (len(cid) > 1000):
                         print("Description is too long, description should be less than 1000 characters.")
                     else:
-                        self.setDescription(desc)
-                case 4: # Edit the course sections
+                        c.setDescription(desc)
+                case '4': # Edit the course sections
                     sections = input("Enter the sections and schedule of a course (E.g. S25N01 - Mo We 11:30-13:00): ")
                     if (len(sections) < 1):
                         print("You must enter atleast one section.")
                     else:
-                        self.setSections(sections)
-                case 5: # Edit the recommended year for the course
+                        c.setSections(sections)
+                case '5': # Edit the recommended year for the course
                     try:
                         year = int(input("Enter the recommended year that this course be taken by students (1,2,3,4): "))
                         if (year >= 1 or year <= 4):
-                            self.setRecYear(year)
+                            c.setRecYear(year)
                         else:
                             print("Invalid input, please enter a single digit number between 1-4.")
                     except ValueError:
                         print("Value is of incorrect data type, try again.")
-                case 6: # Edit the offered terms for the course
+                case '6': # Edit the offered terms for the course
                     try:
                         term = int(input("""Enter the term this course is offered in:
                                         1 - Fall
@@ -118,11 +126,11 @@ class FacultyMember():
                                         """))
                         match term:
                             case 1:
-                                self.setTerm("Fall") 
+                                c.setTerm("Fall") 
                             case 2:
-                                self.setTerm("Spring")  
+                                c.setTerm("Spring")  
                             case 3:
-                                self.setTerm("Both")   
+                                c.setTerm("Both")   
                             case _:
                                 print("Please select either 1, 2, or 3.")
                     except ValueError:
@@ -131,6 +139,8 @@ class FacultyMember():
                     print("Invalid input, try again!")
 
         # Update edit history and make announcement.
+        
+        updateCourse(c, cid)
         updateEditHistory(self.getID(), cid)
 
 

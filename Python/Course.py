@@ -56,6 +56,9 @@ class Course():
         return self.__term
     
     # Setter methods:    
+    def setID(self, cid: str):
+        self.__id = cid
+
     def setName(self, name: str):
         self.__name = name
         
@@ -86,7 +89,10 @@ class Course():
         This function should be used when instantiating a course or whenever a review of the course is written.
         :param rs: The list of all reviews for a course.
         """
-
+        
+        if len(rs) == 0:
+            return
+        
         # Get difficulty
         dsum = 0.0
         for review in rs:
@@ -116,7 +122,7 @@ class Course():
             if len(cid) < 1 or len(cid) > 10:
                 print("Course ID is not of the correct format.")
             else:
-                self.__id = cid
+                self.setID(cid)
                 break
         
         # Get course name

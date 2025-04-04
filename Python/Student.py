@@ -1,6 +1,7 @@
 from Course import Course
 from Review import Review
-from CourseData import writeReview, getCourse, checkCourseID  #for writeReview function,getCourse for semesterData
+from CourseData import writeReview, getCourse, checkCourseID
+
 import hashlib
 
 class Student():
@@ -89,6 +90,13 @@ class Student():
         review = Review()
         if (review.createReview()):
             writeReview(review, cid, self.getID())
+
+    def editReview(self):
+        """
+        Allows a student to edit one of their existing reviews for a course.
+        """
+        cid = input("What course do you want to edit your review for?")
+        pass
                 
     def register(self):
         """

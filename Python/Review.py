@@ -95,7 +95,6 @@ class Review():
         
         # Set the date to current day
         self.setDate(str(datetime.today().date()))
-        
 
 # Run this to create a review and see the object's values!
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 from Announcement import Announcement
 from db_queries import *
+from datetime import datetime
 
 def postAnnouncement(ann: Announcement, facID: int):
     """
@@ -78,11 +79,12 @@ def getNextID() -> int:
 
     return id
 
-
 def updateEditHistory(facID: int, cid: str):
     """
     Updates the CourseEditHistory after a course has been edited by a faculty announcement. Also automatically makes and postsan announcement with the course change description.
     
+
+    Note - if the course ID was changed, the old course ID is passed to this function, not the new one.
     :param facID: The ID of the faculty member who edited the course.
     :param cid: The ID of the course that was edited.
     """

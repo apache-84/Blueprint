@@ -1,4 +1,5 @@
 from Course import Course
+from db_queries import *
 
 def getCoursesTaught(facID: int) -> list[Course]:
     """

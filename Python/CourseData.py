@@ -30,30 +30,31 @@ def writeReview(r: Review, cid: str, stuID: int):
     # After review has been inserted, update course difficulty and hours values:
     updateCourse(cid)
 
-def updateCourse(cid: str):
+def updateCourse(c: Course, cid: str):
     """
-    Given a course ID, all current values of the course object will be written to the database.
+    Given a course object, all current values of the course object will be written to the database under the row where the passed course ID is present..
 
     This method should be called when:
     1. A faculty member edits information about an existing course.
     2. A new review of the course has been submitted by a student (changes to the average difficulty and hours).
-    :param cid: The course ID of the course to be updated
+    :param c: The updated course object to be updated to the database.
+    :param cid: The (old) course ID of the row to be updated.
     """
-    c = getCourse(cid)
 
     sql = """update Courses 
-    set courseName = ?,
+    set courseID = ?,
+    courseName = ?,
     description = ?,
-    recommendedHours = ?,
+    recommendedHours = ?,0
     courseDifficulty = ?,
     sections = ?,
     recommendedYear = ?,
     term = ?
     where courseID = ?"""
     
-    c.calculateAverages(getReviewData(cid)) # Updates hours and difficulty
+    c.calculateAverages(getReviewData(c.getID())) # Updates hours and difficulty
 
-    execute_query(sql, c.getName(), c.getDescription(), c.getHours(), c.getDifficulty(), c.getSections(), c.getRecYear(), c.getTerm(), cid)
+    execute_query(sql, c.getID(), c.getName(), c.getDescription(), c.getHours(), c.getDifficulty(), c.getSections(), c.getRecYear(), c.getTerm(), c.getID())
     print("Course information updated in database successfully!")
 
 def addCourse(c: Course):
@@ -102,7 +103,6 @@ def getCourse(cid: str) -> Course:
     :param cid: The course ID of the course to construct.
     :return: The constructed Course class object.
     """
-    
     sql = "select * from Courses where courseID = ?"
     data = fetch_query(sql, cid)[0] # There should only be one course with an ID.
     c = Course(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
@@ -117,7 +117,7 @@ def checkCourseID(cid: str) -> bool:
     """
     sql = "select * from Courses where courseID = ?"
     res = fetch_query(sql, cid)
-    print(res)
+    print(res) #prints out was here for debugging
 
     if len(res) == 0: # If list is empty
         return False
