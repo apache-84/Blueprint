@@ -14,10 +14,11 @@ if __name__ == '__main__':
     print ("Hello, Welcome to Blueprint.viu.cs")
     while True:
         res = input("Are you a student or faculty member? Type S for Student or F for faculty").upper()
-        if (res != "S" or "F"):
+        if res == 'F':
+            loginFaculty()
+        elif res == 'S':
+            loginStudent()
+        else:   
             print("Incorrect input, please enter S or F")
-        else:
-            if res == 'S':
-                loginStudent()
-            if res == 'F':
-                loginFaculty()
+                
+    

@@ -113,7 +113,7 @@ class Course():
         # Get course ID
         while True:
             cid = input("Enter a course ID (e.g. CSCI 260): ").upper()
-            if (len(cid) < 1 or len(cid) > 10):
+            if len(cid) < 1 or len(cid) > 10:
                 print("Course ID is not of the correct format.")
             else:
                 self.__id = cid
@@ -122,7 +122,7 @@ class Course():
         # Get course name
         while True:
             name = input("Enter the name of the course in full (e.g. Topics in Computer Science): ")
-            if (len(name) < 1 or len(name) > 50 ):
+            if len(name) < 1 or len(name) > 50:
                 print("Course name is empty or too long, please retry.")
             
             else:
@@ -167,17 +167,18 @@ class Course():
                                 2 - Spring
                                 3 - Both
                                 """))
-                if (term < 1 or term > 3):
-                    print("Please select either 1, 2, or 3")
-                else:
-                    match term:
-                        case 1:
-                            self.setTerm("Fall")
-                        case 2:
-                            self.setTerm("Spring")
-                        case 3:
-                            self.setTerm("Both") 
-                    break      
+                match term:
+                    case 1:
+                        self.setTerm("Fall")
+                        break   
+                    case 2:
+                        self.setTerm("Spring")
+                        break   
+                    case 3:
+                        self.setTerm("Both") 
+                        break   
+                    case _:
+                        print("Please select either 1, 2, or 3")
             except ValueError:
                 print("Value is of incorrect data type, try again.")
         

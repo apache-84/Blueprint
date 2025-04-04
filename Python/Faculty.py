@@ -1,7 +1,8 @@
 from Course import Course
-from CourseData import getCourse, updateCourse, checkCourseID, addCoursesTaught, delCoursesTaught
+from CourseData import getCourse, updateCourse, checkCourseID
 from Announcement import Announcement
 from AnnouncementData import postAnnouncement, getAnnouncement
+from CoursesTaughtData import addCoursesTaught, delCoursesTaught
 import hashlib
 
 class FacultyMember():
@@ -59,6 +60,7 @@ class FacultyMember():
         :param cid: The ID of the course whose information is being edited.
         """
         command = -1
+        c = getCourse(cid)
         while command != 0:
             command = input("""Course editor: Type the following number to do the following action:
             1 - Edit the course ID
@@ -69,24 +71,32 @@ class FacultyMember():
             6 - Edit the offered terms for the course
             0 - Leave the course editor
             """)
-
             match command:
-                case 0:
+                case 0: # Leave the course editor
                     print("Leaving the course editor.")
                     break
-
-                case 1:
-
+                case 1: # Edit the course ID
+                    while True:
+                        cid = input("Enter a course ID (e.g. CSCI 260): ").upper()
+                        
+                        if checkCourseID(cid) == False:
+                            print("Course with that ID already exists within database. Can't change ID to that!")
+                        elif len(cid) < 1 or len(cid) > 10:
+                            print("Course ID is not of the correct format.")
+                        else:
+                            c.setID(cid)
+                            break
+                    pass
                 case 2:
-
+                    pass
                 case 3:
-                
+                    pass
                 case 4:
-
+                    pass
                 case 5:
-                
+                    pass
                 case 6:
-
+                    pass
                 case _:
                     print("Invalid input, try again!")
 
