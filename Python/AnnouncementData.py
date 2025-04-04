@@ -77,3 +77,19 @@ def getNextID() -> int:
         id = res[0] + 1
 
     return id
+
+
+def updateEditHistory(facID: int, cid: str):
+    """
+    Updates the CourseEditHistory after a course has been edited by a faculty announcement. Also automatically makes and postsan announcement with the course change description.
+    
+    :param facID: The ID of the faculty member who edited the course.
+    :param cid: The ID of the course that was edited.
+    """
+    desc = input("Edit the description of your changes to the course: ")
+    editDate = str(datetime.today().date())
+    
+    sql = "insert into CourseEditHistory values (?, ?, ?, ?)"
+    execute_query(sql, cid, facID, editDate, desc)
+    a = Announcement(getNextID(), desc, editDate, cid)
+    postAnnouncement(a, facID)

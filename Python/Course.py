@@ -151,7 +151,7 @@ class Course():
         while True:
             try:
                 year = int(input("Enter the recommended year that this course be taken by students (1,2,3,4): "))
-                if (year >= 4 or year <= 4):
+                if (year >= 1 or year <= 4):
                     self.setRecYear(year)
                     break
                 else:
@@ -178,7 +178,7 @@ class Course():
                         self.setTerm("Both") 
                         break   
                     case _:
-                        print("Please select either 1, 2, or 3")
+                        print("Please select either 1, 2, or 3.")
             except ValueError:
                 print("Value is of incorrect data type, try again.")
         

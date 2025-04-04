@@ -3,6 +3,7 @@ from Review import Review
 from ReviewData import getReview, findNextID
 from Course import Course
 
+
 def writeReview(r: Review, cid: str, stuID: int):
     """
     Writes a review to the database given a Review object and a valid course ID. Also updates course values.
