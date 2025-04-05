@@ -83,7 +83,7 @@ class FacultyMember():
                 case '0': # Leave the course editor
                     print("Leaving the course editor.")
                 case '1': # Edit the course ID
-                    newCid = input("Enter a course ID (e.g. CSCI 260): ").upper()      
+                    newCid = input("Enter the new course ID (e.g. CSCI 260): ").upper()      
                     if checkCourseID(newCid) == True:
                         print("Course with that ID already exists within database. Can't change ID to that!")
                     elif len(newCid) < 1 or len(newCid) > 10:
@@ -91,26 +91,26 @@ class FacultyMember():
                     else:
                         c.setID(newCid)
                 case '2': # Edit the course name
-                    name = input("Enter the name of the course in full (e.g. Topics in Computer Science): ")
+                    name = input("Enter the new name of the course in full (e.g. Topics in Computer Science): ")
                     if len(name) < 1 or len(name) > 50:
                         print("Course name is empty or too long, please retry.")  
                     else:
                         c.setName(name)
                 case '3': # Edit the course description
-                    desc = input("Enter a description of the course: ")
+                    desc = input("Enter the new description of the course: ")
                     if (len(cid) > 1000):
                         print("Description is too long, description should be less than 1000 characters.")
                     else:
                         c.setDescription(desc)
                 case '4': # Edit the course sections
-                    sections = input("Enter the sections and schedule of a course (E.g. S25N01 - Mo We 11:30-13:00): ")
+                    sections = input("Enter the new sections and schedule of a course (E.g. S25N01 - Mo We 11:30-13:00): ")
                     if (len(sections) < 1):
                         print("You must enter atleast one section.")
                     else:
                         c.setSections(sections)
                 case '5': # Edit the recommended year for the course
                     try:
-                        year = int(input("Enter the recommended year that this course be taken by students (1,2,3,4): "))
+                        year = int(input("Enter the new recommended year that this course be taken by students (1,2,3,4): "))
                         if (year >= 1 or year <= 4):
                             c.setRecYear(year)
                         else:
@@ -119,7 +119,7 @@ class FacultyMember():
                         print("Value is of incorrect data type, try again.")
                 case '6': # Edit the offered terms for the course
                     try:
-                        term = int(input("""Enter the term this course is offered in:
+                        term = int(input("""Enter the new term(s) this course is offered in:
                                         1 - Fall
                                         2 - Spring
                                         3 - Both

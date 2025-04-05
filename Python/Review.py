@@ -5,7 +5,7 @@ class Review():
     Creates a review object that can be written to the database or displayed to the frontend.
     """
 
-    def __init__(self, id: int = 0, text: str = "", diff: float = 0.0, hours: int = 0, date: str = ""):
+    def __init__(self, id: int = 0, text: str = "", diff: float = 0.0, hours: int = 0, date: str = "", cid: str = ""):
         """
         Instantiates a Review object with the given values: id, text, diff, hours, date. Otherwise, will use default values.
 
@@ -20,6 +20,7 @@ class Review():
         self.__difficulty = diff
         self.__recHours = hours
         self.__reviewDate = date
+        self.__course = cid
     
     # Getter methods:
     def getID(self) -> int:
@@ -37,6 +38,9 @@ class Review():
     def getDate(self) -> str:
         return self.__reviewDate
     
+    def getCourse(self) -> str:
+        return self.__course
+
     # Setter methods:
     def setID(self, id):
         self.__reviewID = id
@@ -53,6 +57,9 @@ class Review():
     def setDate(self, date):
         self.__reviewDate = date
         
+    def getDate(self, cid):
+        self.__course = cid
+
     def createReview(self):
         """
         Creates a review object from the command line. (FOR DEVELOPMENT PURPOSES)
@@ -86,7 +93,7 @@ class Review():
         
         # Get text Section
         while True:
-            text = str(input("Enter text for your review: \n"))
+            text = str(input("Enter the text for your review: \n"))
             if (len(text) > 0 and len(text) <= 500):
                 self.setText(text)
                 break

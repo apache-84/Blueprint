@@ -119,7 +119,7 @@ def create_tables():
     """) 
              
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS AnmouncementReactions (
+        CREATE TABLE IF NOT EXISTS AnnouncementReactions (
             announcementID INTEGER,
             studentID INTEGER,
             reaction INTEGER,
@@ -129,11 +129,12 @@ def create_tables():
         );
     """) 
     
+    cursor.execute("drop table if exists AnmouncementReactions")
+
     conn.commit()
     conn.close()
 
 # note: basic command-line test for table existence: `sqlite3 csci375team3.db ".tables"`
 if __name__ == "__main__":
-    drop_tables()
     create_tables()
     print("Database initialized. Have a nice day.")

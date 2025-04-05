@@ -10,18 +10,21 @@ def deleteReview(id: int): # deletes a review given an id
     sql = "delete * from Reviews where reviewID = ?"
     execute_query(sql, id)
 
-def getReview(id: int) -> Review:
+def getReview(stuID: int, cid: str) -> Review:
     """
-    Retrieves a review from the database given a reviewID
+    Retrieves a review from the database given a studentID and courseID
 
     This method finds a review from the database and then constructs a Review object to be displayed on the frontend.
-    :param id: The reviewID of the review to be retrieved.
-    :return: The retrieved review as a Review object.
+    :param stuID: The studentID of the student who made the review.
+    :return: The courseID of the course the review was made for.
     """
-    sql = "select * from Reviews where reviewID = ?"
-    print(fetch_query(sql, id))
-    res = fetch_query(sql, id)[0] # first row of result set
-    review = Review(res[0], res[1], res[2], res[3], res[4]) # first 5 column values
+    sql = "select * from Reviews where studentID = ? and courseID = ?"
+    print(fetch_query(sql, stuID, cid)) # remove later
+    res = fetch_query(sql, stuID, cid)
+    if len(res) == 0:
+        return None
+    res = res[0]
+    review = Review(res[0], res[1], res[2], res[3], res[4], res[6])
     return review
 
 def findNextID() -> int:
@@ -40,3 +43,23 @@ def findNextID() -> int:
         id = res[0] + 1
 
     return id
+
+def updateReview(r: Review, stuID: int):
+    """
+    Updates a review in the database with a given review object and studentID
+
+    :param r: The Review object containing the updated review data.
+    :param stuID: The studentID of the student who wrote and updated the review.
+    :return: The courseID of the course the review was made for.
+    """
+    sql = """update Reviews 
+    set reviewText = ?,
+    difficulty = ?,
+    recommendedHours = ?,
+    reviewDate = ?,
+    courseID = ?,
+    studentID = ?,
+    where reviewID = ?
+    """
+    execute_query(sql, r.getText(), r.getDifficulty(), r.getHours(), r.getDate(), r.getCourse(), stuID, r.getID())
+    print("Review updated!")

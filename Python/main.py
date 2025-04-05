@@ -51,8 +51,17 @@ if __name__ == '__main__':
                 case '1':
                     courseRes = input("Search what course you would like to find: ")
                     if (checkCourseID(courseRes) == True):
-                        getCourse(courseRes)
-                        break
+                        course = getCourse(courseRes)
+                                    
+                        print("Course ID: ", course.getID())
+                        print("Course Name: ", course.getName())
+                        print("Course Description: ", course.getDescription())
+                        print("Recommended Hours: ", course.getHours())
+                        print("Course Difficulty: ", course.getDifficulty())
+                        print("Course Sections: ", course.getSections())
+                        print("Recommended year: ", course.getRecYear())
+                        print("Course Term: ", course.getTerm())
+                        
                     else:
                         print("invalid search, please try another courseID: ")
                         
@@ -76,6 +85,58 @@ if __name__ == '__main__':
                 case _:
                     print("Invalid command! Try again")
 
+
+    # Student menu prior to login check            
+    if (studentFlag == True):
+        command = -1
+        while command != '0':
+            command = input("""Course editor: Type the following number to do the following action:
+            0 - End your session
+            1 - View a course
+            2 - Add a course
+            3 - Calculate your Semester
+            4 - Add a review 
+            5 - Edit a review you've made
+            6 - View announcements board
+            """)
+            match command:
+                case '0':
+                    print("Thank you for visiting! Enjoy your day!!! :)")
+                case '1':
+                    courseRes = input("Search what course you would like to find: ")
+                    if (checkCourseID(courseRes) == True):
+                        getCourse(courseRes)
+                        break
+                    else:
+                        print("invalid search, please try another courseID: ")
+                        
+                case '2':
+                    s.selectCourse()
+                                        
+                case '3':
+                    courseList = s.calculateSemesterData()   
+
+                    courses = s.getSelCourses()
+                    for course in courses:
+                 
+                        print("Course ID: ", course.getID())
+                        print("Course Name: ", course.getName())
+                        print("Course Description: ", course.getDescription())
+                        print("Recommended Hours: ", course.getHours())
+                        print("Course Difficulty: ", course.getDifficulty())
+                        print("Course Sections: ", course.getSections())
+                        print("Recommended year: ", course.getRecYear())
+                        print("Course Term: ", course.getTerm())
+                    print(courseList) 
+                       
+                case '4':
+                    s.makeReview()
+
+                case '5':
+                    s.editReview()
+                
+                case _:    
+                    print("Invalid command! Try again")
     #successfully logged in now select an action    
 
             
