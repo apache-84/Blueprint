@@ -57,7 +57,7 @@ class Review():
     def setDate(self, date):
         self.__reviewDate = date
         
-    def getDate(self, cid):
+    def setCourse(self, cid):
         self.__course = cid
 
     def createReview(self):

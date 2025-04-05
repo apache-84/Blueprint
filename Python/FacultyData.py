@@ -60,9 +60,9 @@ def loginFaculty() -> FacultyMember:
             if ans == "Y":
                 registerFaculty()
                 loginFaculty()
-                return
+                return None
             elif ans == "N":
-                return
+                return None
     
     # Get faculty information
     res = res[0]

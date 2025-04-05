@@ -10,17 +10,35 @@ def deleteReview(id: int): # deletes a review given an id
     sql = "delete * from Reviews where reviewID = ?"
     execute_query(sql, id)
 
-def getReview(stuID: int, cid: str) -> Review:
+def getStuReview(stuID: int, cid: str) -> Review:
     """
-    Retrieves a review from the database given a studentID and courseID
+    Retrieves a review from the database given a studentID and courseID.
 
     This method finds a review from the database and then constructs a Review object to be displayed on the frontend.
     :param stuID: The studentID of the student who made the review.
-    :return: The courseID of the course the review was made for.
+    :param cid: The courseID of the course the review was made for.
+    :return: A Review object containing all of the review's information.
     """
     sql = "select * from Reviews where studentID = ? and courseID = ?"
     print(fetch_query(sql, stuID, cid)) # remove later
     res = fetch_query(sql, stuID, cid)
+    if len(res) == 0:
+        return None
+    res = res[0]
+    review = Review(res[0], res[1], res[2], res[3], res[4], res[6])
+    return review
+
+def getReview(rID: int) -> Review:
+    """
+    Retrieves a review from the database with the given reviewID.
+
+    This method finds a review from the database and then constructs a Review object to be displayed on the frontend.
+    :param rID: The studentID of the student who made the review.
+    :return: A Review object containing all of the review's information.
+    """
+    sql = "select * from Reviews where reviewID = ?"
+    print(fetch_query(sql, rID)) # remove later
+    res = fetch_query(sql, rID)
     if len(res) == 0:
         return None
     res = res[0]
@@ -58,7 +76,7 @@ def updateReview(r: Review, stuID: int):
     recommendedHours = ?,
     reviewDate = ?,
     courseID = ?,
-    studentID = ?,
+    studentID = ?
     where reviewID = ?
     """
     execute_query(sql, r.getText(), r.getDifficulty(), r.getHours(), r.getDate(), r.getCourse(), stuID, r.getID())

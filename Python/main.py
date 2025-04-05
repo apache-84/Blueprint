@@ -12,8 +12,7 @@ from CoursesTaughtData import *
 from datetime import datetime
 
 if __name__ == '__main__':
-    f = FacultyMember()
-    s = Student()
+
     print ("Hello, Welcome to Blueprint.viu.cs")
    
     # While loop for login and registry
@@ -23,11 +22,13 @@ if __name__ == '__main__':
         res = input("Are you a student or faculty member? Type S for Student or F for faculty. ").upper()
         if res == 'F':
             f = loginFaculty()
-            facultyFlag = True
+            if type(f) == FacultyMember:
+                facultyFlag = True
             break
         elif res == 'S':
             s = loginStudent()
-            studentFlag = True
+            if type(s) == Student:  
+                studentFlag = True
             break
         else:   
             print("Incorrect input, please enter S or F")
@@ -37,8 +38,8 @@ if __name__ == '__main__':
     if (facultyFlag == True):
         command = -1
         while command != '0':
-            command = input("""Course editor: Type the following number to do the following action:
-            0 - End your session
+            command = input("""Type the following number to do the following action:
+            0 - End your session 
             1 - View a course
             2 - Add a course to your courses taught.
             3 - Add a course
@@ -90,7 +91,7 @@ if __name__ == '__main__':
     if (studentFlag == True):
         command = -1
         while command != '0':
-            command = input("""Course editor: Type the following number to do the following action:
+            command = input("""Type the following number to do the following action:
             0 - End your session
             1 - View a course
             2 - Add a course
@@ -105,8 +106,17 @@ if __name__ == '__main__':
                 case '1':
                     courseRes = input("Search what course you would like to find: ")
                     if (checkCourseID(courseRes) == True):
-                        getCourse(courseRes)
-                        break
+                        course = getCourse(courseRes)
+                                    
+                        print("Course ID: ", course.getID())
+                        print("Course Name: ", course.getName())
+                        print("Course Description: ", course.getDescription())
+                        print("Recommended Hours: ", course.getHours())
+                        print("Course Difficulty: ", course.getDifficulty())
+                        print("Course Sections: ", course.getSections())
+                        print("Recommended year: ", course.getRecYear())
+                        print("Course Term: ", course.getTerm())
+                        
                     else:
                         print("invalid search, please try another courseID: ")
                         
@@ -142,3 +152,4 @@ if __name__ == '__main__':
             
         
     
+    print("Thanks for using Blueprint.viu.cs!")

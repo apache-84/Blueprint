@@ -126,9 +126,9 @@ def loginStudent() -> Student:
             if ans == "Y":
                 registerStudent()
                 loginStudent()
-                return
+                return None
             elif ans == "N":
-                return
+                return None
     
     res = res[0]
     

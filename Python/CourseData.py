@@ -28,7 +28,7 @@ def writeReview(r: Review, cid: str, stuID: int):
     print("Review for", cid, "submitted succesfully with ID", id)
 
     # After review has been inserted, update course difficulty and hours values:
-    updateCourse(cid)
+    updateCourse(getCourse(cid), cid)
 
 def updateCourse(c: Course, cid: str):
     """
@@ -45,7 +45,7 @@ def updateCourse(c: Course, cid: str):
     set courseID = ?,
     courseName = ?,
     description = ?,
-    recommendedHours = ?,0
+    recommendedHours = ?,
     courseDifficulty = ?,
     sections = ?,
     recommendedYear = ?,

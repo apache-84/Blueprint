@@ -1,7 +1,7 @@
 from Course import Course
 from Review import Review
 from CourseData import writeReview, getCourse, checkCourseID
-from ReviewData import getReview, updateReview
+from ReviewData import getStuReview, updateReview
 from datetime import datetime
 import hashlib
 
@@ -79,33 +79,34 @@ class Student():
         """
         # Get course section
         cid = input("What course is this review for (e.g. CSCI 260)? ").upper()
-
+        
         if checkCourseID(cid) == False:
             print("Course doesn't exist within the database! Leaving review creator.")
             return
             
         # Make review section
         review = Review()
+        review.createReview()
         writeReview(review, cid, self.getID())
 
     def editReview(self):
         """
         Allows a student to edit one of their existing reviews for a course.
         """
-        cid = input("What course do you want to edit your review for?")
+        cid = input("What course do you want to edit your review for? ")
 
-        r = getReview(self.getID(), cid)
+        r = getStuReview(self.getID(), cid)
         if type(r) == None:
             print("You have not written a review for that course! Leaving review editor.")
             return
-    
+        command = -1
         while command != '0':
             command = input("""Review editor for your review of {course}: Type the following number to do the following action:
             0 - Leave the review editor
             1 - Edit the difficulty rating
             2 - Edit the recommended hours per week
             3 - Edit the review text
-            """.format(course=cid))
+            """.format(course = cid))
             match command:
                 case '0': # Leave the review editor
                     print("Leaving the review editor.")
@@ -122,7 +123,7 @@ class Student():
                     try:
                         hours = int(input("Enter the new recommended hours per week someone should spend on this course: "))
                         if (hours > 0):
-                            self.setHours(hours)
+                            r.setHours(hours)
                         else:
                             print("Invalid input: Hours cannot be negative.")
                     except ValueError:
@@ -130,7 +131,7 @@ class Student():
                 case '3':       
                     text = str(input("Enter the new text for your review: \n"))
                     if (len(text) > 0 and len(text) <= 500):
-                        self.setText(text)
+                        r.setText(text)
                     else:
                         print("Text is an invalid character size, must be between 0 and 500 characters.")
                 case _: # Invalid command input
@@ -139,7 +140,6 @@ class Student():
         r.setDate(str(datetime.today().date()))
 
         updateReview(r, self.getID())
-        pass
                 
     def register(self):
         """
