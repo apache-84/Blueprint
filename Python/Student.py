@@ -96,7 +96,7 @@ class Student():
         cid = input("What course do you want to edit your review for? ")
 
         r = getStuReview(self.getID(), cid)
-        if type(r) == None:
+        if r is None:
             print("You have not written a review for that course! Leaving review editor.")
             return
         command = -1

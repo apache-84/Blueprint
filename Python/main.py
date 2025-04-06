@@ -22,14 +22,14 @@ if __name__ == '__main__':
         res = input("Are you a student or faculty member? Type S for Student or F for faculty. ").upper()
         if res == 'F':
             f = loginFaculty()
-            if type(f) == FacultyMember:
-                facultyFlag = True
-            break
+            if f is None:
+                break
+            facultyFlag = True
         elif res == 'S':
             s = loginStudent()
-            if type(s) == Student:  
-                studentFlag = True
-            break
+            if s is None:  
+                break
+            studentFlag = True
         else:   
             print("Incorrect input, please enter S or F")
 

@@ -20,7 +20,6 @@ def getStuReview(stuID: int, cid: str) -> Review:
     :return: A Review object containing all of the review's information.
     """
     sql = "select * from Reviews where studentID = ? and courseID = ?"
-    print(fetch_query(sql, stuID, cid)) # remove later
     res = fetch_query(sql, stuID, cid)
     if len(res) == 0:
         return None
@@ -42,7 +41,7 @@ def getReview(rID: int) -> Review:
     if len(res) == 0:
         return None
     res = res[0]
-    review = Review(res[0], res[1], res[2], res[3], res[4], res[6])
+    review = Review(res[0], res[1], res[2], res[3], res[4], res[5])
     return review
 
 def findNextID() -> int:
