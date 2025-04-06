@@ -107,8 +107,8 @@ class Course():
         
         hours = hsum / len(rs)
 
-        self.setDifficulty(diff)
-        self.setHours(hours)
+        self.setDifficulty(round(diff, 1))
+        self.setHours(round(hours, 1))
         
     def createCourse(self):
         """TO BE USED FOR TESTING:

@@ -41,17 +41,20 @@ if __name__ == '__main__':
         while command != '0':
             command = input("""Type the following number to do the following action:
             0 - End your session 
-            1 - View a course
-            2 - Add a course to your courses taught.
-            3 - Add a course
-            4 - Edit a course
-            5 - Create an announcement for a course
+            1 - Display all courses
+            2 - View a course
+            3 - Add a course to your courses taught
+            4 - Add a course
+            5 - Edit a course
+            6 - Create an announcement for a course
             """)
             match command:
                 case '0':
                     print("Thank you for visiting! Enjoy your day!!! :)")
                 case '1':
-                    courseRes = input("Search what course you would like to find: ")
+                    displayCourses()
+                case '2':
+                    courseRes = input("Search what course you would like to find: ").upper()
                     if (checkCourseID(courseRes) == True):
                         course = getCourse(courseRes)
                         cmd = -1
@@ -65,7 +68,7 @@ if __name__ == '__main__':
                             4 - View course announcements
                             5 - Edit the information for this course
                             6 - Make an announcement for this course.
-                            """)
+                            """).upper()
                             
                             match cmd:
                                 case '0':
@@ -90,7 +93,6 @@ if __name__ == '__main__':
                                         print("Review: \n" + review.getText())
                                         print("--------------------------------------------")
                                 case '4':
-                                    print(getCourseAnnouncements(course.getID()))
                                     recentAnnouncements = getCourseAnnouncements(course.getID())
 
                                     for announcement in recentAnnouncements:
@@ -109,21 +111,21 @@ if __name__ == '__main__':
                     else:
                         print("invalid search, courseID not found... Returning to main page. ")
                         
-                case '2': 
-                    addCourseTaught = input("Enter a course that you want to add to your profile for quick access: ")                
+                case '3': 
+                    addCourseTaught = input("Enter a course that you want to add to your profile for quick access: ").upper()              
                     f.addCourseProfile(addCourseTaught)
 
-                case '3':
+                case '4':
                     f.addCourse()
                 
-                case '4':
+                case '5':
                     editID = input("Enter the courseID of the course you would like to edit: ")
                     if (checkCourseID(editID) == True):
                         f.editCourse(editID)
                     else:
                         print("Invalid course ID, please try again. ")
                     
-                case '5':
+                case '6':
                     cid = input("What course is this announcement for (e.g. CSCI 260)? ").upper()
                     if checkCourseID(cid):
                         f.makeAnnouncement(cid)
@@ -139,21 +141,24 @@ if __name__ == '__main__':
         while command != '0':
             command = input("""Type the following number to do the following action:
             0 - End your session
-            1 - View a course
-            2 - Add a course to your semester
-            3 - Calculate your semester statistics
-            4 - Write a review for a course
-            5 - Edit a review you've made
-            6 - View all of your posted reviews
-            7 - View the announcements board
-            8 - React to an announcement
-            9 - Wipe all courses from your semester
+            1 - Display all courses
+            2 - View a course
+            3 - Add a course to your semester
+            4 - Calculate your semester statistics
+            5 - Write a review for a course
+            6 - Edit a review you've made
+            7 - View all of your posted reviews
+            8 - View the announcements board
+            9 - React to an announcement
+            10 - Wipe all courses from your semester
             """)
             match command:
                 case '0':
                     print("Thank you for visiting! Enjoy your day!!! :)")
                 case '1':
-                    courseRes = input("Search what course you would like to find: ")
+                    displayCourses()
+                case '2':
+                    courseRes = input("Search what course you would like to find: ").upper()
                     if (checkCourseID(courseRes) == True):
                         course = getCourse(courseRes)
                         cmd = -1
@@ -166,7 +171,7 @@ if __name__ == '__main__':
                             3 - View course reviews
                             4 - View course announcements
                             5 - Add course to your semester
-                            """)
+                            """).upper()
                             
                             match cmd:
                                 case '0':
@@ -191,7 +196,6 @@ if __name__ == '__main__':
                                         print("--------------------------------------------")
 
                                 case '4':
-                                    print(getCourseAnnouncements(course.getID()))
                                     recentAnnouncements = getCourseAnnouncements(course.getID())
 
                                     for announcement in recentAnnouncements:
@@ -209,11 +213,11 @@ if __name__ == '__main__':
                     else:
                         print("invalid search, courseID not found... Returning to main page. ")
                         
-                case '2':
-                    s.selectCourse()                      
                 case '3':
+                    s.selectCourse()                      
+                case '4':
                     if len(s.selectedCourses) == 0:
-                        print("Select courses before calculating semester information (use action 2).")
+                        print("Select courses before calculating semester information (use action 3).")
                     else:
                         semesterData = s.calculateSemesterData()
                         print("Calculating semester information...")
@@ -237,12 +241,12 @@ if __name__ == '__main__':
                             print("Course Term:", course.getTerm())
                             print("--------------------------------------------")
                         
-                case '4':
+                case '5':
                     s.makeReview()
 
-                case '5':
-                    s.editReview()
                 case '6':
+                    s.editReview()
+                case '7':
                     reviews = getReviews(s.getID())
                     for review in reviews:
                         print("Course:", review.getCourse())
@@ -251,7 +255,7 @@ if __name__ == '__main__':
                         print("Review: \n" + review.getText())
                         print("--------------------------------------------")
 
-                case '7':
+                case '8':
                     announcements = getAnnouncementBoard()
 
                     for announcement in announcements:
@@ -261,18 +265,32 @@ if __name__ == '__main__':
                         print("Announcement: \n" + announcement.getAnnText())
                         print("Reaction rating:", announcement.getReactions())
                         print("--------------------------------------------")
-                case '8':
+                case '9':
                     annID = input("Select an announcement ID associated with a course to give it a reaction: ")
-                    if getAnnouncement(annID) is None:
+                    a = getAnnouncement(annID)
+                    if a is None:
                         print("Announcement with ID", annID, "doesn't exist. Returning to main page.")
-                    else:
-                        reaction = int(input("Enter a reaction, 0 for downvote, 1 for upvote: "))
+                    else:   
+                        print("ID:", a.getAnnID())
+                        print("Course:", a.getCourse())
+                        print("Date:", a.getAnnDate())
+                        print("Announcement: \n" + a.getAnnText())
+                        print("Reaction rating:", a.getReactions())
+                        print("--------------------------------------------")
+                        oldReaction = checkIfReacted(s.getID(), annID)
+                        if oldReaction == -1:
+                            print("You have not reacted to this announcement before.")
+                        elif oldReaction == 0:
+                            print("Your old reaction was a downvote.")
+                        else:
+                            print("Your old reaction was an upvote.")
+                        reaction = int(input("Enter your reaction, 0 for downvote, 1 for upvote: "))
                         if reaction != 0 and reaction != 1:
                             print("Incorrect reaction type, please enter 0 or 1 ")
                         else:
                             updateReaction(s.getID(), annID, reaction)
                     
-                case '9':
+                case '10':
                     s.selectedCourses = []
                     print("Selected courses have been removed!")
                 case _:    
@@ -284,3 +302,4 @@ if __name__ == '__main__':
     # except Exception as e:
     #     print("Program ran into an error, terminating...")
     #     print(e)
+

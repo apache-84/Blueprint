@@ -68,7 +68,7 @@ def checkIfReacted(stuID: int, annID: int) -> int:
     if (len(res) == 0):
         return -1
     
-    return res[0]
+    return res[0][0]
 
 def updateReaction(stuID: int, annID: int, reaction: int):
     """
@@ -85,25 +85,24 @@ def updateReaction(stuID: int, annID: int, reaction: int):
     status = checkIfReacted(stuID, annID)
     
     unreactSQL = "delete from AnnouncementReactions where studentID = ? and AnnouncementID = ?"
-    reactSQL = "update reaction from AnnouncementReactions where studentID = ? and AnnouncementID = ?"
-    
-    insertSQL = "insert into AnnouncementReactions"
+    reactSQL = "update AnnouncementReactions set reaction = ? where studentID = ? and AnnouncementID = ?"
+    insertSQL = "insert into AnnouncementReactions values (?, ?, ?)"
     
     # If reacted wth downvote before.
     if status == 0:
         if reaction == 0:
-            execute_query(unreactSQL)
+            execute_query(unreactSQL, stuID, annID)
         elif reaction == 1:
-            execute_query(reactSQL, reaction)
+            execute_query(reactSQL, reaction, stuID, annID)
     # If reacted with upvote before.
     elif status == 1:
         if reaction == 0:
-            execute_query(reactSQL, reaction)
+            execute_query(reactSQL, reaction, stuID, annID)
         elif reaction == 1:
-            execute_query(unreactSQL)
+            execute_query(unreactSQL, stuID, annID)
     # If haven't reacted before.
     else:
-        execute_query(insertSQL)
+        execute_query(insertSQL, annID, stuID, reaction)
 
     # Update announcement's reactions by reconstructing the object.
     a = getAnnouncement(annID)
@@ -117,7 +116,6 @@ def loginStudent() -> Student:
     user = input("Enter your username: ")
     sql = "select * from Students where username = ?"
     res = fetch_query(sql, user)
-    print(res)
 
     if (len(res) == 0):
         print("An account with this username doesn't exist, want to register an account?")

@@ -59,6 +59,10 @@ class Student():
             semesterData[0].append(course)
         
         semesterData[1] = dsum / len(self.selectedCourses)
+
+        # Rounding to one decimal place.
+        semesterData[1] = round(semesterData[1], 1)
+        semesterData[2] = round(semesterData[2], 1)
         return semesterData
 
     def selectCourse(self): # In final version, cid will be a param

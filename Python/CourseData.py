@@ -55,7 +55,6 @@ def updateCourse(c: Course, cid: str):
     c.calculateAverages(getReviewData(c.getID())) # Updates hours and difficulty
 
     execute_query(sql, c.getID(), c.getName(), c.getDescription(), c.getHours(), c.getDifficulty(), c.getSections(), c.getRecYear(), c.getTerm(), c.getID())
-    print("Course information updated in database successfully!")
 
 def addCourse(c: Course):
     """
@@ -105,7 +104,13 @@ def getCourse(cid: str) -> Course:
     """
     sql = "select * from Courses where courseID = ?"
     data = fetch_query(sql, cid)[0] # There should only be one course with an ID.
-    c = Course(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7])
+
+    c = Course(cid, data[1], data[2], data[3], data[4], data[5], data[6], data[7])
+    
+    # Makes it calculate difficulty and write it to the database when retrieved.
+    reviews = getReviewData(cid)
+    c.calculateAverages(reviews)
+    updateCourse(c, c.getID())
     return c
     
 def checkCourseID(cid: str) -> bool:
@@ -117,9 +122,21 @@ def checkCourseID(cid: str) -> bool:
     """
     sql = "select * from Courses where courseID = ?"
     res = fetch_query(sql, cid)
-    print(res) #prints out was here for debugging
-
     if len(res) == 0: # If list is empty
         return False
     
     return True
+
+
+def displayCourses():
+    sql = "select courseID from Courses"
+
+    res = fetch_query(sql)
+
+    for cid in res:
+        c = getCourse(cid[0])
+        print("ID:", c.getID())
+        print("Name:", c.getName())
+        print("Difficulty:", c.getDifficulty())
+        print("Hours:", c.getHours())
+        print("--------------------------------------------")

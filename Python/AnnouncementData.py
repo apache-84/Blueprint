@@ -119,7 +119,7 @@ def getCourseAnnouncements(cid: str) -> list[Announcement]:
     res = fetch_query(sql, cid)
     if len(res) == 0:
         print("Course has no announcements.")
-        return
+        return courseAnns
 
     for a in res:
         courseAnns.append(getAnnouncement(a[0]))
