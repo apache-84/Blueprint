@@ -109,32 +109,41 @@ if __name__ == '__main__':
                         if (checkCourseID(courseRes) == True):
                             course = getCourse(courseRes)
                             cmd = -1
+                            print("Welcome to the course viewer for {c}!".format(c = course.getID()))
                             while cmd != '0':
-                                cmd = input("""Welcome to the course viewer for {c}!
-                                Type the following number to do the following action:
+                                cmd = input("""Type the following number to do the following action:
                                 0 - Leave the course viewer.
                                 1 - View course information (without description)
                                 2 - View course description
                                 3 - View course reviews
                                 4 - View course announcements
-                                """.format(c = course.getID()))
+                                """)
                                 
                                 match cmd:
                                     case '0':
                                         print("Thank you for using the course viewer! Going back to the main page.")
                                     case '1':
-                                        print("Course ID: ", course.getID())
-                                        print("Course Name: ", course.getName())
-                                        print("Recommended Hours Per Week: ", course.getHours())
-                                        print("Course Difficulty: ", course.getDifficulty())
-                                        print("Course Sections: ", course.getSections())
-                                        print("Recommended year: ", course.getRecYear())
-                                        print("Course Term: ", course.getTerm())
+                                        print("Course ID:", course.getID())
+                                        print("Course Name:", course.getName())
+                                        print("Recommended Hours Per Week:", course.getHours())
+                                        print("Course Difficulty:", course.getDifficulty())
+                                        print("Course Sections:", course.getSections())
+                                        print("Recommended year:", course.getRecYear())
+                                        print("Course Term:", course.getTerm())
                                     case '2':
-                                        print(course.getID(), "Course Description: \n", course.getDescription())
+                                        print(course.getID(), "Course Description: \n" + course.getDescription())
                                     case '3':
-                                        pass
+                                        reviewList = getReviewData(course.getID())
+
+                                        for review in reviewList:
+                                            print("ID:", review.getID())
+                                            print("Difficulty:", review.getDifficulty())
+                                            print("Recommended hours per week", review.getHours())
+                                            print("Review: \n" + review.getText())
+                                            print("\n")
+            
                                     case '4':
+                                        pass
                                     case _:
                                         print("Invalid command! Try again")
 
@@ -149,7 +158,7 @@ if __name__ == '__main__':
                             print("Course Term: ", course.getTerm())
                             
                         else:
-                            print("invalid search, please try another courseID: ")
+                            print("invalid search, courseID not found... Returning to main page. ")
                             
                     case '2':
                         s.selectCourse()
