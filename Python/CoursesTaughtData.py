@@ -1,4 +1,5 @@
 from Course import Course
+from CourseData import *
 from db_queries import *
 
 def getCoursesTaught(facID: int) -> list[Course]:
@@ -12,8 +13,9 @@ def getCoursesTaught(facID: int) -> list[Course]:
     sql = "select courseID from CoursesTaught where facultyID = ?"
     res = fetch_query(sql, facID)
     for course in res:
-        c = getCourse(course[0])
-        coursesTaught.append(c)
+        if checkCourseID(course[0]) == True:
+            c = getCourse(course[0])
+            coursesTaught.append(c)
     
     return coursesTaught
 

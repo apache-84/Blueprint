@@ -78,6 +78,8 @@ class Student():
                     print("You have already selected that course! Returning to main page.")
                     return
             self.selectedCourses.append(getCourse(cid))
+            print(cid, "added to your semester!")
+
         else:
             print("Course doesn't exist within the database! Try again..")
             return
@@ -93,7 +95,6 @@ class Student():
             print("Course doesn't exist within the database! Leaving review creator.")
             return
         
-        print(getStuReview(self.getID(), cid))
         if getStuReview(self.getID(), cid) is not None:
             print("You have already written a review for this course. Leaving review creator.")
             return
@@ -107,12 +108,19 @@ class Student():
         """
         Allows a student to edit one of their existing reviews for a course.
         """
-        cid = input("What course do you want to edit your review for? ")
+        cid = input("What course do you want to edit your review for? ").upper()
 
         r = getStuReview(self.getID(), cid)
         if r is None:
             print("You have not written a review for that course! Leaving review editor.")
             return
+        print("===== OLD REVIEW =====")
+        print("Course:", r.getCourse())
+        print("Difficulty:", r.getDifficulty())
+        print("Recommended hours per week", r.getHours())
+        print("Review: \n" + r.getText())
+        print("--------------------------------------------")
+
         command = -1
         while command != '0':
             command = input("""Review editor for your review of {course}: Type the following number to do the following action:

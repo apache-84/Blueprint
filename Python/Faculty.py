@@ -48,7 +48,7 @@ class FacultyMember():
         self.__password = password
         
     def setCourses(self, courses: list[Course]):
-        self.__coursesTaughts = courses
+        self.__coursesTaught = courses
 
     def addCourse(self):
         """
@@ -187,30 +187,46 @@ class FacultyMember():
         """
         Allows a faculty member to add a course to their profile under 'courses taught'. Gets added to CoursesTaught table in database.
         """
-        cid = input("Enter the course ID of the course you want to add to your taught courses: ")
+        # Checks if the course exists.
+        cid = input("Enter the course ID of the course you want to add to your taught courses: ").upper()
         if checkCourseID(cid) == False:
             print("Course", cid, "does not exist")
             return
-        
-        addCoursesTaught(self.getID(), cid)
-        print("Course succesfully added to your profile!!!")
-        
-    def removeCourseProfile(self):
-        """
-        Allows a faculty member to remove a course from their profile if it is already in their profile. Gets removed from CoursesTaught table in database.
-        """
-        
-        cid = input("Enter the course ID of the course you want to remove: ")
         
         # Checks if course ID is in their coursesTaught already.
         courseCheck = False
         for course in self.getCourses():
             if cid == course.getID():
                 courseCheck = True
+        if courseCheck == True:
+            print("Course", cid, "is already in your courses taught!")
+            return
+
+        self.__coursesTaught.append(getCourse(cid))
+        addCoursesTaught(self.getID(), cid)
+        print(cid, "succesfully added to your profile!")
+        
+    def removeCourseProfile(self):
+        """
+        Allows a faculty member to remove a course from their profile if it is already in their profile. Gets removed from CoursesTaught table in database.
+        """
+        
+        cid = input("Enter the course ID of the course you want to remove: ").upper()
+        
+        index = -1
+        # Checks if course ID is in their coursesTaught already.
+        courseCheck = False
+        for course in self.getCourses():
+            if cid == course.getID():
+                courseCheck = True
+                index = self.getCourses().index(course)
                 break
 
         if courseCheck == False:
-            print("Course", cid, "is not in your courses tauught!")
+            print("Course", cid, "is not in your courses taught!")
             return
-        
+
+        del self.__coursesTaught[index]
+
         delCoursesTaught(self.getID(), cid)
+        print(cid, "succesfully removed from your profile!")

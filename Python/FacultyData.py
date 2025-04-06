@@ -51,7 +51,6 @@ def loginFaculty() -> FacultyMember:
     user = input("Enter your username: ")
     sql = "select * from FacultyMembers where username = ?"
     res = fetch_query(sql, user)
-    print(res)
 
     if (len(res) == 0):
         print("An account with this username doesn't exist, want to register an account?")

@@ -19,7 +19,7 @@ def drop_tables():
     cursor.execute("DROP TABLE IF EXISTS Courses;")
     cursor.execute("DROP TABLE IF EXISTS Announcements;")
     cursor.execute("DROP TABLE IF EXISTS Reviews;")
-    cursor.execute("DROP TABLE IF EXISTS CourseTaught;")
+    cursor.execute("DROP TABLE IF EXISTS CoursesTaught;")
     cursor.execute("DROP TABLE IF EXISTS CourseEditHistory;")
     cursor.execute("DROP TABLE IF EXISTS AnnouncementReactions;")
 

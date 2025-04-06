@@ -24,7 +24,7 @@ def getStuReview(stuID: int, cid: str) -> Review:
     if len(res) == 0:
         return None
     res = res[0]
-    review = Review(res[0], res[1], res[2], res[3], res[4], res[6])
+    review = Review(res[0], res[1], res[2], res[3], res[4], res[5])
     return review
 
 def getReview(rID: int) -> Review:

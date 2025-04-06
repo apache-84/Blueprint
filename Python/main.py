@@ -43,10 +43,12 @@ if __name__ == '__main__':
             0 - End your session 
             1 - Display all courses
             2 - View a course
-            3 - Add a course to your courses taught
-            4 - Add a course
-            5 - Edit a course
-            6 - Create an announcement for a course
+            3 - Manage your taught courses
+            4 - View your taught courses
+            5 - Add a course
+            6 - Edit a course
+            7 - Create an announcement for a course
+            8 - View the announcements board
             """)
             match command:
                 case '0':
@@ -67,8 +69,8 @@ if __name__ == '__main__':
                             3 - View course reviews
                             4 - View course announcements
                             5 - Edit the information for this course
-                            6 - Make an announcement for this course.
-                            """).upper()
+                            6 - Make an announcement for this course
+                            """)
                             
                             match cmd:
                                 case '0':
@@ -110,27 +112,58 @@ if __name__ == '__main__':
                                     print("Invalid command! Try again.")
                     else:
                         print("invalid search, courseID not found... Returning to main page. ")
-                        
                 case '3': 
-                    addCourseTaught = input("Enter a course that you want to add to your profile for quick access: ").upper()              
-                    f.addCourseProfile(addCourseTaught)
-
+                    cmd = -1
+                    while cmd != '0':
+                        cmd = input("""Type the following number to do the following action:
+                            0 - Leave the taught courses manager
+                            1 - Add a course to your profile
+                            2 - Remove a course from your profile
+                            """)
+                        match cmd:
+                            case '0':
+                                print("Leaving the taught courses manager.")
+                            case '1':
+                                f.addCourseProfile()
+                            case '2':
+                                f.removeCourseProfile()
+                            case _:
+                                print("Invalid command! Try again.")
                 case '4':
-                    f.addCourse()
-                
+                    for course in f.getCourses():
+                        print("Course ID:", course.getID())
+                        print("Course Name:", course.getName())
+                        print("Recommended Hours Per Week:", course.getHours())
+                        print("Course Difficulty:", course.getDifficulty())
+                        print("Course Sections:", course.getSections())
+                        print("Recommended year:", course.getRecYear())
+                        print("Course Term:", course.getTerm())
+                        print("--------------------------------------------")
                 case '5':
+                    f.addCourse()
+                case '6':
                     editID = input("Enter the courseID of the course you would like to edit: ")
                     if (checkCourseID(editID) == True):
                         f.editCourse(editID)
                     else:
                         print("Invalid course ID, please try again. ")
                     
-                case '6':
+                case '7':
                     cid = input("What course is this announcement for (e.g. CSCI 260)? ").upper()
                     if checkCourseID(cid):
                         f.makeAnnouncement(cid)
                     else:
-                        print("Course doesn't exist within the database! Try again.")            
+                        print("Course doesn't exist within the database! Try again.")  
+                case '8':
+                    announcements = getAnnouncementBoard()
+
+                    for announcement in announcements:
+                        print("ID:", announcement.getAnnID())
+                        print("Course:", announcement.getCourse())
+                        print("Date:", announcement.getAnnDate())
+                        print("Announcement: \n" + announcement.getAnnText())
+                        print("Reaction rating:", announcement.getReactions())
+                        print("--------------------------------------------")                         
                 case _:
                     print("Invalid command! Try again.")
 
@@ -207,14 +240,15 @@ if __name__ == '__main__':
                                         print("--------------------------------------------")
 
                                 case '5':
-                                    s.selectedCourses.append(course.getID())
+                                    s.selectedCourses.append(course)
+                                    print(course.getID(), "added to your semester!")
                                 case _:
                                     print("Invalid command! Try again.")
                     else:
                         print("invalid search, courseID not found... Returning to main page. ")
                         
                 case '3':
-                    s.selectCourse()                      
+                    s.selectCourse()  
                 case '4':
                     if len(s.selectedCourses) == 0:
                         print("Select courses before calculating semester information (use action 3).")
@@ -243,7 +277,6 @@ if __name__ == '__main__':
                         
                 case '5':
                     s.makeReview()
-
                 case '6':
                     s.editReview()
                 case '7':
