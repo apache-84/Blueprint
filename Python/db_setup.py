@@ -4,7 +4,7 @@
 
 import sqlite3
 
-DB_FILE = "csci375team3.db"
+DB_FILE = "../Database/blueprintdb.db"
 
 
 def drop_tables():
@@ -132,7 +132,6 @@ def create_tables():
     conn.commit()
     conn.close()
 
-# note: basic command-line test for table existence: `sqlite3 csci375team3.db ".tables"`
 if __name__ == "__main__":
     create_tables()
     print("Database initialized. Have a nice day.")
