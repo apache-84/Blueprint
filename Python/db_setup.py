@@ -133,5 +133,6 @@ def create_tables():
     conn.close()
 
 if __name__ == "__main__":
+    drop_tables()
     create_tables()
     print("Database initialized. Have a nice day.")

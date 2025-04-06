@@ -1,4 +1,5 @@
 import sqlite3
+import hashlib
 
 DB_FILE = "../Database/blueprintdb.db"
 # (courseID, courseName, description, recommendHours, courseDifficulty, sections, reccommendedYear, term)
@@ -6,6 +7,7 @@ def insert():
         conn = sqlite3.connect(DB_FILE)
         cursor = conn.cursor()
         
+        # Courses dummy data
         cursor.executemany("""
                 INSERT INTO Courses 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -52,6 +54,25 @@ def insert():
                     ('CSCI 490','Independent Project ','A one-semester independent research and development project under faculty supervision. Includes required research and development as per an approved project proposal, and preparation of a written report detailing the results.', 0, 0,'All Sections',4,'Both'),
                     ('CSCI 491','Senior Research Project ','An opportunity for student experience in research and development under the supervision of a faculty member in Computing Science. Project duration is two academic terms during which time a student must develop an approved project proposal, carry out the required research and development, prepare a written report detailing results, and satisfy any additional requirements as specified in the approved project proposal.', 0, 0,'All Sections',4,'Both')
                 ])
+
+        # Student account dummy data
+        password1 = '123'
+        password2 = 'tacocat'
+        password3 = 'ilikepasswords'
+        password4 = 'iloveviu'
+        password5 = 'csci375sucks'
+
+        cursor.executemany("""
+                INSERT INTO Students
+                VALUES (?, ?, ?)
+                """, [
+                 (1, 'Luka', hashlib.sha256(password1.encode()).hexdigest()),
+                 (2, 'Lachlan', hashlib.sha256(password2.encode()).hexdigest()),
+                 (3, 'Casey', hashlib.sha256(password3.encode()).hexdigest()),
+                 (4, 'alphasigmaTobin', hashlib.sha256(password4.encode()).hexdigest()),
+                 (5, 'Brandon', hashlib.sha256(password5.encode()).hexdigest())
+                ])
+        
         conn.commit()
         conn.close()
 
