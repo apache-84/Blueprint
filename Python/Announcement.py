@@ -50,23 +50,16 @@ class Announcement():
     def setReactions(self, reactions: int):
         self.__reactions = reactions
 
-    def createAnnouncement(self):
+    def createAnnouncement(self, cid: str):
         """FOR TESTING PURPOSES ONLY: Creates an Announcement object
 
         Prompts user to enter a courseID for the course of the announcement, calls checkCourseID to ensure course exists in database,
         then prompts user to enter the announcement text,
         and then sets the announcement date to the current day
         """
-        # Get course section
-        while True:
-            cid = input("What course is this announcement for (e.g. CSCI 260)?").upper()
-
-            if checkCourseID(cid):
-                self.setCourse(cid)
-                break
-            else:
-                print("Course doesn't exist within the database! Try again.")
-                return
+        self.setCourse(cid)
+        
+        # Get text section
         while True:
             text = input("Enter the text to your announcement post, between 1-500 characters: ")
             if (len(text) < 1 or len(text) > 500):

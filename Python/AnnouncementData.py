@@ -15,8 +15,8 @@ def postAnnouncement(ann: Announcement, facID: int):
     cid = ann.getCourse()
     
     sql = "insert into Announcements values (?, ?, ?, ?, ?)"
-    fetch_query(sql, aid, text, date, cid, facID)
-    print("Announcement for ", cid, " posted to database!")
+    execute_query(sql, aid, text, date, cid, facID)
+    print("Announcement for", cid, "posted to database!")
 
 
 def getAnnouncement(annID: int) -> Announcement:
@@ -28,9 +28,9 @@ def getAnnouncement(annID: int) -> Announcement:
     """
     sql = "select * from Announcements where AnnouncementID = ?"
     res = fetch_query(sql, annID)
-    if len(res == 0):
-        print("Announcement with ID ", annID, " doesn't exist")
-        return
+    if len(res) == 0:
+        print("Announcement with ID", annID, "doesn't exist")
+        return None
 
     res = res[0]
     reactions = getReactions(annID)
@@ -48,17 +48,20 @@ def getReactions(annID: int) -> int:
     Should be called when an announcement is being retried, or when someone has reacted to it since it was constructed.
     :return: The reaction state of the announcement (total upvotes - total downvotes).
     """
-    sql = """select reaction, count(*) 
-          from AnnouncementReactions 
-          where AnnouncementID = ? 
-          group by reaction 
-          order by reaction desc"""
+    usql = """select count(*) 
+        from AnnouncementReactions 
+        where AnnouncementID = ? and reaction = 1
+        """
     
-    res = fetch_query(sql, annID)
-    upvotes = res[0][1]
-    downvotes = res[1][1]
-    
-    reactions = upvotes - downvotes
+    dsql = """select count(*) 
+        from AnnouncementReactions 
+        where AnnouncementID = ? and reaction = 0
+        """
+
+    upvotes = fetch_query(usql, annID)
+    downvotes = fetch_query(dsql, annID)
+
+    reactions = upvotes[0][0] - downvotes[0][0]
     
     return reactions
 
@@ -95,3 +98,29 @@ def updateEditHistory(facID: int, cid: str):
     execute_query(sql, cid, facID, editDate, desc)
     a = Announcement(getNextID(), desc, editDate, cid)
     postAnnouncement(a, facID)
+
+def getAnnouncementBoard() -> list[Announcement]:
+    sql = "select announcementID from Announcements order by AnnouncementDate desc, announcementID desc"
+    res = fetch_query(sql)
+
+    if len(res) == 0:
+        print("No announcements on the announcement board at this time.")
+
+    annBoard = []
+    i = 0
+    while i < 3 and i < len(res):
+        annBoard.append(getAnnouncement(res[i][0]))
+        i += 1
+    return annBoard
+
+def getCourseAnnouncements(cid: str) -> list[Announcement]:
+    courseAnns = []
+    sql = "select announcementID from Announcements where courseID = ?"
+    res = fetch_query(sql, cid)
+    if len(res) == 0:
+        print("Course has no announcements.")
+        return
+
+    for a in res:
+        courseAnns.append(getAnnouncement(a[0]))
+    return courseAnns

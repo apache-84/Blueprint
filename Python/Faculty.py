@@ -67,6 +67,7 @@ class FacultyMember():
         
         :param cid: The ID of the course whose information is being edited.
         """
+        editFlag = False
         command = -1
         c = getCourse(cid)
         while command != '0':
@@ -90,29 +91,34 @@ class FacultyMember():
                         print("Course ID is not of the correct format.")
                     else:
                         c.setID(newCid)
+                        editFlag = True
                 case '2': # Edit the course name
                     name = input("Enter the new name of the course in full (e.g. Topics in Computer Science): ")
                     if len(name) < 1 or len(name) > 50:
                         print("Course name is empty or too long, please retry.")  
                     else:
                         c.setName(name)
+                        editFlag = True
                 case '3': # Edit the course description
                     desc = input("Enter the new description of the course: ")
                     if (len(cid) > 1000):
                         print("Description is too long, description should be less than 1000 characters.")
                     else:
                         c.setDescription(desc)
+                        editFlag = True
                 case '4': # Edit the course sections
                     sections = input("Enter the new sections and schedule of a course (E.g. S25N01 - Mo We 11:30-13:00): ")
                     if (len(sections) < 1):
                         print("You must enter atleast one section.")
                     else:
                         c.setSections(sections)
+                        editFlag = True
                 case '5': # Edit the recommended year for the course
                     try:
                         year = int(input("Enter the new recommended year that this course be taken by students (1,2,3,4): "))
                         if (year >= 1 or year <= 4):
                             c.setRecYear(year)
+                            editFlag = True
                         else:
                             print("Invalid input, please enter a single digit number between 1-4.")
                     except ValueError:
@@ -126,11 +132,14 @@ class FacultyMember():
                                         """))
                         match term:
                             case 1:
-                                c.setTerm("Fall") 
+                                c.setTerm("Fall")
+                                editFlag = True 
                             case 2:
                                 c.setTerm("Spring")  
+                                editFlag = True
                             case 3:
-                                c.setTerm("Both")   
+                                c.setTerm("Both")
+                                editFlag = True
                             case _:
                                 print("Please select either 1, 2, or 3.")
                     except ValueError:
@@ -139,9 +148,9 @@ class FacultyMember():
                     print("Invalid input, try again!")
 
         # Update edit history and make announcement.
-        
-        updateCourse(c, cid)
-        updateEditHistory(self.getID(), cid)
+        if editFlag == True:
+            updateCourse(c, cid)
+            updateEditHistory(self.getID(), cid)
 
 
     def register(self):
@@ -166,12 +175,12 @@ class FacultyMember():
                 self.__password = hashlib.sha256(pWord.encode()).hexdigest()
                 break
         
-    def makeAnnouncement(self):
+    def makeAnnouncement(self, cid: str):
         """
         Allows a faculty member to make an announcement. Announcement gets posted to database.
         """
         a = Announcement()    
-        a.createAnnouncement()
+        a.createAnnouncement(cid)
         postAnnouncement(a, self.getID())
 
     def addCourseProfile(self):

@@ -36,7 +36,7 @@ def getReviews(stuID: int) -> list[Review]:
     reviews = fetch_query(sql, stuID)
     stuReviews = []
     for review in reviews:
-        stuReviews.append(getReview(review))
+        stuReviews.append(getReview(review[0]))
 
     return stuReviews
 

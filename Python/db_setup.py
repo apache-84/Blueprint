@@ -128,8 +128,6 @@ def create_tables():
             FOREIGN KEY (studentID) REFERENCES Students(studentID)
         );
     """) 
-    
-    cursor.execute("drop table if exists AnmouncementReactions")
 
     conn.commit()
     conn.close()

@@ -69,9 +69,14 @@ class Student():
         """
         cid = input("What course do you want to add to your semester? ").upper()
         if checkCourseID(cid):
+            for course in self.getSelCourses():
+                if cid == course.getID():
+                    print("You have already selected that course! Returning to main page.")
+                    return
             self.selectedCourses.append(getCourse(cid))
         else:
             print("Course doesn't exist within the database! Try again..")
+            return
     
     def makeReview(self):
         """

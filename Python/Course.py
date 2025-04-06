@@ -190,4 +190,3 @@ class Course():
         
         print("Course creation successful!")
         
-        
