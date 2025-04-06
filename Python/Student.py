@@ -83,7 +83,12 @@ class Student():
         if checkCourseID(cid) == False:
             print("Course doesn't exist within the database! Leaving review creator.")
             return
-            
+        
+        print(getStuReview(self.getID(), cid))
+        if getStuReview(self.getID(), cid) is not None:
+            print("You have already written a review for this course. Leaving review creator.")
+            return
+
         # Make review section
         review = Review()
         review.createReview()

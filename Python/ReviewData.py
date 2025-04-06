@@ -36,7 +36,6 @@ def getReview(rID: int) -> Review:
     :return: A Review object containing all of the review's information.
     """
     sql = "select * from Reviews where reviewID = ?"
-    print(fetch_query(sql, rID)) # remove later
     res = fetch_query(sql, rID)
     if len(res) == 0:
         return None
