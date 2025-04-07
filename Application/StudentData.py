@@ -123,8 +123,7 @@ def loginStudent() -> Student:
             ans = input("Y/N: ").upper()
             if ans == "Y":
                 registerStudent()
-                loginStudent()
-                return None
+                return loginStudent()
             elif ans == "N":
                 return None
     
@@ -139,7 +138,7 @@ def loginStudent() -> Student:
     
     if p != password:
         print("Incorrect password, login failed.")
-        return
+        return None
     
     print("Login for", username, "successful!")
     s = Student(id, username, password)

@@ -58,8 +58,7 @@ def loginFaculty() -> FacultyMember:
             ans = input("Y/N: ").upper()
             if ans == "Y":
                 registerFaculty()
-                loginFaculty()
-                return None
+                return loginFaculty()
             elif ans == "N":
                 return None
     
@@ -74,7 +73,7 @@ def loginFaculty() -> FacultyMember:
     
     if p != password:
         print("Incorrect password, login failed.")
-        return
+        return None
 
     print("Login for", username, "successful!")
     f = FacultyMember(id, username, password, getCoursesTaught(id))
