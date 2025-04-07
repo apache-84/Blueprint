@@ -10,6 +10,7 @@ def registerStudent():
     """
     Asks the student for their username and password, hashes the password, gets the next available student ID, and stores it to the database.
     """
+    print('===== REGISTER ACCOUNT =====')
     s = Student()
     s.register()
 
@@ -113,6 +114,7 @@ def loginStudent() -> Student:
     
     :return s: The student object of the logged in student.
     """
+    print("===== LOG IN =====")
     user = input("Enter your username: ")
     sql = "select * from Students where username = ?"
     res = fetch_query(sql, user)

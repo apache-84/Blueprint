@@ -8,6 +8,7 @@ def registerFaculty():
     """
     Asks the faculty member for their username and password, hashes the password, gets the next available faculty ID, and stores it to the database.
     """
+    print('===== REGISTER ACCOUNT =====')
     f = FacultyMember()
     f.register()
 
@@ -48,6 +49,7 @@ def loginFaculty() -> FacultyMember:
     
     :return: The faculty member object of the logged in faculty member.
     """
+    print("===== LOG IN =====")
     user = input("Enter your username: ")
     sql = "select * from FacultyMembers where username = ?"
     res = fetch_query(sql, user)
