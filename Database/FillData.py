@@ -66,28 +66,28 @@ def insert():
             VALUES (?, ?, ?)
             """, [
                 (1, 'Luka', hashlib.sha256(password1.encode()).hexdigest()),
-                (2, 'Lachlan', hashlib.sha256(password2.encode()).hexdigest()),
-                (3, 'Casey', hashlib.sha256(password3.encode()).hexdigest()),
+                (2, 'excellentstudent12', hashlib.sha256(password2.encode()).hexdigest()),
+                (3, 'c0dingprodigy', hashlib.sha256(password3.encode()).hexdigest()),
                 (4, 'alphasigmaTobin', hashlib.sha256(password4.encode()).hexdigest()),
-                (5, 'Brandon', hashlib.sha256(password5.encode()).hexdigest())
+                (5, 'Casey', hashlib.sha256(password5.encode()).hexdigest())
             ])
     
     # Faculty member account dummy data
     password1 = '123'
-    password2 = 'tacocat'
-    password3 = 'ilikepasswords'
+    password2 = 'codinggod'
+    password3 = 'grrr'
     password4 = 'iloveviu'
-    password5 = 'csci375sucks'
+    password5 = 'ihatestudents'
 
     cursor.executemany("""
             INSERT INTO FacultyMembers
             VALUES (?, ?, ?)
             """, [
                 (1, 'Luka', hashlib.sha256(password1.encode()).hexdigest()),
-                (2, 'Lachlan', hashlib.sha256(password2.encode()).hexdigest()),
-                (3, 'Casey', hashlib.sha256(password3.encode()).hexdigest()),
+                (2, 'c0mpu73r0ov3rl0rd9000', hashlib.sha256(password2.encode()).hexdigest()),
+                (3, 'angryprofessor89', hashlib.sha256(password3.encode()).hexdigest()),
                 (4, 'alphasigmaTobin', hashlib.sha256(password4.encode()).hexdigest()),
-                (5, 'Brandon', hashlib.sha256(password5.encode()).hexdigest())
+                (5, 'TheLyncher', hashlib.sha256(password5.encode()).hexdigest())
             ]) 
 
     # Review dummy data

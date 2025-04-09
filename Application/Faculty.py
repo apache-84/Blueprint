@@ -159,9 +159,9 @@ class FacultyMember():
         """
         # Get the username
         while True:
-            user = input("Enter a username between 1-20 digits: ")
+            user = input("Enter a username between 1-20 characters: ")
             if len(user) == 0 or len(user) > 20:
-                print("Username is not between 1-20, please try again")
+                print("Username is not between 1-20 characters, please try again")
             else:
                 self.__username = user
                 break
