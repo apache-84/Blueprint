@@ -56,6 +56,9 @@ class Course():
         return self.__term
     
     # Setter methods:    
+    def setID(self, cid: str):
+        self.__id = cid
+
     def setName(self, name: str):
         self.__name = name
         
@@ -86,7 +89,10 @@ class Course():
         This function should be used when instantiating a course or whenever a review of the course is written.
         :param rs: The list of all reviews for a course.
         """
-
+        
+        if len(rs) == 0:
+            return
+        
         # Get difficulty
         dsum = 0.0
         for review in rs:
@@ -101,8 +107,8 @@ class Course():
         
         hours = hsum / len(rs)
 
-        self.setDifficulty(diff)
-        self.setHours(hours)
+        self.setDifficulty(round(diff, 1))
+        self.setHours(round(hours, 1))
         
     def createCourse(self):
         """TO BE USED FOR TESTING:
@@ -113,16 +119,16 @@ class Course():
         # Get course ID
         while True:
             cid = input("Enter a course ID (e.g. CSCI 260): ").upper()
-            if (len(cid) < 1 or len(cid) > 10):
+            if len(cid) < 1 or len(cid) > 10:
                 print("Course ID is not of the correct format.")
             else:
-                self.__id = cid
+                self.setID(cid)
                 break
         
         # Get course name
         while True:
             name = input("Enter the name of the course in full (e.g. Topics in Computer Science): ")
-            if (len(name) < 1 or len(name) > 50 ):
+            if len(name) < 1 or len(name) > 50:
                 print("Course name is empty or too long, please retry.")
             
             else:
@@ -151,7 +157,7 @@ class Course():
         while True:
             try:
                 year = int(input("Enter the recommended year that this course be taken by students (1,2,3,4): "))
-                if (year >= 4 or year <= 4):
+                if (year >= 1 or year <= 4):
                     self.setRecYear(year)
                     break
                 else:
@@ -167,20 +173,20 @@ class Course():
                                 2 - Spring
                                 3 - Both
                                 """))
-                if (term < 1 or term > 3):
-                    print("Please select either 1, 2, or 3")
-                else:
-                    match term:
-                        case 1:
-                            self.setTerm("Fall")
-                        case 2:
-                            self.setTerm("Spring")
-                        case 3:
-                            self.setTerm("Both") 
-                    break      
+                match term:
+                    case 1:
+                        self.setTerm("Fall")
+                        break   
+                    case 2:
+                        self.setTerm("Spring")
+                        break   
+                    case 3:
+                        self.setTerm("Both") 
+                        break   
+                    case _:
+                        print("Please select either 1, 2, or 3.")
             except ValueError:
                 print("Value is of incorrect data type, try again.")
         
         print("Course creation successful!")
-        
         
