@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meow</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+ 
+    <div class="sidebar"> <!-- Sidebar Div -->
+        <div class="top">
+          <div class="logo">
+            <i class="bx bx-clipboard"></i>  <!-- Icon --> 
+            <span>Blueprint</span> <!-- Logo Text -->
+          </div>
+          <i class="bx bx-menu" id="btn"></i> <!-- Menu Icon "Three Lines" --> 
+        </div>
+        <div class="user">
+          <img src="Images/Meowmeow.jpeg" alt="me" class="user-img"> <!-- User Image, Eventually need to let user edit these -->
+          <div>
+            <p class="bold">Kawal</p> <!-- User Name -->
+            <p>Faculty</p>
+          </div>
+        </div>
+      <ul> <!-- Sidebar Menu Start of Items and such on left and hovers, first span are icons title and second span is hover -->
+        <li>
+          <a href="#"> 
+            <i class="bx bx-home"></i>
+            <span class="nav-item">Home</span>
+          </a>
+          <span class="tooltip">Home</span>
+        </li>
+          <li>
+          <a href="#"> 
+            <i class="bx bx-calculator"></i>
+            <span class="nav-item">Calculator</span>
+          </a>
+          <span class="tooltip">Calculator</span>
+        </li>
+          <li>
+          <a href="#"> 
+            <i class="bx bx-comment-check"></i>
+            <span class="nav-item">Reviews</span>
+          </a>
+          <span class="tooltip">Reviews</span>
+        </li>
+          <li>
+          <a href="#"> 
+            <i class="bx bxs-info-square"></i>
+            <span class="nav-item">About</span>
+          </a>
+          <span class="tooltip">About</span>
+        </li>
+          <li>
+          <a href="#"> 
+            <i class="bx bx-cog"></i>
+            <span class="nav-item">Settings</span>
+          </a>
+          <span class="tooltip">Settings</span>
+        </li>
+          <li>
+          <a href="#"> 
+            <i class="bx bxs-log-out"></i>
+            <span class="nav-item">Logout</span>
+          </a>
+          <span class="tooltip">Logout</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <div class="container">
+        <h1>Welcome to the Meow App</h1>
+        <h1>Meow Meow Meow</h1>
+      </div>
+    </div>
+
+</body>
+
+<script>
+  let btn = document.querySelector('#btn') /*Selects the menu button*/
+  let sidebar = document.querySelector('.sidebar') /*Selects the sidebar*/
+
+  btn.onclick = function() { /*When the button is clicked*/
+    sidebar.classList.toggle('active') /*Toggle the active class on the sidebar*/
+  } /*End of function*/
+</script>
+
+</html>
