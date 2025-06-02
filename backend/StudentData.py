@@ -71,7 +71,7 @@ def loginStudent(username: str, password: str) -> Student:
         raise UsernameNotFoundError("An account with that username doesn't exist.")
     else:
         if checkPassword(username, password):
-            sql = "select stuID from Students where username = ?"
+            sql = "select studentID from Students where username = ?"
             stuID = fetch_query(sql, username)[0][0]
             return Student(stuID, username, password)
         else:

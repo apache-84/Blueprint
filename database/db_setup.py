@@ -4,7 +4,7 @@
 
 import sqlite3
 
-DB_FILE = "../Database/blueprintdb.db"
+DB_FILE = "database/blueprintdb.db"
 
 
 def drop_tables():

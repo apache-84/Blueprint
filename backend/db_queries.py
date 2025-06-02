@@ -14,7 +14,7 @@ print(usernames)
 
 import sqlite3
 
-DB_FILE = "../Database/blueprintdb.db"
+DB_FILE = "database/blueprintdb.db"
 
 def execute_query(query, *params):
     """Executes a given SQL query with parameters and commits."""

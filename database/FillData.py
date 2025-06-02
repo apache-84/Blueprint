@@ -1,7 +1,7 @@
 import sqlite3
 import hashlib
 
-DB_FILE = "../Database/blueprintdb.db"
+DB_FILE = "database/blueprintdb.db"
 def insert():
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
