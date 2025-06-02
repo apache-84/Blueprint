@@ -6,26 +6,52 @@ from .AnnouncementData import getReactions, getAnnouncement
 import hashlib
 import time
 
-def registerStudent():
+"""
+Inputs student with given ID's account info into database.
+"""
+def updateStudent(stuID: int, username: str, password: str):
+    sql = "update Students set username = ?, password = ? where studentID = ?"
+    execute_query(sql, username, password, stuID)
+
+"""
+Checks if a student member account with username exists. Returns true if username isn't taken, false if it is.
+"""
+
+def checkUsername(username: str) -> bool:
+    sql = "select * from Students where username = ?"
+    res = fetch_query(sql, username)
+
+    return len(res) == 0
+
+"""
+Checks if a student member account with a given username gave the correct password. True if correct, false if not.
+"""
+
+def checkPassword(username: str, password: str) -> bool:
+    # Hash the password
+    p = hashlib.sha256(password.encode()).hexdigest()
+
+    # Get other password from db
+    sql = "select password from Students where username = ?"
+    res = fetch_query(sql, username)
+    DBPassword = res[0][0]
+
+    return p == DBPassword
+
+
+def registerStudent(username: str, password: str):
     """
     Asks the student for their username and password, hashes the password, gets the next available student ID, and stores it to the database.
+    Makes a student object in the process.
     """
-    print('===== REGISTER ACCOUNT =====')
     s = Student()
-    s.register()
 
     s.setID(getNextID())
+    s.setUsername(username)
+    s.setPassword(password)
 
     sql = "insert into Students values (?, ?, ?)"
-
-    # FAKE IT UNTIL YOU MAKE IT
-    stunum = input("Enter your student number: ")
-    print("Waiting for", stunum, "to sign in to VIU student database...")
-    time.sleep(5)
-    print("Student verified!")
-
     execute_query(sql, s.getID(), s.getUsername(), s.getPassword())
-    print("Student registered to database!")
 
 def getReviews(stuID: int) -> list[Review]:
     """
@@ -108,44 +134,20 @@ def updateReaction(stuID: int, annID: int, reaction: int):
     # Update announcement's reactions by reconstructing the object.
     a = getAnnouncement(annID)
      
-def loginStudent() -> Student:
+def loginStudent(username: str, password: str) -> Student:
     """
-    Interactive login for a student. Prompts student for their username and password. If student doesn't have a username in database, prompts them to register a new account.
-    
-    :return s: The student object of the logged in student.
     """
-    print("===== LOG IN =====")
-    user = input("Enter your username: ")
-    sql = "select * from Students where username = ?"
-    res = fetch_query(sql, user)
-
-    if (len(res) == 0):
-        print("An account with this username doesn't exist, want to register an account?")
-        while True:
-            ans = input("Y/N: ").upper()
-            if ans == "Y":
-                registerStudent()
-                return loginStudent()
-            elif ans == "N":
-                return None
+    if checkUsername(username) == True:
+        print("An account with that username doesn't exist.")
+    else:
+        if checkPassword(username, password):
+            sql = "select stuID from Students where username = ?"
+            stuID = fetch_query(sql, username)[0][0]
+            s = Student(stuID, username, password)
+            return s
+        else:
+            print("Password is incorrect.")
     
-    res = res[0]
-    
-    id = res[0]
-    username = res[1]
-    password = res[2]
-
-    pWord = input("Enter your password: ")
-    p = hashlib.sha256(pWord.encode()).hexdigest()
-    
-    if p != password:
-        print("Incorrect password, login failed.")
-        return None
-    
-    print("Login for", username, "successful!")
-    s = Student(id, username, password)
-    
-    return s
 
 if __name__ == '__main__':
     loginStudent()
