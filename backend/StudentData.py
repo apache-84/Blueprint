@@ -38,21 +38,40 @@ def checkPassword(username: str, password: str) -> bool:
 
     return p == DBPassword
 
-
 def registerStudent(username: str, password: str):
     """
     Asks the student for their username and password, hashes the password, gets the next available student ID, and stores it to the database.
     Makes a student object in the process.
     """
-    s = Student()
 
-    s.setID(getNextID())
-    s.setUsername(username)
-    s.setPassword(password)
+    if checkUsername(username):
+        s = Student()
+        s.setID(getNextID())
+        s.setUsername(username)
+        s.setPassword(password)
 
-    sql = "insert into Students values (?, ?, ?)"
-    execute_query(sql, s.getID(), s.getUsername(), s.getPassword())
-
+        sql = "insert into Students values (?, ?, ?)"
+        execute_query(sql, s.getID(), s.getUsername(), s.getPassword())
+        return s
+    else:
+        print("Account with this username already exists.")
+    
+    return
+      
+def loginStudent(username: str, password: str) -> Student:
+    """
+    """
+    if checkUsername(username) == True:
+        print("An account with that username doesn't exist.")
+    else:
+        if checkPassword(username, password):
+            sql = "select stuID from Students where username = ?"
+            stuID = fetch_query(sql, username)[0][0]
+            s = Student(stuID, username, password)
+            return s
+        else:
+            print("Password is incorrect.")
+    
 def getReviews(stuID: int) -> list[Review]:
     """
     Returns a list of all the Review objects a student has written.
@@ -133,21 +152,3 @@ def updateReaction(stuID: int, annID: int, reaction: int):
 
     # Update announcement's reactions by reconstructing the object.
     a = getAnnouncement(annID)
-     
-def loginStudent(username: str, password: str) -> Student:
-    """
-    """
-    if checkUsername(username) == True:
-        print("An account with that username doesn't exist.")
-    else:
-        if checkPassword(username, password):
-            sql = "select stuID from Students where username = ?"
-            stuID = fetch_query(sql, username)[0][0]
-            s = Student(stuID, username, password)
-            return s
-        else:
-            print("Password is incorrect.")
-    
-
-if __name__ == '__main__':
-    loginStudent()
