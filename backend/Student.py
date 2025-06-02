@@ -84,6 +84,8 @@ class Student():
             print("Course doesn't exist within the database! Try again..")
             return
     
+    # TURN THIS INTO A FORM
+
     def makeReview(self):
         """
         FOR TESTING PURPOSES ONLY: Allows student to input a course ID and write a review for the course.
@@ -103,6 +105,8 @@ class Student():
         review = Review()
         review.createReview()
         writeReview(review, cid, self.getID())
+
+    # TURN THIS INTO A FORM
 
     def editReview(self):
         """
@@ -163,25 +167,3 @@ class Student():
 
         updateReview(r, self.getID())
                 
-    def register(self):
-        """
-        Allows a student to input their username and password for account registration.
-        """
-
-        # Get the username
-        while True:
-            user = input("Enter a username between 1-20 characters: ")
-            if len(user) == 0 or len(user) > 20:
-                print("Username is not between 1-20 characters, please try again")
-            else:
-                self.__username = user
-                break
-        # Get the password        
-        while True:
-            pWord = input("Enter a password: ")
-            if len(pWord) == 0:
-                print("Password must be longer than 0 characters!")
-            else:
-                self.__password = hashlib.sha256(pWord.encode()).hexdigest()
-                break
-      

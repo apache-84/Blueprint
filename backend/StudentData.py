@@ -2,32 +2,37 @@ from .Student import Student
 from .db_queries import *
 from .ReviewData import getReview
 from .Review import Review
-from .AnnouncementData import getReactions, getAnnouncement
+from .AnnouncementData import getAnnouncement
 import hashlib
 import time
 
-"""
-Inputs student with given ID's account info into database.
-"""
+# Error classes
+
+class UsernameNotFoundError(Exception): pass
+class IncorrectPasswordError(Exception): pass
+
 def updateStudent(stuID: int, username: str, password: str):
+    """
+    Inputs student with given ID's account info into database.
+    """
     sql = "update Students set username = ?, password = ? where studentID = ?"
     execute_query(sql, username, password, stuID)
 
-"""
-Checks if a student member account with username exists. Returns true if username isn't taken, false if it is.
-"""
 
 def checkUsername(username: str) -> bool:
+    """
+    Checks if a student member account with username exists. Returns true if username isn't taken, false if it is.
+    """
     sql = "select * from Students where username = ?"
     res = fetch_query(sql, username)
 
     return len(res) == 0
 
-"""
-Checks if a student member account with a given username gave the correct password. True if correct, false if not.
-"""
 
 def checkPassword(username: str, password: str) -> bool:
+    """
+    Checks if a student member account with a given username gave the correct password. True if correct, false if not.
+    """
     # Hash the password
     p = hashlib.sha256(password.encode()).hexdigest()
 
@@ -40,6 +45,8 @@ def checkPassword(username: str, password: str) -> bool:
 
 def registerStudent(username: str, password: str):
     """
+    Helper function for student registration.
+
     Asks the student for their username and password, hashes the password, gets the next available student ID, and stores it to the database.
     Makes a student object in the process.
     """
@@ -55,22 +62,20 @@ def registerStudent(username: str, password: str):
         return s
     else:
         print("Account with this username already exists.")
-    
-    return
       
 def loginStudent(username: str, password: str) -> Student:
     """
+    Helper function for student login.
     """
     if checkUsername(username) == True:
-        print("An account with that username doesn't exist.")
+        raise UsernameNotFoundError("An account with that username doesn't exist.")
     else:
         if checkPassword(username, password):
             sql = "select stuID from Students where username = ?"
             stuID = fetch_query(sql, username)[0][0]
-            s = Student(stuID, username, password)
-            return s
+            return Student(stuID, username, password)
         else:
-            print("Password is incorrect.")
+            raise IncorrectPasswordError("Password is incorrect.")
     
 def getReviews(stuID: int) -> list[Review]:
     """

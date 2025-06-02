@@ -16,7 +16,6 @@ def postAnnouncement(ann: Announcement, facID: int):
     
     sql = "insert into Announcements values (?, ?, ?, ?, ?)"
     execute_query(sql, aid, text, date, cid, facID)
-    print("Announcement for", cid, "posted to database!")
 
 
 def getAnnouncement(annID: int) -> Announcement:
