@@ -24,5 +24,4 @@ def register():
         password = registerForm.password.data
         userType = registerForm.userType.data
 
-
     return render_template("register.html", registerForm = registerForm)
