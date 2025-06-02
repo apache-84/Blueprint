@@ -9,6 +9,7 @@ import time
 # Error classes
 
 class UsernameNotFoundError(Exception): pass
+class UsernameTakenError(Exception): pass
 class IncorrectPasswordError(Exception): pass
 
 def updateStudent(stuID: int, username: str, password: str):
@@ -61,7 +62,7 @@ def registerStudent(username: str, password: str):
         execute_query(sql, s.getID(), s.getUsername(), s.getPassword())
         return s
     else:
-        print("Account with this username already exists.")
+        raise UsernameTakenError("Account with this username already exists.")
       
 def loginStudent(username: str, password: str) -> Student:
     """
