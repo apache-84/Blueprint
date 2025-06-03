@@ -6,6 +6,31 @@
   <title>Document</title>
 </head>
 <body>
-  test
+
+ <form method="POST" action="{{ url_for('register') }}">
+  {{ registerForm.hidden_tag() }}
+
+  <p>
+    {{ registerForm.username.label }}<br>
+    {{ registerForm.username(size=32) }}
+  </p>
+
+  <p>
+    {{ registerForm.userType.label }}<br>
+    {% for subfield in registerForm.userType %}
+      <label>
+        {{ subfield() }} {{ subfield.label.text }}
+      </label><br>
+    {% endfor %}
+  </p>
+
+  <p>
+    {{ registerForm.password.label }}<br>
+    {{ registerForm.password(size=32) }}
+  </p>
+
+  <p>{{ registerForm.submit() }}</p>
+</form>
+
 </body>
 </html>

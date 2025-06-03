@@ -9,22 +9,19 @@ from backend.StudentData import *
 from backend.Faculty import *
 from backend.FacultyData import *
 from backend.CoursesTaughtData import *
+from database.db_setup import *
 #from frontend.forms import *
-from flask import Flask, render_template, request, url_for, redirect, session
+from flask import Flask, render_template, request, url_for, redirect, session, flash
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, PasswordField
+from wtforms import StringField, SubmitField, TextAreaField, PasswordField, BooleanField, RadioField
 from wtforms.validators import DataRequired, Length
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "secretkeyoooooo"
 
-#move this later back to forms.py
-#class RegistrationForm(FlaskForm):
-#    username = StringField("Username", validators=[Length(min=2, max=20)])
-#    userType = [("Student", "S"), ("Faculty", "F")]
-#    password = PasswordField("Password", validators=[DataRequired(), Length(min=6)])
-#    register = SubmitField("Register Account")
+DB_FILE = "database/blueprintdb.db"
 
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[Length(min=2, max=20)])
@@ -33,10 +30,9 @@ class LoginForm(FlaskForm):
 
 class RegistrationForm(FlaskForm):
     username = StringField("Username", validators=[Length(min=2, max=20)])
-    userType = [("Student", "S"), ("Faculty", "F")]
+    userType = RadioField("Registering as", choices=[("S", "Student"), ("F", "Faculty")], validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=2)])
     submit = SubmitField("Register Account")
-
 
 @app.route('/', methods=["GET", "POST"])
 def index():
@@ -46,13 +42,56 @@ def index():
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
-    registerForm = RegistrationForm()
 
-    if registerForm.validate_on_submit():
+    registerForm = RegistrationForm()
+    user_type = registerForm.userType.data
+
+    if registerForm.validate_on_submit(): #we want a way to check if s or f called to insert for faculty or student query
         username = registerForm.username.data
         password = registerForm.password.data
-        registerForm = registerForm
-    return render_template("register.html", registerForm = registerForm)
+        user_type = registerForm.userType.data #boolean for student or faculty
+
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
+
+        if user_type == "S":
+          cursor.execute("INSERT INTO Students (username, password) VALUES (?, ?)", (username, password))
+          user_id = cursor.lastrowid           
+        elif user_type == "F":
+          cursor.execute("INSERT INTO FacultyMembers (username, password) VALUES (?, ?)", (username, password))
+          user_id = cursor.lastrowid
+        else:
+            flash("Invalid user type selected. Please choose Student or Faculty.", "danger")
+            return render_template("register.html", registerForm=registerForm)
+        
+        conn.commit()
+       
+        flash(f"Registration successful! Your user ID is {user_id}", "success")
+        return redirect(url_for("login"))  # Change to your actual login route
+
+    except sqlite3.IntegrityError:
+            flash("Username already exists.", "warning")
+    finally:
+            conn.close()
+
+
+    return render_template("register.html", registerForm=registerForm)
+
+@app.route('/list_users', methods=['GET'])
+def list_users():
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM Students")
+    students = cursor.fetchall()
+
+    cursor.execute("SELECT * FROM FacultyMembers")
+    faculty = cursor.fetchall()
+
+    conn.close()
+
+    return render_template("list_users.html", students=students, faculty=faculty)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -70,7 +109,6 @@ def login():
             loginForm.password.errors.append(str(e))
     
     return render_template("login.html", loginForm = loginForm)
-
 
 
 if __name__ == '__main__':

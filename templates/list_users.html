@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>All Users</title>
+</head>
+<body>
+    <h1>Students</h1>
+    {% if students %}
+        <ul>
+        {% for student in students %}
+            <li>ID: {{ student[0] }}, Username: {{ student[1] }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No students found.</p>
+    {% endif %}
+
+    <h1>Faculty Members</h1>
+    {% if faculty %}
+        <ul>
+        {% for f in faculty %}
+            <li>ID: {{ f[0] }}, Username: {{ f[1] }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No faculty members found.</p>
+    {% endif %}
+</body>
+</html>
