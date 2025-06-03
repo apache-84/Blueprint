@@ -13,6 +13,9 @@
   <p>
     {{ registerForm.username.label }}<br>
     {{ registerForm.username(size=32) }}
+    {% for error in registerForm.username.errors %}
+      <span style="color: red;">{{ error }}</span>
+    {% endfor %}
   </p>
 
   <p>
@@ -27,6 +30,9 @@
   <p>
     {{ registerForm.password.label }}<br>
     {{ registerForm.password(size=32) }}
+    {% for error in registerForm.password.errors %}
+      <span style="color: red;">{{ error }}</span>
+    {% endfor %}
   </p>
 
   <p>{{ registerForm.submit() }}</p>

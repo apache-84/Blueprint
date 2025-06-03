@@ -27,7 +27,10 @@ def checkUsername(username: str) -> bool:
     sql = "select * from Students where username = ?"
     res = fetch_query(sql, username)
 
-    return len(res) == 0
+    if len(res) == 0:
+        return True
+
+    return False
 
 
 def checkPassword(username: str, password: str) -> bool:
@@ -52,7 +55,7 @@ def registerStudent(username: str, password: str):
     Makes a student object in the process.
     """
 
-    if checkUsername(username):
+    if checkUsername(username) == True:
         s = Student()
         s.setID(getNextID())
         s.setUsername(username)

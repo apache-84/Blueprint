@@ -47,36 +47,29 @@ def register():
     user_type = registerForm.userType.data
 
     if registerForm.validate_on_submit(): #we want a way to check if s or f called to insert for faculty or student query
-        username = registerForm.username.data
-        password = registerForm.password.data
-        user_type = registerForm.userType.data #boolean for student or faculty
+        try:
+            username = registerForm.username.data
+            password = registerForm.password.data
+            user_type = registerForm.userType.data # boolean for student or faculty
 
-    try:
-        conn = sqlite3.connect(DB_FILE)
-        cursor = conn.cursor()
+            if user_type == "S":
+                student = registerStudent(username, password)
+                # Make a cookie to store user's ID, name, and type.      
+                session['user_id'] = student.getID()
+                session['user_name'] = student.getUsername()
+                session['user_type'] = "S"
+                return redirect(url_for("index"))  # Change back to home page
+            elif user_type == "F":
+                pass
+                # registerFaculty()
+            else:
+                flash("Invalid user type selected. Please choose Student or Faculty.", "danger")
+                return render_template("register.html", registerForm = registerForm)
+        except UsernameTakenError as e: 
+            registerForm.username.errors.append(str(e))
+        flash(f"Registration for {session['user_name']} successful!")
 
-        if user_type == "S":
-          cursor.execute("INSERT INTO Students (username, password) VALUES (?, ?)", (username, password))
-          user_id = cursor.lastrowid           
-        elif user_type == "F":
-          cursor.execute("INSERT INTO FacultyMembers (username, password) VALUES (?, ?)", (username, password))
-          user_id = cursor.lastrowid
-        else:
-            flash("Invalid user type selected. Please choose Student or Faculty.", "danger")
-            return render_template("register.html", registerForm=registerForm)
-        
-        conn.commit()
-       
-        flash(f"Registration successful! Your user ID is {user_id}", "success")
-        return redirect(url_for("login"))  # Change to your actual login route
-
-    except sqlite3.IntegrityError:
-            flash("Username already exists.", "warning")
-    finally:
-            conn.close()
-
-
-    return render_template("register.html", registerForm=registerForm)
+    return render_template("register.html", registerForm = registerForm)
 
 @app.route('/list_users', methods=['GET'])
 def list_users():
@@ -100,8 +93,9 @@ def login():
     if loginForm.validate_on_submit():
         try:
             student = loginStudent(loginForm.username.data, loginForm.password.data)
-            session['student_id'] = student.getID()
-            session['student_id'] = student.getUsername()
+            session['user_id'] = student.getID()
+            session['user_name'] = student.getUsername()
+            session['user_type'] = "S"
             return redirect(url_for('index'))
         except UsernameNotFoundError as e:
             loginForm.username.errors.append(str(e))
