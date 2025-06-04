@@ -24,27 +24,47 @@
   <button>Nav bar test</button>
 </a>
 
-<div class="main-content">
-  <div class="cards">
-    <div class="card">
-      <div class="card__content">
-        <div><strong>Course: </strong><span>CSCI 101</span></div>
-        <div><strong>Title: </strong><span>Introduction to Python</span></div>
-        <div><strong>Available Terms: </strong><span>Fall</span></div>
-        <div><strong>Recommended Year: </strong><span>2</span></div>
-        <div><strong>Hours: </strong><span>3-5 hours per week</span></div>
-        <div><strong>Difficulty: </strong><span>🟢 Easy</span></div>
+<div class="courses">
+  <div class="card">
+    <div class="card__content">
+      <div><strong>Course: </strong><span>CSCI 101</span></div>
+      <div><strong>Title: </strong><span>Introduction to Python</span></div>
+      <div><strong>Available Terms: </strong><span>Fall</span></div>
+      <div><strong>Recommended Year: </strong><span>2</span></div>
+      <div><strong>Hours: </strong><span>3-5 hours per week</span></div>
+      <div><strong>Difficulty: </strong><span>🟢 Easy</span></div>
+    </div>
+    <div class="card__info">
+      <div>
+        <i class="bx bx-comment-check"> Reviews: </i> 3
       </div>
-      <div class="card__info">
-        <div>
-          <i class="bx bx-comment-check"> Reviews: </i> 3
-        </div>
-        <div>
-          <a href="./" class="card__link">View Class</a>
-        </div> 
-      </div>
+      <div>
+        <a href="./" class="card__link">View Class</a>
+      </div> 
     </div>
   </div>
+
+  { % for course in courses % }
+  <div class="card">
+    <div class="card__content">
+      <div><strong>Course: </strong><span>CSCI 101</span></div>
+      <div><strong>Title: </strong><span>Introduction to Python</span></div>
+      <div><strong>Available Terms: </strong><span>Fall</span></div>
+      <div><strong>Recommended Year: </strong><span>2</span></div>
+      <div><strong>Hours: </strong><span>3-5 hours per week</span></div>
+      <div><strong>Difficulty: </strong><span>🟢 Easy</span></div>
+    </div>
+    <div class="card__info">
+      <div>
+        <i class="bx bx-comment-check"> Reviews: </i> 3
+      </div>
+      <div>
+        <a href="./" class="card__link">View Class</a>
+      </div> 
+    </div>
+  </div>
+  { % endfor % }
+
 </div>
 
 {% endblock %}

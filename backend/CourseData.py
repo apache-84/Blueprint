@@ -128,15 +128,14 @@ def checkCourseID(cid: str) -> bool:
     return True
 
 
-def displayCourses():
-    sql = "select courseID from Courses"
+def getAllCourses() -> list[Course]:
+    courses = []
 
+    sql = "select courseID from Courses"
     res = fetch_query(sql)
 
     for cid in res:
         c = getCourse(cid[0])
-        print("ID:", c.getID())
-        print("Name:", c.getName())
-        print("Difficulty:", c.getDifficulty())
-        print("Hours:", c.getHours())
-        print("--------------------------------------------")
+        courses.append(c)
+    
+    return courses
