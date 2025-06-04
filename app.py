@@ -17,7 +17,7 @@ from wtforms import StringField, SubmitField, TextAreaField, PasswordField, Bool
 from wtforms.validators import DataRequired, Length
 from werkzeug.security import generate_password_hash, check_password_hash
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='frontend/templates', static_folder='frontend/static')
 
 app.config["SECRET_KEY"] = "secretkeyoooooo"
 
@@ -103,6 +103,12 @@ def login():
             loginForm.password.errors.append(str(e))
     
     return render_template("login.html", loginForm = loginForm)
+
+
+@app.route('/nav', methods=['GET'])
+def navbartest():  
+    return render_template("navbar.html")
+
 
 
 if __name__ == '__main__':
