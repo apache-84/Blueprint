@@ -1,3 +1,9 @@
+
+{% extends "base.html" %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
 <h1>Welcome to Blueprint!</h1>
 
 <p>This is the home page of Blueprint.</p>
@@ -21,12 +27,13 @@
 <div class="main-content">
   <div class="cards">
     <div class="card">
-      <img src="Images/100Classes.jpg" alt="" class="card__image"> 
       <div class="card__content">
-        <div><strong>Title:</strong> <span>Introduction to Python</span></div>
-        <div><strong>Description:</strong> <span>Learn the basics of Python programming, including variables, loops, functions, and basic data structures.</span></div>
-        <div><strong>Hours:</strong> <span>3-5 hours per week</span></div>
-        <div><strong>Difficulty:</strong> <span>🟢 Easy</span></div>
+        <div><strong>Course: </strong><span>CSCI 101</span></div>
+        <div><strong>Title: </strong><span>Introduction to Python</span></div>
+        <div><strong>Available Terms: </strong><span>Fall</span></div>
+        <div><strong>Recommended Year: </strong><span>2</span></div>
+        <div><strong>Hours: </strong><span>3-5 hours per week</span></div>
+        <div><strong>Difficulty: </strong><span>🟢 Easy</span></div>
       </div>
       <div class="card__info">
         <div>
@@ -39,3 +46,5 @@
     </div>
   </div>
 </div>
+
+{% endblock %}

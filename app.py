@@ -107,7 +107,7 @@ def login():
 
 @app.route('/nav', methods=['GET'])
 def navbartest():  
-    return render_template("navbar.html")
+    return render_template("base.html")
 
 
 
