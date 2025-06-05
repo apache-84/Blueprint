@@ -139,3 +139,20 @@ def getAllCourses() -> list[Course]:
         courses.append(c)
     
     return courses
+
+"""
+Turns a Course object into a dictionary. Helpful when using Jinja syntax.
+"""
+def courseToDict(c: Course) -> dict:
+    course = {
+    "id": c.getID(),
+    "name": c.getName(),
+    "description": c.getDescription(),
+    "hours": c.getHours(),
+    "difficulty": c.getDifficulty(),
+    "sections": c.getSections(),
+    "year": c.getRecYear(),
+    "term": c.getTerm(),
+    "reviewCount": len(getReviewData(c.getID()))
+    }
+    return course

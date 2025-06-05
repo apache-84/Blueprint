@@ -36,8 +36,11 @@ class RegistrationForm(FlaskForm):
 
 @app.route('/', methods=["GET", "POST"])
 def index():
-    courses = getAllCourses()
-    return render_template("index.html", courses = courses)
+    courseData = []
+    for c in getAllCourses():
+        courseData.append(courseToDict(c))
+
+    return render_template("index.html", courses = courseData)
 
 
 @app.route('/register', methods=["GET", "POST"])
@@ -105,11 +108,18 @@ def login():
     return render_template("login.html", loginForm = loginForm)
 
 
-@app.route('/nav', methods=['GET'])
-def navbartest():  
-    return render_template("base.html")
+@app.route('/courses/<cid>', methods=['GET', 'POST'])
+def courses(cid):
+    # Replacing hyphens from passed URL back to spaces for DB querying.
+    cid = cid.replace("-", " ")
+    
+    print("Course ID:", cid)
+    # Get the course from cid as a dict.
+    c = getCourse(cid)
+    course = courseToDict(c)
 
-
+    return render_template("course.html", course=course)
+    pass
 
 if __name__ == '__main__':
     app.run(debug=True)
