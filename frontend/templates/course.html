@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %} Blueprint - {{ course.name }} {% endblock %}
+{% block title %}Blueprint - {{ course.id }}{% endblock %}
 
 {% block content %}
+
+<div><strong>Course: </strong><span>{{ course.id }}</span></div>
+<div><strong>Title: </strong><span>{{ course.name }}</span></div>
+<div><strong>Hours: </strong><span>{{ course.hours }}</span></div>
+<div><strong>Difficulty: </strong><span>{{ course.difficulty }}</span></div>
+<div><strong>Sections: </strong><span>{{ course.sections }}</span></div>
+<div><strong>Recommended Year: </strong><span>{{ course.year }}</span></div>
+<div><strong>Available Terms: </strong><span>{{ course.term }}</span></div>
 
 {% endblock %}
