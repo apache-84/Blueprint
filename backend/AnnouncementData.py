@@ -123,3 +123,16 @@ def getCourseAnnouncements(cid: str) -> list[Announcement]:
     for a in res:
         courseAnns.append(getAnnouncement(a[0]))
     return courseAnns
+
+"""
+Turns an Announcement object into a dictionary. Helpful when using Jinja syntax.
+"""
+def annToDict(a: Announcement) -> dict:
+    announcement = {
+    "id": a.getAnnID(),
+    "text": a.getAnnText(),
+    "date": a.getAnnDate(),
+    "course": a.getCourse(),
+    "reactions": a.getReactions()
+    }
+    return announcement

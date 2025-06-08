@@ -40,7 +40,11 @@ def index():
     for c in getAllCourses():
         courseData.append(courseToDict(c))
 
-    return render_template("index.html", courses = courseData)
+    annBoard = []
+    for a in getAnnouncementBoard():
+        annBoard.append(annToDict(a))
+
+    return render_template("index.html", courses = courseData, announcementBoard = annBoard)
 
 
 @app.route('/register', methods=["GET", "POST"])
