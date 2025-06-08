@@ -138,5 +138,14 @@ def courses(cid):
 
     return render_template("course.html", course=course, reviews=reviews, announcements=announcements)
 
+@app.route('/about', methods=['GET'])
+def about():
+    return render_template("about.html")
+
+@app.route('/help', methods=['GET'])
+def help():
+    return render_template("help.html")
+
+
 if __name__ == '__main__':
     app.run(debug=True)
