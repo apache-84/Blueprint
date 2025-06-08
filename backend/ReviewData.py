@@ -79,3 +79,17 @@ def updateReview(r: Review, stuID: int):
     """
     execute_query(sql, r.getText(), r.getDifficulty(), r.getHours(), r.getDate(), r.getCourse(), stuID, r.getID())
     print("Review updated!")
+
+"""
+Turns a Review object into a dictionary. Helpful when using Jinja syntax.
+"""
+def reviewToDict(r: Review) -> dict:
+    review = {
+    "id": r.getID(),
+    "text": r.getText(),
+    "difficulty": r.getDifficulty(),
+    "hours": r.getHours(),
+    "date": r.getDate(),
+    "course": r.getCourse()
+    }
+    return review

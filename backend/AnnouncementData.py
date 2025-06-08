@@ -112,18 +112,6 @@ def getAnnouncementBoard() -> list[Announcement]:
         i += 1
     return annBoard
 
-def getCourseAnnouncements(cid: str) -> list[Announcement]:
-    courseAnns = []
-    sql = "select announcementID from Announcements where courseID = ?"
-    res = fetch_query(sql, cid)
-    if len(res) == 0:
-        print("Course has no announcements.")
-        return courseAnns
-
-    for a in res:
-        courseAnns.append(getAnnouncement(a[0]))
-    return courseAnns
-
 """
 Turns an Announcement object into a dictionary. Helpful when using Jinja syntax.
 """

@@ -51,15 +51,16 @@
   <h2>Recent Announcements</h2>
   {% for ann in announcementBoard %}
     <div class="announcement">
-      <div class="announcement-content">
+      <div class="announcement__content">
         <div><strong>ID: </strong><span>{{ ann.id }}</span></div>
         <div><strong>Text: </strong><p>{{ ann.text }}</p></div>
         <div><strong>Date: </strong><span>{{ ann.date }}</span></div>
         <div><strong>Course: </strong><span>{{ ann.course }}</span></div>
       </div>
-      <div class="announcement-reactions">
+      <div class="announcement__reactions">
         <div>
-          <i class="bx bx-chevron-up"></i> <i class="bx bx-chevron-up"></i> Reactions: {{ ann.reactions }}
+          <!-- These icons don't work for some reason -->
+          <i class="bx bx-arrow-big-down"></i> <i class="bx bx-arrow-big-up">Reactions: {{ ann.reactions }}</i> 
         </div>
       </div>
     </div>

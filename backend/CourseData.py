@@ -2,6 +2,8 @@ from .db_queries import *
 from .Review import Review
 from .ReviewData import getReview, findNextID
 from .Course import Course
+from .Announcement import Announcement
+from .AnnouncementData import getAnnouncement
 
 
 def writeReview(r: Review, cid: str, stuID: int):
@@ -94,6 +96,18 @@ def getReviewData(cid: str) -> list[Review]:
         reviewList.append(getReview(review[0]))
         
     return reviewList 
+
+def getCourseAnnouncements(cid: str) -> list[Announcement]:
+    courseAnns = []
+    sql = "select announcementID from Announcements where courseID = ?"
+    res = fetch_query(sql, cid)
+    if len(res) == 0:
+        print("Course has no announcements.")
+        return courseAnns
+
+    for a in res:
+        courseAnns.append(getAnnouncement(a[0]))
+    return courseAnns
     
 def getCourse(cid: str) -> Course:
     """

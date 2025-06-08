@@ -36,10 +36,12 @@ class RegistrationForm(FlaskForm):
 
 @app.route('/', methods=["GET", "POST"])
 def index():
+    # Get every available course
     courseData = []
     for c in getAllCourses():
         courseData.append(courseToDict(c))
 
+    # Get three most recent announcements.
     annBoard = []
     for a in getAnnouncementBoard():
         annBoard.append(annToDict(a))
@@ -117,13 +119,24 @@ def courses(cid):
     # Replacing hyphens from passed URL back to spaces for DB querying.
     cid = cid.replace("-", " ")
     
-    print("Course ID:", cid)
     # Get the course from cid as a dict.
     c = getCourse(cid)
     course = courseToDict(c)
 
-    return render_template("course.html", course=course)
-    pass
+    # Get all course reviews
+    reviews = []
+    reviewList = getReviewData(cid)
+    for r in reviewList:
+        reviews.append(reviewToDict(r))
+
+    # Get all course announcements
+    announcements = []
+    annList = getCourseAnnouncements(cid)
+    for a in annList:
+        announcements.append(annToDict(a))
+    print(announcements)
+
+    return render_template("course.html", course=course, reviews=reviews, announcements=announcements)
 
 if __name__ == '__main__':
     app.run(debug=True)

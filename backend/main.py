@@ -189,7 +189,8 @@ if __name__ == '__main__':
                     case '0':
                         print("Thank you for visiting! Enjoy your day!!! :)")
                     case '1':
-                        displayCourses()
+                        # displayCourses()
+                        pass
                     case '2':
                         courseRes = input("Search what course you would like to find: ").upper()
                         if (checkCourseID(courseRes) == True):

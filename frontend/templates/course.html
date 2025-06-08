@@ -3,13 +3,98 @@
 {% block title %}Blueprint - {{ course.id }}{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='course.css') }}">
 
-<div><strong>Course: </strong><span>{{ course.id }}</span></div>
-<div><strong>Title: </strong><span>{{ course.name }}</span></div>
-<div><strong>Hours: </strong><span>{{ course.hours }}</span></div>
-<div><strong>Difficulty: </strong><span>{{ course.difficulty }}</span></div>
-<div><strong>Sections: </strong><span>{{ course.sections }}</span></div>
-<div><strong>Recommended Year: </strong><span>{{ course.year }}</span></div>
-<div><strong>Available Terms: </strong><span>{{ course.term }}</span></div>
+<div class="page">
+  <!-- Static Top Section -->
+  <div class="course-header">
+    <div><strong>Course: </strong><span>{{ course.id }}</span></div>
+    <div><strong>Title: </strong><span>{{ course.name }}</span></div>
+    <div><strong>Hours: </strong><span>{{ course.hours }}</span></div>
+    <div><strong>Difficulty: </strong><span>{{ course.difficulty }}</span></div>
+    <div><strong>Sections: </strong><span>{{ course.sections }}</span></div>
+    <div><strong>Recommended Year: </strong><span>{{ course.year }}</span></div>
+    <div><strong>Available Terms: </strong><span>{{ course.term }}</span></div>
+    <button class="add-course">Add course to your semester</button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="tab active" data-tab="course-info">Course Information</button>
+    <button class="tab" data-tab="reviews">Reviews</button>
+    <button class="tab" data-tab="announcements">Announcements</button>
+  </div>
+
+  <!-- Dynamic Content Section - Whatever 'tab' is active will not be hidden here. -->
+  <!-- Matches 'data-tab' attributes with 'id' attributes. -->
+  <div class="tab-content">
+
+
+    <div class="tab-panel" id="course-info">
+      <h1>Course Description</h1>
+      <p>{{ course.description }}</p>
+    </div>
+
+
+    <div class="tab-panel hidden" id="reviews">
+      <h1>Course Reviews</h1>
+      {% for review in reviews %}
+        <div class="review__header">
+          <div><strong>ID: </strong><span>{{ review.id }}</span></div>
+          <div><strong>Difficulty: </strong><span>{{ review.difficulty }}</span></div>
+          <div><strong>Recommended Hours Per Week: </strong><span>{{ review.hours }}</span></div>
+          <div>Posted on <span>{{ review.date }}</span></div>
+        </div>
+        <div class="review__content">
+          <div><strong>Text: </strong><p>{{ review.text }}</p></div>
+        </div>
+        <hr>
+      {% endfor %}
+    </div>
+
+
+    <div class="tab-panel hidden" id="announcements">
+      <h1>Course Announcements</h1>
+       {% for ann in announcements %}
+        <div class="announcement">
+          <div class="announcement__content">
+            <div><strong>ID: </strong><span>{{ ann.id }}</span></div>
+            <div><strong>Text: </strong><p>{{ ann.text }}</p></div>
+            <div>Posted on <span>{{ ann.date }}</span></div>          
+          </div>
+          <div class="announcement__reactions">
+            <div>
+              <!-- These icons don't work for some reason -->
+              <i class="bx bx-arrow-big-down"></i> <i class="bx bx-arrow-big-up">Reactions: {{ ann.reactions }}</i> 
+            </div>
+          </div>
+        </div>
+        <hr>
+      {% endfor %}
+    </div>
+
+
+  </div>
+  <script defer>
+    const tabs = document.querySelectorAll(".tab");
+    const panels = document.querySelectorAll(".tab-panel");
+
+    tabs.forEach(tab => {
+      // When clicking on a tab button
+      tab.addEventListener("click", () => {
+          // Remove 'active' from all tabs and make the clicked tab 'active'.
+          tabs.forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+
+          // Hide all panels and show the selected panel
+          panels.forEach(p => p.classList.add("hidden"));
+          const target = tab.getAttribute("data-tab");
+          document.getElementById(target).classList.remove("hidden");
+      });
+    });
+  </script>
+</div>
+
+
 
 {% endblock %}

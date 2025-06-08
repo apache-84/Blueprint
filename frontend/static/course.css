@@ -1,0 +1,50 @@
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-header {
+  height: 33vh;
+  background-color: #f0f0f0;
+  padding: 1rem;
+}
+
+.tab-bar {
+  background: #ddd;
+  display: flex;
+  justify-content: space-around;
+}
+
+.tab {
+  flex: 1;
+  padding: 1rem;
+  cursor: pointer;
+  background: #ccc;
+  border: none;
+  outline: none;
+  font-weight: bold;
+}
+
+.tab.active {
+  background: #fff;
+}
+
+.tab-content {
+  flex-grow: 1;
+  padding: 1rem;
+  background-color: #fff;
+  overflow-y: auto;
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel:not(.hidden) {
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
