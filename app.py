@@ -63,10 +63,12 @@ def register():
 
             if user_type == "S":
                 student = registerStudent(username, password)
+
                 # Make a cookie to store user's ID, name, and type.      
                 session['user_id'] = student.getID()
                 session['user_name'] = student.getUsername()
                 session['user_type'] = "S"
+
                 return redirect(url_for("index"))  # Change back to home page
             elif user_type == "F":
                 pass
@@ -134,7 +136,6 @@ def courses(cid):
     annList = getCourseAnnouncements(cid)
     for a in annList:
         announcements.append(annToDict(a))
-    print(announcements)
 
     return render_template("course.html", course=course, reviews=reviews, announcements=announcements)
 
@@ -146,6 +147,32 @@ def about():
 def help():
     return render_template("help.html")
 
+@app.route('/calculator', methods=['GET'])
+def calculator():
+    pass
+
+# WIP - Route to add course to a student's selected courses.
+@app.route('/add-course/<cid>', methods=['POST'])
+def addCourse(cid):
+    # Replacing hyphens from passed URL back to spaces for DB querying.
+    cid = cid.replace("-", " ")
+
+    # Check if logged in as a student
+    if session['user_type'] != "S":
+        raise NotAStudentError("You must be logged in as a student user to add courses to your semester.")
+    
+
+    s = Student(session['user_id'])
+
+    try:
+        s.selectCourse(cid)
+        print("Selected Courses:")
+        for c in s.selectedCourses:
+            print(c.getID())
+    except SelectCourseError as e:
+        print(str(e))
+    
+    return redirect(url_for('courses' , cid=cid.replace(" ", "-")))
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -5,6 +5,10 @@ from .ReviewData import getStuReview, updateReview
 from datetime import datetime
 import hashlib
 
+class NotAStudentError(Exception): pass
+class SelectCourseError(Exception): pass
+
+
 class Student():
     def __init__(self, stuID: int = 0, username: str = "", password: str = ""):
         """
@@ -65,24 +69,21 @@ class Student():
         semesterData[2] = round(semesterData[2], 1)
         return semesterData
 
-    def selectCourse(self): # In final version, cid will be a param
+    def selectCourse(self, cid: str): 
         """
-        Selects a course to be stored in selected courses.
+        Selects a course to be stored in selected courses, given a course ID.
         
-        Input a courseID, check that the courseID exists and then append the corresponding Course object with the given courseID to selectedCourses.
+        Get a courseID, check that the courseID exists and then append the corresponding Course object with the given courseID to selectedCourses.
         """
-        cid = input("What course do you want to add to your semester? ").upper()
-        if checkCourseID(cid):
+        
+        if checkCourseID(cid) == True:
             for course in self.getSelCourses():
                 if cid == course.getID():
-                    print("You have already selected that course! Returning to main page.")
-                    return
+                    raise SelectCourseError("You have already selected that course! Can't add it to your semester.")
             self.selectedCourses.append(getCourse(cid))
             print(cid, "added to your semester!")
-
-        else:
-            print("Course doesn't exist within the database! Try again..")
-            return
+        elif checkCourseID(cid) == False:
+            raise SelectCourseError("Course not found in database. Reload the page and try again.")
     
     # TURN THIS INTO A FORM
 
