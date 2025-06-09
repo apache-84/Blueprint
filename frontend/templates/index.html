@@ -19,15 +19,17 @@
   <button>List Users</button>
 </a>
 
-<div class="courses">
+<div class="cards">
 
   <h2>Courses</h2>
   <!-- Each course is a dict. -->
   {% for course in courses %}
     <div class="card">
+      <div class="card__header">
+        <p>{{ course.name }}</p>
+      </div>
       <div class="card__content">
         <div><strong>Course: </strong><span>{{ course.id }}</span></div>
-        <div><strong>Title: </strong><span>{{ course.name }}</span></div>
         <div><strong>Hours: </strong><span>{{ course.hours }}</span></div>
         <div><strong>Difficulty: </strong><span>{{ course.difficulty }}</span></div>
         <div><strong>Sections: </strong><span>{{ course.sections }}</span></div>
@@ -35,9 +37,7 @@
         <div><strong>Available Terms: </strong><span>{{ course.term }}</span></div>
       </div>
       <div class="card__info">
-        <div>
-          <i class="bx bx-comment-check"> Reviews: </i> {{ course.reviewCount }}
-        </div>
+        <div><i class="bx bx-comment-check"> Reviews: </i> {{ course.reviewCount }}</div>
         <div>
           <!-- Replacing spaces with hyphens for a nicer and less buggy URL. -->
           <a href="{{ url_for('courses', cid = course.id.replace(' ', '-')) }}" class="card__link">View Course</a>
