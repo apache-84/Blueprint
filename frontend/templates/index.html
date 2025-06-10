@@ -21,10 +21,18 @@
 
 <h2>Courses</h2>
 
+<div class="search-bar-container">
+  <input type="text" id="search-bar" placeholder="Search courses by name or ID...">
+</div>
+
 <div class="cards">
   <!-- Each course is a dict. -->
   {% for course in courses %}
-    <a href="{{ url_for('courses', cid = course.id.replace(' ', '-')) }}" class="card">
+    <a href="{{ url_for('courses', cid = course.id.replace(' ', '-')) }}"
+       class="card"
+       data-id="{{ course.id | lower }}"
+       data-name="{{ course.name | lower }}">
+
       <div class="card__header">
         <p>{{ course.name }}</p>
       </div>
@@ -75,5 +83,25 @@
     </div>
   {% endfor %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('search-bar');
+  const cards = document.querySelectorAll('.card');
+
+  searchInput.addEventListener('input', function () {
+    const query = searchInput.value.toLowerCase();
+
+    cards.forEach(card => {
+      const id = card.getAttribute('data-id');
+      const name = card.getAttribute('data-name');
+      const match = id.includes(query) || name.includes(query);
+
+      card.style.display = match ? 'block' : 'none';
+    });
+  });
+});
+</script>
+
 
 {% endblock %}
