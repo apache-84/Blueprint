@@ -24,26 +24,35 @@
 <div class="cards">
   <!-- Each course is a dict. -->
   {% for course in courses %}
-    <div class="card">
+    <a href="{{ url_for('courses', cid = course.id.replace(' ', '-')) }}" class="card">
       <div class="card__header">
         <p>{{ course.name }}</p>
       </div>
+
       <div class="card__content">
-        <div><strong>Course: </strong><span>{{ course.id }}</span></div>
-        <div><strong>Hours: </strong><span>{{ course.hours }}</span></div>
-        <div><strong>Difficulty: </strong><span>{{ course.difficulty }}</span></div>
-        <div><strong>Sections: </strong><span>{{ course.sections }}</span></div>
-        <div><strong>Recommended Year: </strong><span>{{ course.year }}</span></div>
-        <div><strong>Available Terms: </strong><span>{{ course.term }}</span></div>
-      </div>
-      <div class="card__info">
-        <div><i class="bx bx-comment-check"> Reviews: </i> {{ course.reviewCount }}</div>
-        <div>
-          <!-- Replacing spaces with hyphens for a nicer and less buggy URL. -->
-          <a href="{{ url_for('courses', cid = course.id.replace(' ', '-')) }}" class="card__link">View Course</a>
+        <div class="card_id" >{{ course.id }}</div>
+      
+        <div class="details_wrapper">
+          <div class="details">
+            <p><strong>Recommended Hours: </strong>{{ course.hours }}<br></p>
+            <p><strong>Sections: </strong>{{ course.sections }}<br></p>
+            <p><strong>Recommended Year: </strong>{{ course.year }}<br></p>
+            <p><strong>Available Terms: </strong>{{ course.term }}</p>
+          </div>
+
+        <div class="difficulty">
+          <strong>Difficulty: </strong><br>
+          <p>{{ course.difficulty }}</p>
+          </div>
         </div>
       </div>
-    </div>
+
+      <div class="card__info">
+        <div><i class="bx bx-comment-check"> Reviews: </i> {{ course.reviewCount }}</div>
+        <div><span class="card__link">Add Course to Semester</span></div>
+          <!-- Replacing spaces with hyphens for a nicer and less buggy URL. -->
+      </div>
+    </a>
   {% endfor %}
 </div>
 
