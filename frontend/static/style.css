@@ -205,19 +205,17 @@
   flex-direction: column;
   justify-content: space-between;
   background: white;
-  border-radius: 8px;
+  border-radius: 60px;
   height: 300px;
   width: 100%;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
   text-decoration: none;
   color: inherit;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-top-left-radius: 12px;
-  border-top-right-radius:
 }
 
 .card:hover {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   transform: translateY(-5px);
   transition: all 0.3s ease;
   cursor: pointer;
@@ -226,25 +224,30 @@
 .card__header {
   background-color: #ff3232; /* 🔵 Choose your color */
   color: white;
-  padding: 1rem;
+  padding: 0.5rem;
   text-align: center;
   font-weight: bold;
   font-size: 1.25rem;
   border-bottom: 2px solid #ff9f9f;
   height: 50px;         
   overflow: hidden;      
+  text-align: center;
   white-space: nowrap;   
   text-overflow: ellipsis;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
 .card__content {
   line-height: 1.5;
   flex-grow: 1;
   font-size: 0.9em;
+  padding-top: 5px;
   padding-left: 15px;
   padding-right: 15px;
   background: #fafafa;
 }
+
 .card__content > div:first-of-type { /*this will get the first div inside the card__content, works as finding child cards*/
   margin-top: 0;
 }
@@ -271,6 +274,8 @@
   font-size: 0.88rem;
   border-top: 1px solid #ccc;
   border-bottom: 2px solid #cccccc9a;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 .card__link {
@@ -286,16 +291,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   justify-content: center;
   color: #000000;
   font-style: bold;
-  font-size: 1.25rem;
+  font-size: 1rem;
   padding-top: 0.3rem;
-  padding-bottom: 0.3rem;
 }
 
 .details {
-  padding-top: 0.3rem;
+  padding-top: 1.1rem;
   font-size: 1.1rem;
   flex: 1;
 }
@@ -304,6 +309,7 @@
   font-size: 1.2rem;
   min-width: 70px;
   text-align: right;
+  padding-top: 40px;
 }
 
 .difficulty p {
