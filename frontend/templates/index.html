@@ -57,8 +57,10 @@
 
       <div class="card__info">
         <div><i class="bx bx-comment-check"> Reviews: </i> {{ course.reviewCount }}</div>
-        <div><span class="card__link">Add Course to Semester</span></div>
-          <!-- Replacing spaces with hyphens for a nicer and less buggy URL. -->
+         <form action="{{ url_for('index') }}" method="POST">
+          <input type="hidden" name="course_id" value="{{ course.id }}">
+          <button type="submit" class="add-button">Add Course to Semester</button>
+        </form>
       </div>
     </a>
   {% endfor %}

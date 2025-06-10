@@ -2,41 +2,32 @@ from .Student import Student
 from .db_queries import *
 from .ReviewData import getReview
 from .Review import Review
-from .AnnouncementData import getAnnouncement
+from .AnnouncementData import getReactions, getAnnouncement
 import hashlib
 import time
 
-# Error classes
-
-class UsernameNotFoundError(Exception): pass
-class UsernameTakenError(Exception): pass
-class IncorrectPasswordError(Exception): pass
-
+"""
+Inputs student with given ID's account info into database.
+"""
 def updateStudent(stuID: int, username: str, password: str):
-    """
-    Inputs student with given ID's account info into database.
-    """
     sql = "update Students set username = ?, password = ? where studentID = ?"
     execute_query(sql, username, password, stuID)
 
+"""
+Checks if a student member account with username exists. Returns true if username isn't taken, false if it is.
+"""
 
 def checkUsername(username: str) -> bool:
-    """
-    Checks if a student member account with username exists. Returns true if username isn't taken, false if it is.
-    """
     sql = "select * from Students where username = ?"
     res = fetch_query(sql, username)
 
-    if len(res) == 0:
-        return True
+    return len(res) == 0
 
-    return False
-
+"""
+Checks if a student member account with a given username gave the correct password. True if correct, false if not.
+"""
 
 def checkPassword(username: str, password: str) -> bool:
-    """
-    Checks if a student member account with a given username gave the correct password. True if correct, false if not.
-    """
     # Hash the password
     p = hashlib.sha256(password.encode()).hexdigest()
 
@@ -47,40 +38,21 @@ def checkPassword(username: str, password: str) -> bool:
 
     return p == DBPassword
 
+
 def registerStudent(username: str, password: str):
     """
-    Helper function for student registration.
-
     Asks the student for their username and password, hashes the password, gets the next available student ID, and stores it to the database.
     Makes a student object in the process.
     """
+    s = Student()
 
-    if checkUsername(username) == True:
-        s = Student()
-        s.setID(getNextID())
-        s.setUsername(username)
-        s.setPassword(password)
+    s.setID(getNextID())
+    s.setUsername(username)
+    s.setPassword(password)
 
-        sql = "insert into Students values (?, ?, ?)"
-        execute_query(sql, s.getID(), s.getUsername(), s.getPassword())
-        return s
-    else:
-        raise UsernameTakenError("Account with this username already exists.")
-      
-def loginStudent(username: str, password: str) -> Student:
-    """
-    Helper function for student login.
-    """
-    if checkUsername(username) == True:
-        raise UsernameNotFoundError("An account with that username doesn't exist.")
-    else:
-        if checkPassword(username, password):
-            sql = "select studentID from Students where username = ?"
-            stuID = fetch_query(sql, username)[0][0]
-            return Student(stuID, username, password)
-        else:
-            raise IncorrectPasswordError("Password is incorrect.")
-    
+    sql = "insert into Students values (?, ?, ?)"
+    execute_query(sql, s.getID(), s.getUsername(), s.getPassword())
+
 def getReviews(stuID: int) -> list[Review]:
     """
     Returns a list of all the Review objects a student has written.
@@ -161,3 +133,30 @@ def updateReaction(stuID: int, annID: int, reaction: int):
 
     # Update announcement's reactions by reconstructing the object.
     a = getAnnouncement(annID)
+     
+def loginStudent(username: str, password: str) -> Student:
+    """
+    """
+    if checkUsername(username) == True:
+        print("An account with that username doesn't exist.")
+    else:
+        if checkPassword(username, password):
+            sql = "select stuID from Students where username = ?"
+            stuID = fetch_query(sql, username)[0][0]
+            s = Student(stuID, username, password)
+            return s
+        else:
+            print("Password is incorrect.")
+
+def stuToDict(s: Student) -> dict:
+    student = {
+    "id": s.getID(),
+    "username": s.getUsername(),
+    "password": s.getPassword(),
+    "selectedCourses": s.getSelCourses()
+    }
+    return student
+    
+
+if __name__ == '__main__':
+    loginStudent()
