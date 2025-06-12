@@ -9,6 +9,7 @@ from backend.StudentData import *
 from backend.Faculty import *
 from backend.FacultyData import *
 from backend.CoursesTaughtData import *
+from backend.UserData import *
 from database.db_setup import *
 #from frontend.forms import *
 from flask import Flask, render_template, request, url_for, redirect, session, flash
@@ -26,11 +27,12 @@ DB_FILE = "database/blueprintdb.db"
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[Length(min=2, max=20)])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=2)])
+    userType = RadioField("User Type", choices=[("S", "Student"), ("F", "Faculty")], validators=[DataRequired()])
     submit = SubmitField("Login")
 
 class RegistrationForm(FlaskForm):
     username = StringField("Username", validators=[Length(min=2, max=20)])
-    userType = RadioField("Registering as", choices=[("S", "Student"), ("F", "Faculty")], validators=[DataRequired()])
+    userType = RadioField("User Type", choices=[("S", "Student"), ("F", "Faculty")], validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=2)])
     submit = SubmitField("Register Account")
 
@@ -60,22 +62,14 @@ def register():
             username = registerForm.username.data
             password = registerForm.password.data
             user_type = registerForm.userType.data # boolean for student or faculty
-
-            if user_type == "S":
-                student = registerStudent(username, password)
-
-                # Make a cookie to store user's ID, name, and type.      
-                session['user_id'] = student.getID()
-                session['user_name'] = student.getUsername()
-                session['user_type'] = "S"
-
+            # Make a cookie to store user's ID, name, and type.      
+            if user_type == 'S':
+                registerStudent(username, password)
+                loginUser
                 return redirect(url_for("index"))  # Change back to home page
-            elif user_type == "F":
-                pass
-                # registerFaculty()
-            else:
-                flash("Invalid user type selected. Please choose Student or Faculty.", "danger")
-                return render_template("register.html", registerForm = registerForm)
+            elif user_type == 'F':
+                registerFaculty(username, password)
+                return redirect(url_for("index"))  # Change back to home page
         except UsernameTakenError as e: 
             registerForm.username.errors.append(str(e))
         flash(f"Registration for {session['user_name']} successful!")
@@ -103,10 +97,8 @@ def login():
     loginForm = LoginForm()
     if loginForm.validate_on_submit():
         try:
-            student = loginStudent(loginForm.username.data, loginForm.password.data)
-            session['user_id'] = student.getID()
-            session['user_name'] = student.getUsername()
-            session['user_type'] = "S"
+            userType = loginForm.userType.data
+            loginUser(userType, loginForm.username.data, loginForm.password.data)
             return redirect(url_for('index'))
         except UsernameNotFoundError as e:
             loginForm.username.errors.append(str(e))

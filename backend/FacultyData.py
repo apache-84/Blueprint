@@ -2,28 +2,29 @@ from .Faculty import FacultyMember
 from .db_queries import *
 from .CoursesTaughtData import getCoursesTaught
 import hashlib
-import time
 
-def registerFaculty():
-    """
-    Asks the faculty member for their username and password, hashes the password, gets the next available faculty ID, and stores it to the database.
-    """
-    print('===== REGISTER ACCOUNT =====')
-    f = FacultyMember()
-    f.register()
 
-    f.setID(getNextID())
+def updateFaculty(facID: int, username: str, password: str):
+    """
+    Inputs faculty member with given ID's account info into database.
+    """
+    sql = "update FacultyMembers set username = ?, password = ? where facultyID = ?"
+    execute_query(sql, username, password, facID)
+
+
+def registerFaculty(username: str, password: str) -> FacultyMember:
+    """
+    Takes a faculty member's username and password. Hashes the password, gets the next available student ID, and stores it to the database.
+    """
+    password = hashlib.sha256(password.encode()).hexdigest()
+    id = getNextID()
 
     sql = "insert into FacultyMembers values (?, ?, ?)"
+    execute_query(sql, id, username, password)
 
-    # FAKE IT UNTIL YOU MAKE IT
-    facnum = input("Enter your faculty ID number: ")
-    print("Waiting for", facnum, "to sign in to VIU faculty database...")
-    time.sleep(5)
-    print("Faculty member verified!")
-
-    execute_query(sql, f.getID(), f.getUsername(), f.getPassword())
-    print("Faculty member registered to database!")
+    # Create faculty member object
+    f = FacultyMember(username=username, id=id)
+    return f
 
 
 def getNextID() -> int:
@@ -43,44 +44,18 @@ def getNextID() -> int:
 
     return id
 
-def loginFaculty() -> FacultyMember:
-    """
-    Interactive login for a faculty member. Prompts faculty member for their username and password. If faculty doesn't have a username in database, prompts them to register a new account.
+def facToDict(f: FacultyMember) -> dict:
+    faculty = {
+    "id": f.getID(),
+    "username": f.getUsername(),
+    "password": f.getPassword(),
+    "pinnedCourses": f.getCourses()
+    }
+    return faculty
     
-    :return: The faculty member object of the logged in faculty member.
-    """
-    print("===== LOG IN =====")
-    user = input("Enter your username: ")
+def getFaculty(username: str):
     sql = "select * from FacultyMembers where username = ?"
-    res = fetch_query(sql, user)
-
-    if (len(res) == 0):
-        print("An account with this username doesn't exist, want to register an account?")
-        while True:
-            ans = input("Y/N: ").upper()
-            if ans == "Y":
-                registerFaculty()
-                return loginFaculty()
-            elif ans == "N":
-                return None
-    
-    # Get faculty information
-    res = res[0]
-    id = res[0]
-    username = res[1]
-    password = res[2]
-
-    pWord = input("Enter your password: ")
-    p = hashlib.sha256(pWord.encode()).hexdigest()
-    
-    if p != password:
-        print("Incorrect password, login failed.")
+    res = fetch_query(sql, username)
+    if len(res) == 0:
         return None
-
-    print("Login for", username, "successful!")
-    f = FacultyMember(id, username, password, getCoursesTaught(id))
-    
-    return f
-
-if __name__ =='__main__':
-    loginFaculty()
+    return res[0]

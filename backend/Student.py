@@ -5,9 +5,6 @@ from .ReviewData import getStuReview, updateReview
 from datetime import datetime
 import hashlib
 
-class NotAStudentError(Exception): pass
-class SelectCourseError(Exception): pass
-
 
 class Student():
     def __init__(self, stuID: int = 0, username: str = "", password: str = ""):
@@ -21,7 +18,6 @@ class Student():
         self.__stuID = stuID
         self.__username = username
         self.__password = password
-        self.selectedCourses = []
     
     # Getter methods:
     def getID(self) -> int:
@@ -33,9 +29,6 @@ class Student():
     def getPassword(self) -> str:
         return self.__password
 
-    def getSelCourses(self) -> list:
-        return self.selectedCourses
-
     # Setter methods:
     def setID(self, stuID: str):
         self.__stuID = stuID
@@ -46,45 +39,7 @@ class Student():
     def setPassword(self, pWord: int):
         self.__password = pWord
 
-    def calculateSemesterData(self):
-        """
-        Calculates the semester data from a student's selected courses list.
-        
-        Returns a 3-element list containing the selected courses, average difficulty, and total recommended hours per week.
-        Index 0 is a list of Course objects, index 1 is the semester's average difficulty, index 2 is the total hours per week.
-        :return: A list of the results in the format described above, named 'semesterData'.
-        """
-        dsum = 0.0
-        semesterData = [[], 0.0, 0.0]
 
-        for course in self.selectedCourses:
-            dsum += course.getDifficulty()
-            semesterData[2] += course.getHours()
-            semesterData[0].append(course)
-        
-        semesterData[1] = dsum / len(self.selectedCourses)
-
-        # Rounding to one decimal place.
-        semesterData[1] = round(semesterData[1], 1)
-        semesterData[2] = round(semesterData[2], 1)
-        return semesterData
-
-    def selectCourse(self, cid: str): 
-        """
-        Selects a course to be stored in selected courses, given a course ID.
-        
-        Get a courseID, check that the courseID exists and then append the corresponding Course object with the given courseID to selectedCourses.
-        """
-        
-        if checkCourseID(cid) == True:
-            for course in self.getSelCourses():
-                if cid == course.getID():
-                    raise SelectCourseError("You have already selected that course! Can't add it to your semester.")
-            self.selectedCourses.append(getCourse(cid))
-            print(cid, "added to your semester!")
-        elif checkCourseID(cid) == False:
-            raise SelectCourseError("Course not found in database. Reload the page and try again.")
-    
     # TURN THIS INTO A FORM
 
     def makeReview(self):
