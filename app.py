@@ -11,30 +11,14 @@ from backend.FacultyData import *
 from backend.CoursesTaughtData import *
 from backend.UserData import *
 from database.db_setup import *
-#from frontend.forms import *
+from frontend.forms import RegistrationForm, LoginForm
 from flask import Flask, render_template, request, url_for, redirect, session, flash
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, PasswordField, BooleanField, RadioField
-from wtforms.validators import DataRequired, Length
-from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__, template_folder='frontend/templates', static_folder='frontend/static')
 
 app.config["SECRET_KEY"] = "secretkeyoooooo"
 
 DB_FILE = "database/blueprintdb.db"
-
-class LoginForm(FlaskForm):
-    username = StringField("Username", validators=[Length(min=2, max=20)])
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=2)])
-    userType = RadioField("User Type", choices=[("S", "Student"), ("F", "Faculty")], validators=[DataRequired()])
-    submit = SubmitField("Login")
-
-class RegistrationForm(FlaskForm):
-    username = StringField("Username", validators=[Length(min=2, max=20)])
-    userType = RadioField("User Type", choices=[("S", "Student"), ("F", "Faculty")], validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=2)])
-    submit = SubmitField("Register Account")
 
 @app.route('/', methods=["GET", "POST"])
 def index():
@@ -99,6 +83,13 @@ def login():
         try:
             userType = loginForm.userType.data
             loginUser(userType, loginForm.username.data, loginForm.password.data)
+            flash("Login successful!")
+
+            if loginForm.remember_me.data:
+                session.permanent = True
+            else:
+                session.permanent = False
+
             return redirect(url_for('index'))
         except UsernameNotFoundError as e:
             loginForm.username.errors.append(str(e))

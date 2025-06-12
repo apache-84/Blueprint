@@ -5,26 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
   </head>
-    <body>
-      <form method="POST">
-          {{ loginForm.hidden_tag() }}
-          <div>
-              {{ loginForm.username.label }}<br>
-              {{ loginForm.username(size=32) }}<br>
-              {% for error in loginForm.username.errors %}
-                  <span style="color: red;">{{ error }}</span>
-              {% endfor %}
-          </div>
+  <body>
+    <h1>Login</h1>
+    <form method="POST">
+        {{ loginForm.hidden_tag() }}
 
-          <div>
-              {{ loginForm.password.label }}<br>
-              {{ loginForm.password(size=32) }}<br>
-              {% for error in loginForm.password.errors %}
-                  <span style="color: red;">{{ error }}</span>
-              {% endfor %}
-          </div>
+        <div>
+            {{ loginForm.username.label }}<br>
+            {{ loginForm.username(size=32) }}
+            {% for error in loginForm.username.errors %}
+                <div style="color:red;">{{ error }}</div>
+            {% endfor %}
+        </div>
 
-          {{ loginForm.submit() }}
-      </form>
-    </body>
+        <div>
+            {{ loginForm.password.label }}<br>
+            {{ loginForm.password(size=32) }}
+            {% for error in loginForm.password.errors %}
+                <div class="error" style="color:red;">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div>
+            {{ loginForm.userType.label }}<br>
+            {% for choice in loginForm.userType %}
+                {{ choice() }} {{ choice.label.text }}<br>
+            {% endfor %}
+            {% for error in loginForm.userType.errors %}
+                <div class="error" style="color:red;">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div>
+            {{ loginForm.remember() }} {{ loginForm.remember.label }}
+        </div>
+
+        <div>
+            {{ loginForm.submit() }}
+        </div>
+    </form>
+  </body>
 </html>
