@@ -1,53 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-  </head>
-  <body>
-    <h1>Register</h1>
-    <form method="POST">
-        {{ form.hidden_tag() }}
+{% extends "base.html" %}
+{% block title %}Blueprint - Register Account{% endblock %}
 
-        <div>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}
-            {% for error in form.username.errors %}
-                <div class="error" style="color:red;">{{ error }}</div>
-            {% endfor %}
-        </div>
+{% block content %}
+<h1>Register</h1>
+<form method="POST">
+    {{ registerForm.hidden_tag() }}
 
-        <div>
-            {{ form.userType.label }}<br>
-            {% for choice in form.userType %}
-                {{ choice() }} {{ choice.label.text }}<br>
-            {% endfor %}
-            {% for error in form.userType.errors %}
-                <div class="error" style="color:red;">{{ error }}</div>
-            {% endfor %}
-        </div>
+    <div>
+        {{ registerForm.username.label }}<br>
+        {{ registerForm.username(size=32) }}
+        {% for error in registerForm.username.errors %}
+            <div class="error" style="color:red;">{{ error | safe }}</div>
+        {% endfor %}
+    </div>
 
-        <div>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
-            {% for error in form.password.errors %}
-                <div class="error" style="color:red;">{{ error }}</div>
-            {% endfor %}
-        </div>
+    <div>
+        {{ registerForm.userType.label }}<br>
+        {% for choice in registerForm.userType %}
+            {{ choice() }} {{ choice.label.text }}
+        {% endfor %}
+        {% for error in registerForm.userType.errors %}
+            <div class="error" style="color:red;">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <div>
-            {{ form.password2.label }}<br>
-            {{ form.password2(size=32) }}
-            {% for error in form.password2.errors %}
-                <div style="color:red;">{{ error }}</div>
-            {% endfor %}
-        </div>
+    <div>
+        {{ registerForm.password.label }}<br>
+        {{ registerForm.password(size=32) }}
+        {% for error in registerForm.password.errors %}
+            <div class="error" style="color:red;">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <div>
-            {{ form.submit() }}
-        </div>
-    </form>
-    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
-  </body>
-</html>
+    <div>
+        {{ registerForm.password2.label }}<br>
+        {{ registerForm.password2(size=32) }}
+        {% for error in registerForm.password2.errors %}
+            <div style="color:red;">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div>
+        {{ registerForm.submit() }}
+    </div>
+</form>
+<p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+{% endblock %}

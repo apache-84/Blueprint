@@ -1,48 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-  </head>
-  <body>
-    <h1>Login</h1>
-    <form method="POST">
-        {{ loginForm.hidden_tag() }}
+{% extends "base.html" %}
+{% block title %}Blueprint - Log In{% endblock %}
 
-        <div>
-            {{ loginForm.username.label }}<br>
-            {{ loginForm.username(size=32) }}
-            {% for error in loginForm.username.errors %}
-                <div style="color:red;">{{ error }}</div>
-            {% endfor %}
-        </div>
+{% block content %}
+<h1>Login</h1>
+<form method="POST">
+    {{ loginForm.hidden_tag() }}
 
-        <div>
-            {{ loginForm.password.label }}<br>
-            {{ loginForm.password(size=32) }}
-            {% for error in loginForm.password.errors %}
-                <div class="error" style="color:red;">{{ error }}</div>
-            {% endfor %}
-        </div>
+    <div>
+        {{ loginForm.username.label }}<br>
+        {{ loginForm.username(size=32) }}
+        {% for error in loginForm.username.errors %}
+            <div style="color:red;">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <div>
-            {{ loginForm.userType.label }}<br>
-            {% for choice in loginForm.userType %}
-                {{ choice() }} {{ choice.label.text }}<br>
-            {% endfor %}
-            {% for error in loginForm.userType.errors %}
-                <div class="error" style="color:red;">{{ error }}</div>
-            {% endfor %}
-        </div>
+    <div>
+        {{ loginForm.password.label }}<br>
+        {{ loginForm.password(size=32) }}
+        {% for error in loginForm.password.errors %}
+            <div class="error" style="color:red;">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <div>
-            {{ loginForm.remember() }} {{ loginForm.remember.label }}
-        </div>
+    <div>
+        {{ loginForm.userType.label }}<br>
+        {% for choice in loginForm.userType %}
+            {{ choice() }} {{ choice.label.text }}
+        {% endfor %}
+        {% for error in loginForm.userType.errors %}
+            <div class="error" style="color:red;">{{ error }}</div>
+        {% endfor %}
+    </div>
 
-        <div>
-            {{ loginForm.submit() }}
-        </div>
-    </form>
-  </body>
-</html>
+    <div>
+        {{ loginForm.remember() }} {{ loginForm.remember.label }}
+    </div>
+
+    <div>
+        {{ loginForm.submit() }}
+    </div>
+</form>
+{% endblock %}

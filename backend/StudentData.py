@@ -113,7 +113,6 @@ def stuToDict(s: Student) -> dict:
     "id": s.getID(),
     "username": s.getUsername(),
     "password": s.getPassword(),
-    "selectedCourses": s.getSelCourses()
     }
     return student
     
@@ -122,5 +121,10 @@ def getStudent(username: str):
     res = fetch_query(sql, username)
     if len(res) == 0:
         return None
-    return res[0]
+    
+    id = res[0][0]
+    username = res[0][1]
+
+    s = Student(stuID = id, username = username)
+    return s
 

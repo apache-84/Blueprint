@@ -1,4 +1,4 @@
-from flask import session, flash
+from flask import session, flash, url_for
 from .db_queries import *
 from .Student import Student
 from .Faculty import FacultyMember
@@ -7,6 +7,7 @@ from .FacultyData import *
 from .CoursesTaughtData import getCoursesTaught
 from .CourseData import checkCourseID, getCourse
 import hashlib
+from markupsafe import Markup
 
 class SelectCourseError(Exception): pass
 class UsernameTakenError(Exception): pass
@@ -14,40 +15,49 @@ class UsernameNotFoundError(Exception): pass
 class IncorrectPasswordError(Exception): pass
 
 
-def registerUser(userType: str, username: str, password: str, user_id: int):
-    if userType == "S":
-        student = registerStudent(username, password)
-        session['user_type'] = userType
-        session['username'] = student.username
-        session['user_id'] = student.id
-    if userType == "F":
-        faculty = registerFaculty(username, password)
-        session['user_type'] = userType
-        session['username'] = faculty.username
-        session['user_id'] = faculty.id
+def registerUser(userType: str, username: str, password: str):
+
+    if checkUsername(userType, username) == True:
+        if userType == "S":
+            student = registerStudent(username, password)
+            session['user_type'] = userType
+            session['username'] = student['username']
+            session['user_id'] = student['id']
+        if userType == "F":
+            faculty = registerFaculty(username, password)
+            session['user_type'] = userType
+            session['username'] = faculty['username']
+            session['user_id'] = faculty['id']
+    else:
+        login_url = url_for('login')
+        raise UsernameTakenError(Markup(f"An account with that username already exists.<br>" 
+                                        f"Please choose another username or try <a href='{login_url}'>logging in</a>."))
 
 def loginUser(userType: str, username: str, password: str):
 
     if checkUsername(userType, username) == True:
-        flash("An account with that username doesn't exist.")
+        if userType == "S":
+            raise UsernameNotFoundError("A student account with that username doesn't exist.")
+        elif userType == "F":
+            raise UsernameNotFoundError("A faculty member account with that username doesn't exist.")
     else:
         if checkPassword(userType, username, password):
             if userType == "S":
                 student = stuToDict(getStudent(username))
                 session['user_type'] = userType
-                session['username'] = student.username
-                session['user_id'] = student.id
+                session['username'] = student['username']
+                session['user_id'] = student['id']
             elif userType == "F":  
                 faculty = facToDict(getFaculty(username))
                 session['user_type'] = userType
-                session['username'] = faculty.username
-                session['user_id'] = faculty.id
+                session['username'] = faculty['username']
+                session['user_id'] = faculty['id']
             else:
                 session['user_type'] = "G"
                 session['username'] = ""
                 session['user_id'] = ""
         else:
-            flash("Password is incorrect.")
+            raise IncorrectPasswordError("Password is incorrect.")
 
             
 def getCurrentUser():

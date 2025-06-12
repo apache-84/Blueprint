@@ -58,4 +58,9 @@ def getFaculty(username: str):
     res = fetch_query(sql, username)
     if len(res) == 0:
         return None
-    return res[0]
+    
+    id = res[0][0]
+    username = res[0][1]
+
+    f = FacultyMember(id = id, username = username)
+    return f

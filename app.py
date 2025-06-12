@@ -39,24 +39,19 @@ def index():
 def register():
 
     registerForm = RegistrationForm()
-    user_type = registerForm.userType.data
 
     if registerForm.validate_on_submit(): #we want a way to check if s or f called to insert for faculty or student query
         try:
             username = registerForm.username.data
             password = registerForm.password.data
-            user_type = registerForm.userType.data # boolean for student or faculty
-            # Make a cookie to store user's ID, name, and type.      
-            if user_type == 'S':
-                registerStudent(username, password)
-                loginUser
-                return redirect(url_for("index"))  # Change back to home page
-            elif user_type == 'F':
-                registerFaculty(username, password)
-                return redirect(url_for("index"))  # Change back to home page
+            userType = registerForm.userType.data 
+
+            registerUser(userType, username, password)
+            flash(f"Registration for {username} successful!", "success")
+            return redirect(url_for("index"))  # Change back to home page
         except UsernameTakenError as e: 
             registerForm.username.errors.append(str(e))
-        flash(f"Registration for {session['user_name']} successful!")
+            print(str(e))
 
     return render_template("register.html", registerForm = registerForm)
 
@@ -82,10 +77,13 @@ def login():
     if loginForm.validate_on_submit():
         try:
             userType = loginForm.userType.data
-            loginUser(userType, loginForm.username.data, loginForm.password.data)
-            flash("Login successful!")
+            username = loginForm.username.data
+            password = loginForm.password.data
 
-            if loginForm.remember_me.data:
+            loginUser(userType, username, password)
+            flash(f"Login for {username} successful!", "success")
+
+            if loginForm.remember.data == True:
                 session.permanent = True
             else:
                 session.permanent = False
@@ -142,8 +140,8 @@ def addCourse(cid):
 
     # Check if logged in as a student
     if session['user_type'] != "S":
-        raise NotAStudentError("You must be logged in as a student user to add courses to your semester.")
-    
+        # raise NotAStudentError("You must be logged in as a student user to add courses to your semester.")
+        pass
 
     s = Student(session['user_id'])
 

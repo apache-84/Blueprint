@@ -21,8 +21,18 @@
           <div class="user">
             <img src="/docs/Images/SFUC.png" alt="me" class="user-img"> <!-- User Image, Eventually need to let user edit these -->
             <div>
-              <p class="bold">Kawal</p> <!-- User Name -->
-              <p>Faculty</p>
+              {% if session.get('userType') == 'S' %}
+                <p class="bold">{{ session.get('username') }}</p> <!-- User Name -->
+                <p>Student</p>
+              {% elif session.get('userType') == 'F' %}
+                <p class="bold">{{ session.get('username') }}</p> <!-- User Name -->
+                <p>Faculty</p>
+              {% else %}
+                <a href="{{ url_for('login') }}">
+                  <button class ="nav-login">Log In</button>
+                </a>
+                <p>Guest</p>
+              {% endif %}
             </div>
           </div>
         <ul> <!-- Sidebar Menu Start of Items and such on left and hovers, first span are icons title and second span is hover -->
