@@ -18,6 +18,11 @@ app = Flask(__name__, template_folder='frontend/templates', static_folder='front
 
 app.config["SECRET_KEY"] = "secretkeyoooooo"
 
+# Default user data
+# session['userType'] = "G"
+# session['username'] = ""
+# session['userID'] = ""
+
 DB_FILE = "database/blueprintdb.db"
 
 @app.route('/', methods=["GET", "POST"])
@@ -130,7 +135,44 @@ def help():
 
 @app.route('/calculator', methods=['GET'])
 def calculator():
-    pass
+    courses = []
+    semesterData = []
+
+    # Initialize selected courses incase it doesn't exist.
+    initSelectedCourses()
+
+    # Get all course dicts for course cards
+    for cid in session.get('selected_courses'):
+        courses.append(courseToDict(getCourse(cid)))
+
+    if 'semester_data' in session:
+        semesterData = session.pop('semester_data')
+
+    print(courses)
+
+    return render_template("calculator.html", courses = courses, semesterData = semesterData)
+    
+
+@app.route('/semester/process', methods=['POST'])
+def calculateSemester():
+    # Initialize selected courses incase it doesn't exist.
+    initSelectedCourses()
+
+    # Get all course IDs to calculate semester\
+    courseIDs = session.get('selected_courses')
+
+    session['semester_data'] = calculateSemesterData(courseIDs)
+
+    return redirect(url_for('calculator'))
+
+
+@app.route('/semester/clear', methods=['POST'])
+def clearSemester():
+    # Initialize selected courses incase it doesn't exist.
+
+    session['selected_courses'] = []
+
+    return redirect(url_for('calculator'))
 
 # WIP - Route to add course to a student's selected courses.
 @app.route('/add-course/<cid>', methods=['POST'])
@@ -138,22 +180,16 @@ def addCourse(cid):
     # Replacing hyphens from passed URL back to spaces for DB querying.
     cid = cid.replace("-", " ")
 
-    # Check if logged in as a student
-    if session['userType'] != "S":
-        # raise NotAStudentError("You must be logged in as a student user to add courses to your semester.")
-        pass
-
-    s = Student(session['userID'])
+    # Initialize selected courses incase it doesn't exist.
+    initSelectedCourses()
 
     try:
-        s.selectCourse(cid)
-        print("Selected Courses:")
-        for c in s.selectedCourses:
-            print(c.getID())
+        selectCourse(cid)
     except SelectCourseError as e:
         print(str(e))
     
-    return redirect(url_for('courses' , cid=cid.replace(" ", "-")))
+    # Will return back to page user visited this route from, or index if they accessed it directly.
+    return redirect(request.referrer or url_for('index'))
 
 
 @app.route('/logout')

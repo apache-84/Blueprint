@@ -119,31 +119,33 @@ def initSelectedCourses():
     if 'selected_courses' not in session:
         session['selected_courses'] = []
 
-def calculateSemesterData():
+def calculateSemesterData(courseIDs: list[str]):
     """
     Calculates the semester data from a users's selected courses list.
     
-    Returns a 3-element list containing the selected courses, average difficulty, and total recommended hours per week.
-    Index 0 is a list of Course objects, index 1 is the semester's average difficulty, index 2 is the total hours per week.
+    Returns a 2-element list containing the total recommended hours per week and average difficulty of the selected courses.
+    Index 0 is the total hours per week, index 1 is the semester's average difficulty.
     :return: A list of the results in the format described above, named 'semesterData'.
     """
-    courses = session.get('selected_Courses')
+
+    # Sanity check
+    if len(courseIDs) == 0:
+        return
 
     dsum = 0.0
-    semesterData = [[], 0.0, 0.0]
+    semesterData = [0.0, 0.0]
 
-    for cid in courses:
+    for cid in courseIDs:
         course = getCourse(cid)
 
         dsum += course.getDifficulty()
-        semesterData[2] += course.getHours()
-        semesterData[0].append(course)
+        semesterData[0] += course.getHours()
     
-    semesterData[1] = dsum / len(courses)
+    semesterData[1] = dsum / len(courseIDs)
 
     # Rounding to one decimal place.
     semesterData[1] = round(semesterData[1], 1)
-    semesterData[2] = round(semesterData[2], 1)
+    semesterData[0] = round(semesterData[0], 1)
     return semesterData
 
 def selectCourse(cid: str): 
@@ -153,10 +155,10 @@ def selectCourse(cid: str):
     Get a courseID, check that the courseID exists and then append the corresponding Course object with the given courseID to selectedCourses.
     """
     
-    courses = session.get('selected_Courses')
+    courses = session.get('selected_courses')
 
     if checkCourseID(cid) == True:
-        if cid in courses:
+        if len(courses) > 0 and cid in courses:
             raise SelectCourseError("You have already selected that course! Can't add it to your semester.")
         courses.append(cid)
         session['selected_courses'] = courses

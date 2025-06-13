@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Blueprint - Calculator{% endblock %}
+
+{% block content %}
+
+<div class="semester-card">
+  <h1>Your Semester</h1>
+  <div class="semester-stats">
+    {% if semesterData | length == 2 %}
+      <h2>Recommended hours per week: {{ semesterData[0] }}</h2>
+      <h2>Difficulty: {{ semesterData[1] }}</h2>
+      <br>
+      <form action="{{ url_for('calculateSemester') }}" method="POST">
+        <button type="submit" class="calc-button">Calculate your semester</button>
+      </form>
+      <form action="{{ url_for('clearSemester') }}" method="POST">
+        <button type="submit" class="clear-button">Clear all courses from your semester</button>
+      </form>
+    {% elif courses | length > 0 %}
+      <h2>Press the button to view your semester results!</h2>
+      <br>
+      <form action="{{ url_for('calculateSemester') }}" method="POST">
+        <button type="submit" class="calc-button">Calculate your semester</button>
+      </form>
+      <form action="{{ url_for('clearSemester') }}" method="POST">
+        <button type="submit" class="clear-button">Clear all courses from your semester</button>
+      </form>
+      <h2>You have no courses selected. No semester data available.</h2>
+    {% else %}
+      <h2>You have no courses selected. No semester data available.</h2>
+    {% endif %}
+  </div>
+</div>
+
+<div class="cards">
+  <h1>Selected Courses</h1>
+  <!-- Each course is a dict. -->
+  {% for course in courses %}
+    <a href="{{ url_for('courses', cid = course.id.replace(' ', '-')) }}"
+      class="card"
+      data-id="{{ course.id | lower }}"
+      data-name="{{ course.name | lower }}">
+
+      {% if course.difficulty > 3.5 %}
+        <div class="card__header" style="background-color: #ff3232;">
+          {{ course.id }}
+        </div>
+      {% elif course.difficulty < 2.0 %}
+        <div class="card__header" style="background-color: #00b52a;">
+          {{ course.id }}
+        </div>
+      {% else %}
+        <div class="card__header" style="background-color: #ffb915;">
+          {{ course.id }}
+        </div>
+      {% endif %}
+
+      <div class="card__content">
+        <div class="card__name" >{{ course.name }}</div>
+      
+        <div class="details_wrapper">
+          <div class="details">
+            <p><strong>Recommended Hours: </strong>{{ course.hours }}<br></p>
+            <p><strong>Sections: </strong>{{ course.sections }}<br></p>
+            <p><strong>Recommended Year: </strong>{{ course.year }}<br></p>
+            <p><strong>Available Terms: </strong>{{ course.term }}</p>
+          </div>
+
+        <div class="difficulty">
+          <strong>Difficulty: </strong><br>
+          <p>{{ course.difficulty }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card__info">
+        <div><i class="bx bx-comment-check"> Reviews: </i> {{ course.reviewCount }}</div>
+         <form action="{{ url_for('index') }}" method="POST">
+          <input type="hidden" name="course_id" value="{{ course.id }}">
+          <button type="submit" class="add-button">Add Course to Semester</button>
+        </form>
+      </div>
+    </a>
+  {% endfor %}
+</div>
+
+{% endblock %}
