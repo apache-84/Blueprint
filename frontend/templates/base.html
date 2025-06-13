@@ -50,13 +50,15 @@
             </a>
             <span class="tooltip">Calculator</span>
           </li>
-          <li>
-            <a href="#"> 
-              <i class="bx bx-comment-check"></i>
-              <span class="nav-item">Your Reviews</span>
-            </a>
-            <span class="tooltip">Your Reviews</span>
-          </li>
+          {% if session.get('userType') == 'S' %}
+            <li>
+              <a href="{{ url_for('reviews', stuID = session.get('userID')) }}"> 
+                <i class="bx bx-comment-check"></i>
+                <span class="nav-item">Your Reviews</span>
+              </a>
+              <span class="tooltip">Your Reviews</span>
+            </li>
+          {% endif %}
           <li>
             <a href="{{ url_for('about') }}"> 
               <i class="bx bxs-info-square"></i>

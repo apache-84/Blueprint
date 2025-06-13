@@ -165,7 +165,6 @@ def calculateSemester():
 
     return redirect(url_for('calculator'))
 
-
 @app.route('/semester/clear', methods=['POST'])
 def clearSemester():
     # Initialize selected courses incase it doesn't exist.
@@ -200,6 +199,15 @@ def logout():
     session['userID'] = ""
     flash("You have logged out!")
     return redirect(url_for('index'))
+
+@app.route('/reviews/<int:stuID>')
+def reviews(stuID: int):
+    reviews = []
+    stuReviews = getReviews(stuID)
+    for review in stuReviews:
+        reviews.append(reviewToDict(review))
+
+    return render_template('your_reviews.html', reviews = reviews)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Blueprint - {{ session.get('username') }}'s Reviews {% endblock %}
+
+{% block content %}
+
+<h1>Your Posted Reviews</h1>
+{% if reviews | length == 0 %}
+<h3>Looks like you haven't posted any reviews yet...</h3>
+{% endif %}
+
+{% for review in reviews %}
+    <div class="review__header">
+        <div><strong>ID: </strong><span>{{ review.id }}</span></div>
+        <div><strong>For Course: </strong><span>{{ review.course }}</span></div>
+        <div><strong>Difficulty: </strong><span>{{ review.difficulty }}</span></div>
+        <div><strong>Recommended Hours Per Week: </strong><span>{{ review.hours }}</span></div>
+        <div>Posted on <span>{{ review.date }}</span></div>
+    </div>
+    <div class="review__content">
+        <div><strong>Text: </strong><p>{{ review.text }}</p></div>
+    </div>
+
+    <div class="review__footer">
+        <a href="{{ url_for('courses', cid = review.course.replace(' ', '-')) }}">
+            <button>Go To Course</button>
+        </a>
+        <button action="">Edit Review</button>
+    </div>
+    <hr>
+{% endfor %}
+
+
+{% endblock %}
