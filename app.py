@@ -52,7 +52,6 @@ def register():
             return redirect(url_for("index"))  # Change back to home page
         except UsernameTakenError as e: 
             registerForm.username.errors.append(str(e))
-            print(str(e))
 
     return render_template("register.html", registerForm = registerForm)
 
@@ -159,6 +158,7 @@ def addCourse(cid):
 
 @app.route('/logout')
 def logout():
+    session.clear()
     session['userType'] = "G"
     session['username'] = ""
     session['userID'] = ""

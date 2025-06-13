@@ -21,13 +21,13 @@ def registerUser(userType: str, username: str, password: str):
         if userType == "S":
             student = registerStudent(username, password)
             session['userType'] = userType
-            session['username'] = student['username']
-            session['userID'] = student['id']
+            session['username'] = student.getUsername()
+            session['userID'] = student.getID()
         if userType == "F":
             faculty = registerFaculty(username, password)
             session['userType'] = userType
-            session['username'] = faculty['username']
-            session['userID'] = faculty['id']
+            session['username'] = faculty.getUsername()
+            session['userID'] = faculty.getID()
     else:
         login_url = url_for('login')
         raise UsernameTakenError(Markup(f"An account with that username already exists.<br>" 
