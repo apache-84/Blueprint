@@ -19,7 +19,7 @@
             <i class="bx bx-menu" id="btn"></i> <!-- Menu Icon "Three Lines" --> 
           </div>
           <div class="user">
-            <img src="/docs/Images/SFUC.png" alt="me" class="user-img"> <!-- User Image, Eventually need to let user edit these -->
+              <img src="" alt="me" class="user-img"> <!-- User Image, Eventually need to let user edit these -->
             <div>
               {% if session.get('userType') == 'S' %}
                 <p class="bold">{{ session.get('username') }}</p> <!-- User Name -->
@@ -29,7 +29,7 @@
                 <p>Faculty</p>
               {% else %}
                 <a href="{{ url_for('login') }}">
-                  <button class ="nav-login">Log In</button>
+                  <button class ="nav-item">Log In</button>
                 </a>
                 <p>Guest</p>
               {% endif %}
@@ -80,7 +80,7 @@
             <span class="tooltip">Settings</span>
           </li>
           <li>
-            <a href="#"> 
+            <a href="{{ url_for('logout') }}"> 
               <i class="bx bxs-log-out"></i>
               <span class="nav-item">Logout</span>
             </a>

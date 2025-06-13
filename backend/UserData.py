@@ -20,14 +20,14 @@ def registerUser(userType: str, username: str, password: str):
     if checkUsername(userType, username) == True:
         if userType == "S":
             student = registerStudent(username, password)
-            session['user_type'] = userType
+            session['userType'] = userType
             session['username'] = student['username']
-            session['user_id'] = student['id']
+            session['userID'] = student['id']
         if userType == "F":
             faculty = registerFaculty(username, password)
-            session['user_type'] = userType
+            session['userType'] = userType
             session['username'] = faculty['username']
-            session['user_id'] = faculty['id']
+            session['userID'] = faculty['id']
     else:
         login_url = url_for('login')
         raise UsernameTakenError(Markup(f"An account with that username already exists.<br>" 
@@ -44,31 +44,31 @@ def loginUser(userType: str, username: str, password: str):
         if checkPassword(userType, username, password):
             if userType == "S":
                 student = stuToDict(getStudent(username))
-                session['user_type'] = userType
+                session['userType'] = userType
                 session['username'] = student['username']
-                session['user_id'] = student['id']
+                session['userID'] = student['id']
             elif userType == "F":  
                 faculty = facToDict(getFaculty(username))
-                session['user_type'] = userType
+                session['userType'] = userType
                 session['username'] = faculty['username']
-                session['user_id'] = faculty['id']
+                session['userID'] = faculty['id']
             else:
-                session['user_type'] = "G"
+                session['userType'] = "G"
                 session['username'] = ""
-                session['user_id'] = ""
+                session['userID'] = ""
         else:
             raise IncorrectPasswordError("Password is incorrect.")
 
             
 def getCurrentUser():
-    user_type = session.get('user_type')
-    user_id = session.get('user_id')
+    userType = session.get('userType')
+    userID = session.get('userID')
     username = session.get('username')
 
-    if user_type == 'S':
-        return Student(user_id, username)
-    elif user_type == 'F':
-        return FacultyMember(user_id, username, "", getCoursesTaught(user_id))
+    if userType == 'S':
+        return Student(userID, username)
+    elif userType == 'F':
+        return FacultyMember(userID, username, "", getCoursesTaught(userID))
     return None  # not logged in
 
 

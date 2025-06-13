@@ -22,6 +22,7 @@ DB_FILE = "database/blueprintdb.db"
 
 @app.route('/', methods=["GET", "POST"])
 def index():
+    print("Session:", dict(session))
     # Get every available course
     courseData = []
     for c in getAllCourses():
@@ -139,11 +140,11 @@ def addCourse(cid):
     cid = cid.replace("-", " ")
 
     # Check if logged in as a student
-    if session['user_type'] != "S":
+    if session['userType'] != "S":
         # raise NotAStudentError("You must be logged in as a student user to add courses to your semester.")
         pass
 
-    s = Student(session['user_id'])
+    s = Student(session['userID'])
 
     try:
         s.selectCourse(cid)
@@ -154,6 +155,15 @@ def addCourse(cid):
         print(str(e))
     
     return redirect(url_for('courses' , cid=cid.replace(" ", "-")))
+
+
+@app.route('/logout')
+def logout():
+    session['userType'] = "G"
+    session['username'] = ""
+    session['userID'] = ""
+    flash("You have logged out!")
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
