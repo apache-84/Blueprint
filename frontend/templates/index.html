@@ -33,9 +33,19 @@
        data-id="{{ course.id | lower }}"
        data-name="{{ course.name | lower }}">
 
-      <div class="card__header">
-        {{ course.id }}
-      </div>
+      {% if course.difficulty > 3.5 %}
+        <div class="card__header" style="background-color: #ff3232;">
+          {{ course.id }}
+        </div>
+      {% elif course.difficulty < 2.0 %}
+        <div class="card__header" style="background-color: #00b52a;">
+          {{ course.id }}
+        </div>
+      {% else %}
+        <div class="card__header" style="background-color: #ffb915;">
+          {{ course.id }}
+        </div>
+      {% endif %}
 
       <div class="card__content">
         <div class="card__name" >{{ course.name }}</div>

@@ -9,13 +9,10 @@ from backend.StudentData import *
 from backend.Faculty import *
 from backend.FacultyData import *
 from backend.CoursesTaughtData import *
+from backend.UserData import *
 from database.db_setup import *
-#from frontend.forms import *
+from frontend.forms import RegistrationForm, LoginForm
 from flask import Flask, render_template, request, url_for, redirect, session, flash
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, PasswordField, BooleanField, RadioField
-from wtforms.validators import DataRequired, Length
-from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__, template_folder='frontend/templates', static_folder='frontend/static')
 
@@ -23,19 +20,9 @@ app.config["SECRET_KEY"] = "secretkeyoooooo"
 
 DB_FILE = "database/blueprintdb.db"
 
-class LoginForm(FlaskForm):
-    username = StringField("Username", validators=[Length(min=2, max=20)])
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=2)])
-    submit = SubmitField("Login")
-
-class RegistrationForm(FlaskForm):
-    username = StringField("Username", validators=[Length(min=2, max=20)])
-    userType = RadioField("Registering as", choices=[("S", "Student"), ("F", "Faculty")], validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=2)])
-    submit = SubmitField("Register Account")
-
 @app.route('/', methods=["GET", "POST"])
 def index():
+    print("Session:", dict(session))
     # Get every available course
     courseData = []
     for c in getAllCourses():
@@ -53,32 +40,18 @@ def index():
 def register():
 
     registerForm = RegistrationForm()
-    user_type = registerForm.userType.data
 
     if registerForm.validate_on_submit(): #we want a way to check if s or f called to insert for faculty or student query
         try:
             username = registerForm.username.data
             password = registerForm.password.data
-            user_type = registerForm.userType.data # boolean for student or faculty
+            userType = registerForm.userType.data 
 
-            if user_type == "S":
-                student = registerStudent(username, password)
-
-                # Make a cookie to store user's ID, name, and type.      
-                session['user_id'] = student.getID()
-                session['user_name'] = student.getUsername()
-                session['user_type'] = "S"
-
-                return redirect(url_for("index"))  # Change back to home page
-            elif user_type == "F":
-                pass
-                # registerFaculty()
-            else:
-                flash("Invalid user type selected. Please choose Student or Faculty.", "danger")
-                return render_template("register.html", registerForm = registerForm)
+            registerUser(userType, username, password)
+            flash(f"Registration for {username} successful!", "success")
+            return redirect(url_for("index"))  # Change back to home page
         except UsernameTakenError as e: 
             registerForm.username.errors.append(str(e))
-        flash(f"Registration for {session['user_name']} successful!")
 
     return render_template("register.html", registerForm = registerForm)
 
@@ -103,10 +76,18 @@ def login():
     loginForm = LoginForm()
     if loginForm.validate_on_submit():
         try:
-            student = loginStudent(loginForm.username.data, loginForm.password.data)
-            session['user_id'] = student.getID()
-            session['user_name'] = student.getUsername()
-            session['user_type'] = "S"
+            userType = loginForm.userType.data
+            username = loginForm.username.data
+            password = loginForm.password.data
+
+            loginUser(userType, username, password)
+            flash(f"Login for {username} successful!", "success")
+
+            if loginForm.remember.data == True:
+                session.permanent = True
+            else:
+                session.permanent = False
+
             return redirect(url_for('index'))
         except UsernameNotFoundError as e:
             loginForm.username.errors.append(str(e))
@@ -158,11 +139,11 @@ def addCourse(cid):
     cid = cid.replace("-", " ")
 
     # Check if logged in as a student
-    if session['user_type'] != "S":
-        raise NotAStudentError("You must be logged in as a student user to add courses to your semester.")
-    
+    if session['userType'] != "S":
+        # raise NotAStudentError("You must be logged in as a student user to add courses to your semester.")
+        pass
 
-    s = Student(session['user_id'])
+    s = Student(session['userID'])
 
     try:
         s.selectCourse(cid)
@@ -173,6 +154,16 @@ def addCourse(cid):
         print(str(e))
     
     return redirect(url_for('courses' , cid=cid.replace(" ", "-")))
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    session['userType'] = "G"
+    session['username'] = ""
+    session['userID'] = ""
+    flash("You have logged out!")
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)

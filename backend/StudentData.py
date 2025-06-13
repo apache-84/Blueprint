@@ -4,54 +4,28 @@ from .ReviewData import getReview
 from .Review import Review
 from .AnnouncementData import getReactions, getAnnouncement
 import hashlib
-import time
 
-"""
-Inputs student with given ID's account info into database.
-"""
+
 def updateStudent(stuID: int, username: str, password: str):
+    """
+    Inputs student with given ID's account info into database.
+    """
     sql = "update Students set username = ?, password = ? where studentID = ?"
     execute_query(sql, username, password, stuID)
 
-"""
-Checks if a student member account with username exists. Returns true if username isn't taken, false if it is.
-"""
-
-def checkUsername(username: str) -> bool:
-    sql = "select * from Students where username = ?"
-    res = fetch_query(sql, username)
-
-    return len(res) == 0
-
-"""
-Checks if a student member account with a given username gave the correct password. True if correct, false if not.
-"""
-
-def checkPassword(username: str, password: str) -> bool:
-    # Hash the password
-    p = hashlib.sha256(password.encode()).hexdigest()
-
-    # Get other password from db
-    sql = "select password from Students where username = ?"
-    res = fetch_query(sql, username)
-    DBPassword = res[0][0]
-
-    return p == DBPassword
-
-
-def registerStudent(username: str, password: str):
+def registerStudent(username: str, password: str) -> Student:
     """
-    Asks the student for their username and password, hashes the password, gets the next available student ID, and stores it to the database.
-    Makes a student object in the process.
+    Takes a student's username and password. Hashes the password, gets the next available student ID, and stores it to the database.
     """
-    s = Student()
-
-    s.setID(getNextID())
-    s.setUsername(username)
-    s.setPassword(password)
+    password = hashlib.sha256(password.encode()).hexdigest()
+    id = getNextID()
 
     sql = "insert into Students values (?, ?, ?)"
-    execute_query(sql, s.getID(), s.getUsername(), s.getPassword())
+    execute_query(sql, id, username, password)
+
+    # Create student object
+    s = Student(username=username, stuID=id)
+    return s
 
 def getReviews(stuID: int) -> list[Review]:
     """
@@ -134,29 +108,23 @@ def updateReaction(stuID: int, annID: int, reaction: int):
     # Update announcement's reactions by reconstructing the object.
     a = getAnnouncement(annID)
      
-def loginStudent(username: str, password: str) -> Student:
-    """
-    """
-    if checkUsername(username) == True:
-        print("An account with that username doesn't exist.")
-    else:
-        if checkPassword(username, password):
-            sql = "select stuID from Students where username = ?"
-            stuID = fetch_query(sql, username)[0][0]
-            s = Student(stuID, username, password)
-            return s
-        else:
-            print("Password is incorrect.")
-
 def stuToDict(s: Student) -> dict:
     student = {
     "id": s.getID(),
     "username": s.getUsername(),
     "password": s.getPassword(),
-    "selectedCourses": s.getSelCourses()
     }
     return student
     
+def getStudent(username: str):
+    sql = "select * from Students where username = ?"
+    res = fetch_query(sql, username)
+    if len(res) == 0:
+        return None
+    
+    id = res[0][0]
+    username = res[0][1]
 
-if __name__ == '__main__':
-    loginStudent()
+    s = Student(stuID = id, username = username)
+    return s
+
