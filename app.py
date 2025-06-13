@@ -202,6 +202,10 @@ def logout():
 
 @app.route('/reviews/<int:stuID>')
 def reviews(stuID: int):
+    # Sanity check, should never need this.
+    if session.get('userType') != "S":
+        flash("You must be a student to have posted reviews.")
+        
     reviews = []
     stuReviews = getReviews(stuID)
     for review in stuReviews:
