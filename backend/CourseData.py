@@ -1,10 +1,10 @@
 from .db_queries import *
 from .Review import Review
-from .ReviewData import getReview, findNextID
+from .ReviewData import getReview, findNextID, getStuReview
 from .Course import Course
 from .Announcement import Announcement
 from .AnnouncementData import getAnnouncement
-
+import datetime
 
 def writeReview(r: Review, cid: str, stuID: int):
     """
@@ -12,17 +12,24 @@ def writeReview(r: Review, cid: str, stuID: int):
 
     First checks if the course ID is for an existing course. If the course exists, then it inserts the review into the database.
     After database insertion, the course's difficulty and hours values are updated and written to the database as well.
+    
+    Note that the review only needs to have difficulty, hours, text, and title values.
+    
     :param r: The review to be written to the database.
     :param cid" The course ID of the review.
     """
     if checkCourseID(cid) == False:
         print("Course with the given ID doesn't exist in the database.")
         return
+    
+    if getStuReview(stuID, cid) != None:
+        print("Student has already reviewed this course.")
+        return
 
     id = findNextID()
     difficulty = r.getDifficulty()
     hours = r.getHours()
-    date = r.getDate()
+    date = str(datetime.today().date())
     text = r.getText()
 
     sql = "insert into Reviews values (?, ?, ?, ?, ?, ?, ?)" 

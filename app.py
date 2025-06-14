@@ -11,7 +11,7 @@ from backend.FacultyData import *
 from backend.CoursesTaughtData import *
 from backend.UserData import *
 from database.db_setup import *
-from frontend.forms import RegistrationForm, LoginForm
+from frontend.forms import *
 from flask import Flask, render_template, request, url_for, redirect, session, flash
 
 app = Flask(__name__, template_folder='frontend/templates', static_folder='frontend/static')
@@ -60,22 +60,6 @@ def register():
 
     return render_template("register.html", registerForm = registerForm)
 
-@app.route('/list_users', methods=['GET'])
-def list_users():
-    conn = sqlite3.connect(DB_FILE)
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM Students")
-    students = cursor.fetchall()
-
-    cursor.execute("SELECT * FROM FacultyMembers")
-    faculty = cursor.fetchall()
-
-    conn.close()
-
-    return render_template("list_users.html", students=students, faculty=faculty)
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     loginForm = LoginForm()
@@ -101,6 +85,20 @@ def login():
     
     return render_template("login.html", loginForm = loginForm)
 
+@app.route('/list_users', methods=['GET'])
+def list_users():
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM Students")
+    students = cursor.fetchall()
+
+    cursor.execute("SELECT * FROM FacultyMembers")
+    faculty = cursor.fetchall()
+
+    conn.close()
+
+    return render_template("list_users.html", students=students, faculty=faculty)
 
 @app.route('/courses/<cid>', methods=['GET', 'POST'])
 def courses(cid):
@@ -205,13 +203,41 @@ def reviews(stuID: int):
     # Sanity check, should never need this.
     if session.get('userType') != "S":
         flash("You must be a student to have posted reviews.")
-        
+
     reviews = []
     stuReviews = getReviews(stuID)
     for review in stuReviews:
         reviews.append(reviewToDict(review))
 
     return render_template('your_reviews.html', reviews = reviews)
+
+@app.route('/courses/<cid>/make-review')
+def makeReview(cid):
+    # Sanity check, shouldn't need
+    if session.get('userType') != "S":
+        flash("Only students can write reviews. You are not a registered student.")
+        return redirect(url_for('courses', cid = cid))
+
+    reviewForm = ReviewForm()
+
+    if reviewForm.validate_on_submit():
+        difficulty = reviewForm.difficulty.data
+        hours = reviewForm.hours.data
+        title = reviewForm.title.data
+        text = reviewForm.text.data
+        r = Review(text=text, diff=difficulty, hours=hours)
+        return redirect(url_for('submitReview', stuID = session.get('userID'), cid = cid, review = r))
+    
+    return render_template("review_form.html", form = reviewForm)
+
+@app.route('/submit-review/<int:stuID>/<cid>')
+def submitReview(stuID: int, cid: str, review: Review):
+    cid = cid.replace("-", " ")
+
+    writeReview(review, cid, stuID)
+    
+
+    return redirect(url_for('courses', cid = cid.replace(" ", "-")))
 
 if __name__ == '__main__':
     app.run(debug=True)
