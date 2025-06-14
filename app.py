@@ -13,15 +13,12 @@ from backend.UserData import *
 from database.db_setup import *
 from frontend.forms import *
 from flask import Flask, render_template, request, url_for, redirect, session, flash
+from datetime import datetime
+
 
 app = Flask(__name__, template_folder='frontend/templates', static_folder='frontend/static')
 
 app.config["SECRET_KEY"] = "secretkeyoooooo"
-
-# Default user data
-# session['userType'] = "G"
-# session['username'] = ""
-# session['userID'] = ""
 
 DB_FILE = "database/blueprintdb.db"
 
@@ -115,13 +112,25 @@ def courses(cid):
     for r in reviewList:
         reviews.append(reviewToDict(r))
 
+
+    # Get current student's review
+    stuReview = None
+    if session.get('userType') == "S":
+        stuReview = getStuReview(session.get('userID'), cid)
+        # If a stu review exists, get it as a dict and remove it from the rest of the reviews.
+        if stuReview != None:
+            for index, review in enumerate(reviews):
+                if review['id'] == stuReview.getID():
+                    stuReview = reviews.pop(index)
+                    break
+
     # Get all course announcements
     announcements = []
     annList = getCourseAnnouncements(cid)
     for a in annList:
         announcements.append(annToDict(a))
 
-    return render_template("course.html", course=course, reviews=reviews, announcements=announcements)
+    return render_template("course.html", course=course, reviews=reviews, announcements=announcements, stuReview = stuReview)
 
 @app.route('/about', methods=['GET'])
 def about():
@@ -171,7 +180,7 @@ def clearSemester():
 
     return redirect(url_for('calculator'))
 
-# WIP - Route to add course to a student's selected courses.
+# Route to add course to a student's selected courses.
 @app.route('/add-course/<cid>', methods=['POST'])
 def addCourse(cid):
     # Replacing hyphens from passed URL back to spaces for DB querying.
@@ -185,6 +194,28 @@ def addCourse(cid):
     except SelectCourseError as e:
         print(str(e))
     
+    # Will return back to page user visited this route from, or index if they accessed it directly.
+    return redirect(request.referrer or url_for('index'))
+
+# Route to remove course from a student's selected courses.
+@app.route('/remove-course/<cid>', methods=['GET'])
+def removeCourse(cid):
+    # Replacing hyphens from passed URL back to spaces for DB querying.
+    cid = cid.replace("-", " ")
+
+    # Initialize selected courses incase it doesn't exist.
+    initSelectedCourses()
+
+    print("Selected Courses:", session.get('selected_courses'))
+
+    try:
+        session['selected_courses'].remove(cid)
+        session['selected_courses'] = session['selected_courses']
+    except Exception as e:
+        print(str(e))
+    
+    print("Selected Courses:", session.get('selected_courses'))
+
     # Will return back to page user visited this route from, or index if they accessed it directly.
     return redirect(request.referrer or url_for('index'))
 
@@ -211,13 +242,14 @@ def reviews(stuID: int):
 
     return render_template('your_reviews.html', reviews = reviews)
 
-@app.route('/courses/<cid>/make-review')
+@app.route('/courses/<cid>/make-review', methods=['GET', 'POST'])
 def makeReview(cid):
     # Sanity check, shouldn't need
     if session.get('userType') != "S":
         flash("Only students can write reviews. You are not a registered student.")
         return redirect(url_for('courses', cid = cid))
-
+    
+    editFlag = False # Since we are making and not editing a review.
     reviewForm = ReviewForm()
 
     if reviewForm.validate_on_submit():
@@ -226,9 +258,61 @@ def makeReview(cid):
         title = reviewForm.title.data
         text = reviewForm.text.data
         r = Review(text=text, diff=difficulty, hours=hours)
-        return redirect(url_for('submitReview', stuID = session.get('userID'), cid = cid, review = r))
+        return redirect(url_for('reviews', session.get('userID')))
     
-    return render_template("review_form.html", form = reviewForm)
+    return render_template("review_form.html", form = reviewForm, cid = cid, editFlag = editFlag)
+@app.route('/courses/<cid>/edit-review', methods=['GET', 'POST'])
+def editReview(cid):
+    # Sanity check, shouldn't need
+    if session.get('userType') != "S":
+        flash("Only students can edit reviews. You are not a registered student.")
+        return redirect(request.referrer or url_for('index'))
+    
+    cid = cid.replace("-", " ")
+    editFlag = True # Since we are editing and not making a review.
+
+    reviewForm = ReviewForm()
+    # Get the review
+    review = getStuReview(session.get('userID'), cid)
+
+
+    # When getting the page.
+    if request.method == 'GET':        
+        reviewForm.difficulty.data = review.getDifficulty()
+        reviewForm.hours.data = review.getHours()
+        # reviewForm.title.data = review.getTitle()
+        reviewForm.text.data = review.getText()
+        lastUpdated = review.getDate()
+
+    if reviewForm.validate_on_submit():
+        review.setDifficulty(reviewForm.difficulty.data)
+        review.setHours(reviewForm.hours.data)
+        # review.setTitle(reviewForm.title.data)
+        review.setText(reviewForm.text.data)
+        review.setDate(str(datetime.today().date()))
+
+        updateReview(review, session.get('userID'))
+
+        return redirect(url_for('reviews', session.get('userID')))
+    return render_template("review_form.html", form = reviewForm, lastUpdated = lastUpdated, cid = cid, reviewID = review.getID(), editFlag = editFlag)
+
+
+@app.route('/delete-review/<int:reviewID>', methods=['GET'])
+def deleteReview(reviewID):
+    # Sanity check, shouldn't need
+    if session.get('userType') != "S":
+        flash("Only students can edit reviews. You are not a registered student.")
+        return redirect(request.referrer or url_for('index'))
+    
+    # If review exists, delete it.
+    if getReview(reviewID) != None:
+        deleteReviewDB(reviewID)
+    else:
+        flash("You have not written a review for this course. Can't delete review.")
+    
+    return redirect(url_for('reviews', stuID = session.get('userID')))
+
+
 
 @app.route('/submit-review/<int:stuID>/<cid>')
 def submitReview(stuID: int, cid: str, review: Review):

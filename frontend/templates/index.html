@@ -52,7 +52,12 @@
       
         <div class="details_wrapper">
           <div class="details">
-            <p><strong>Recommended Hours: </strong>{{ course.hours }}<br></p>
+            <p><strong>Recommended Hours: </strong>
+              {% if course.reviewCount == 0 %}
+                N/A</p>
+              {% else %}
+                <p>{{ course.difficulty }}</p>
+              {% endif %}
             <p><strong>Sections: </strong>{{ course.sections }}<br></p>
             <p><strong>Recommended Year: </strong>{{ course.year }}<br></p>
             <p><strong>Available Terms: </strong>{{ course.term }}</p>
@@ -60,7 +65,11 @@
 
         <div class="difficulty">
           <strong>Difficulty: </strong><br>
-          <p>{{ course.difficulty }}</p>
+              {% if course.reviewCount == 0 %}
+                <p>N/A</p>
+              {% else %}
+                <p>{{ course.difficulty }}</p>
+              {% endif %}
           </div>
         </div>
       </div>

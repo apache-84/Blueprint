@@ -61,7 +61,12 @@
       
         <div class="details_wrapper">
           <div class="details">
-            <p><strong>Recommended Hours: </strong>{{ course.hours }}<br></p>
+            <p><strong>Recommended Hours: </strong>              
+              {% if course.reviewCount == 0 %}
+                N/A</p>
+              {% else %}
+                {{ course.difficulty }}</p>
+              {% endif %}
             <p><strong>Sections: </strong>{{ course.sections }}<br></p>
             <p><strong>Recommended Year: </strong>{{ course.year }}<br></p>
             <p><strong>Available Terms: </strong>{{ course.term }}</p>
@@ -69,16 +74,20 @@
 
         <div class="difficulty">
           <strong>Difficulty: </strong><br>
-          <p>{{ course.difficulty }}</p>
+            {% if course.reviewCount == 0 %}
+              <p>N/A</p>
+            {% else %}
+              <p>{{ course.difficulty }}</p>
+            {% endif %}
           </div>
         </div>
       </div>
 
       <div class="card__info">
         <div><i class="bx bx-comment-check"> Reviews: </i> {{ course.reviewCount }}</div>
-         <form action="{{ url_for('index') }}" method="POST">
+        <form action="{{ url_for('removeCourse', cid = course.id.replace(' ', '-')) }}" method="GET">
           <input type="hidden" name="course_id" value="{{ course.id }}">
-          <button type="submit" class="add-button">Add Course to Semester</button>
+          <button type="submit" class="add-button">Remove course from your semester</button>
         </form>
       </div>
     </a>

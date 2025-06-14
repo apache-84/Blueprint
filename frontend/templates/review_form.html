@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Blueprint - Edit Review{% endblock %}
+
+{% block content %}
+<form method="POST">
+    
+    <h1>Review Editor</h1>
+    <h2>{{ session.get('username') }}'s review of {{ cid }}:</h2>
+
+    {{ form.hidden_tag() }}
+
+    <div>
+        {{ form.difficulty.label }}<br>
+        {{ form.difficulty(step="0.1") }}
+        {% if form.difficulty.errors %}
+            <ul class="errors">
+                {% for error in form.difficulty.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <div>
+        {{ form.hours.label }}<br>
+        {{ form.hours(step="0.1") }}
+        {% if form.hours.errors %}
+            <ul class="errors">
+                {% for error in form.hours.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <hr>
+    <div>
+        {{ form.title.label }}<br>
+        {{ form.title(size=40) }}
+        {% if form.title.errors %}
+            <ul class="errors">
+                {% for error in form.title.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+    <div>
+        {{ form.text.label }}<br>
+        {{ form.text(rows=20, cols=200, id="reviewText") }}
+        <div id="charCount">500</div>
+        <ul class="errors">
+            {% for error in form.text.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        {{ form.submit() }}
+    </div>
+    {% if editFlag == True %}
+        <div>
+            <p>Review last updated on {{ lastUpdated }}.</p>
+        </div>
+    {% endif %}
+</form>
+    
+{% if editFlag == True %}
+    <div>
+        <a href="{{ url_for('deleteReview', reviewID=reviewID) }}">
+            <button>Delete Review</button>
+        </a>
+    </div>
+{% endif %}
+
+<!-- Script to update characters remaining for the review editor. -->
+<script>
+    const textArea = document.getElementById("reviewText");
+    const charCount = document.getElementById("charCount");
+    const maxChars = 500;
+
+    function updateCharCount() {
+        const remaining = maxChars - textArea.value.length;
+        charCount.textContent = `${remaining}`;
+
+        if (remaining <= 50) {
+            charCount.style.color = "red";
+        } else {
+            charCount.style.color = "inherit";
+        }
+    }
+
+    // Initialize count on page load
+    updateCharCount();
+
+    // Update count on input
+    textArea.addEventListener("input", updateCharCount);
+</script>
+
+{% endblock %}

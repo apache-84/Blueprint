@@ -91,6 +91,8 @@ class Course():
         """
         
         if len(rs) == 0:
+            self.setDifficulty(0.0)
+            self.setHours(0.0)
             return
         
         # Get difficulty

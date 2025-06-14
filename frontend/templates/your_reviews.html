@@ -25,7 +25,9 @@
         <a href="{{ url_for('courses', cid = review.course.replace(' ', '-')) }}">
             <button>Go To Course</button>
         </a>
-        <button action="">Edit Review</button>
+        <a href="{{ url_for('editReview', cid = review.course.replace(' ', '-')) }}">
+            <button>Edit Review</button>
+        </a>
     </div>
     <hr>
 {% endfor %}

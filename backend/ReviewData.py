@@ -1,13 +1,14 @@
 from .db_queries import fetch_query, execute_query
 from .Review import Review
-    
-def deleteReview(id: int): # deletes a review given an id
+from datetime import datetime
+
+def deleteReviewDB(id: int): # deletes a review given an id
     """
     Deletes a review from the database given a reviewID
 
     :param id: The reviewID of the review to be deleted.
     """
-    sql = "delete * from Reviews where reviewID = ?"
+    sql = "delete from Reviews where reviewID = ?"
     execute_query(sql, id)
 
 def getStuReview(stuID: int, cid: str) -> Review:

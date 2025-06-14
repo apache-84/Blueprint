@@ -10,8 +10,14 @@
   <div class="course-header">
     <div><strong>Course: </strong><span>{{ course.id }}</span></div>
     <div><strong>Title: </strong><span>{{ course.name }}</span></div>
-    <div><strong>Hours: </strong><span>{{ course.hours }}</span></div>
-    <div><strong>Difficulty: </strong><span>{{ course.difficulty }}</span></div>
+    <!-- If there are no reviews, we want to set these sections to "N/A". -->
+    {% if reviews | length == 0 %}
+      <div><strong>Hours: </strong><span>N/A</span></div>
+      <div><strong>Difficulty: </strong><span>N/A</span></div>
+    {% else %}
+      <div><strong>Hours: </strong><span>{{ course.hours }}</span></div>
+      <div><strong>Difficulty: </strong><span>{{ course.difficulty }}</span></div>
+    {% endif %}
     <div><strong>Sections: </strong><span>{{ course.sections }}</span></div>
     <div><strong>Recommended Year: </strong><span>{{ course.year }}</span></div>
     <div><strong>Available Terms: </strong><span>{{ course.term }}</span></div>
@@ -39,6 +45,26 @@
 
 
     <div class="tab-panel hidden" id="reviews">
+      {% if session.get('userType') == "S" and stuReview %}
+      <h1>Your review of this course:</h1>
+        <div class="review__header">
+          <div><strong>ID: </strong><span>{{ stuReview.id }}</span></div>
+          <div><strong>Difficulty: </strong><span>{{ stuReview.difficulty }}</span></div>
+          <div><strong>Recommended Hours Per Week: </strong><span>{{ stuReview.hours }}</span></div>
+          <div>Posted on <span>{{ stuReview.date }}</span></div>
+        </div>
+        <div class="review__content">
+          <!-- <div><strong>Title: </strong><p>{{ stuReview.title }}</p></div> -->
+          <div><strong>Text: </strong><p>{{ stuReview.text }}</p></div>
+        </div>
+        <div class="review__footer">
+          <a href="{{ url_for('editReview', cid = stuReview.course.replace(' ', '-')) }}">
+              <button>Edit Review</button>
+          </a>
+        </div>
+        <hr>
+      {% endif %}
+
       <h1>Course Reviews</h1>
       {% for review in reviews %}
         <div class="review__header">
