@@ -194,6 +194,8 @@ def addCourse(cid):
     except SelectCourseError as e:
         print(str(e))
     
+    flash(f"{cid} added to your semester!")
+
     # Will return back to page user visited this route from, or index if they accessed it directly.
     return redirect(request.referrer or url_for('index'))
 
@@ -215,6 +217,9 @@ def removeCourse(cid):
         print(str(e))
     
     print("Selected Courses:", session.get('selected_courses'))
+
+
+    flash(f"{cid} removed from your semester!")
 
     # Will return back to page user visited this route from, or index if they accessed it directly.
     return redirect(request.referrer or url_for('index'))

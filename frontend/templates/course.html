@@ -21,9 +21,15 @@
     <div><strong>Sections: </strong><span>{{ course.sections }}</span></div>
     <div><strong>Recommended Year: </strong><span>{{ course.year }}</span></div>
     <div><strong>Available Terms: </strong><span>{{ course.term }}</span></div>
-    <form action="{{ url_for('addCourse', cid = course.id.replace(' ', '-')) }}" method="POST">
-      <button class="submit">Add course to your semester</button>
-    </form>
+    {% if course.id in session.get('selected_courses') %}
+      <form action="{{ url_for('removeCourse', cid = course.id.replace(' ', '-')) }}" method="POST">
+        <button type="submit" class="add-button">Remove course from your semester</button>
+      </form>
+    {% else %}
+      <form action="{{ url_for('addCourse', cid = course.id.replace(' ', '-')) }}" method="POST">
+        <button type="submit" class="add-button">Add course to your semester</button>
+      </form>
+    {% endif %}
   </div>
 
   <!-- Tabs -->
