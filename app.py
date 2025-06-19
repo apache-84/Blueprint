@@ -198,7 +198,7 @@ def addCourse(cid):
     return redirect(request.referrer or url_for('index'))
 
 # Route to remove course from a student's selected courses.
-@app.route('/remove-course/<cid>', methods=['GET'])
+@app.route('/remove-course/<cid>', methods=['POST'])
 def removeCourse(cid):
     # Replacing hyphens from passed URL back to spaces for DB querying.
     cid = cid.replace("-", " ")
