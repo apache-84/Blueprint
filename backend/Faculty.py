@@ -1,8 +1,8 @@
 from .Course import Course
 from .CourseData import getCourse, updateCourse, checkCourseID, addCourse
 from .Announcement import Announcement
-from .AnnouncementData import postAnnouncement, getAnnouncement, updateEditHistory
-from .CoursesTaughtData import addCoursesTaught, delCoursesTaught
+from .AnnouncementData import postAnnouncement, updateEditHistory
+from .PinnedCoursesData import addPinnedCourses, delPinnedCourses
 import hashlib
 
 class FacultyMember():
@@ -202,8 +202,7 @@ class FacultyMember():
             print("Course", cid, "is already in your courses taught!")
             return
 
-        self.__coursesTaught.append(getCourse(cid))
-        addCoursesTaught(self.getID(), cid)
+        addPinnedCourses(self.getID(), cid)
         print(cid, "succesfully added to your profile!")
         
     def removeCourseProfile(self):
@@ -228,5 +227,5 @@ class FacultyMember():
 
         del self.__coursesTaught[index]
 
-        delCoursesTaught(self.getID(), cid)
+        delPinnedCourses(self.getID(), cid)
         print(cid, "succesfully removed from your profile!")

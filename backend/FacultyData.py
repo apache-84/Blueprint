@@ -1,6 +1,5 @@
 from .Faculty import FacultyMember
 from .db_queries import *
-from .CoursesTaughtData import getCoursesTaught
 import hashlib
 
 

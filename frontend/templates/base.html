@@ -58,6 +58,21 @@
               </a>
               <span class="tooltip">Your Reviews</span>
             </li>
+          {% elif session.get('userType') == 'F' %}
+            <li>
+              <a href="#"> 
+                <i class="bx bx-comment-check"></i>
+                <span class="nav-item">Pinned Courses</span>
+              </a>
+              <span class="tooltip">Pinned Courses</span>
+            </li>
+            <li>
+              <a href="#"> 
+                <i class="bx bx-comment-check"></i>
+                <span class="nav-item">Make Announcement</span>
+              </a>
+              <span class="tooltip">Make Announcement</span>
+            </li>
           {% endif %}
           <li>
             <a href="{{ url_for('about') }}"> 

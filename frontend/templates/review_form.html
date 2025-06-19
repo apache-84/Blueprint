@@ -69,9 +69,9 @@
     
 {% if editFlag == True %}
     <div>
-        <a href="{{ url_for('deleteReview', reviewID=reviewID) }}">
+        <form action="{{ url_for('deleteReview', reviewID=reviewID) }}" method="GET">
             <button>Delete Review</button>
-        </a>
+        </form>
     </div>
 {% endif %}
 

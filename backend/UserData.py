@@ -4,7 +4,7 @@ from .Student import Student
 from .Faculty import FacultyMember
 from .StudentData import *
 from .FacultyData import *
-from .CoursesTaughtData import getCoursesTaught
+from .PinnedCoursesData import getPinnedCourses
 from .CourseData import checkCourseID, getCourse
 import hashlib
 from markupsafe import Markup
@@ -13,7 +13,9 @@ class SelectCourseError(Exception): pass
 class UsernameTakenError(Exception): pass
 class UsernameNotFoundError(Exception): pass
 class IncorrectPasswordError(Exception): pass
+class UserTypeError(Exception): pass
 
+# FUNCTIONS FOR LOGIN SYSTEM
 
 def registerUser(userType: str, username: str, password: str):
 
@@ -28,6 +30,7 @@ def registerUser(userType: str, username: str, password: str):
             session['userType'] = userType
             session['username'] = faculty.getUsername()
             session['userID'] = faculty.getID()
+            initPinnedCourses()
     else:
         login_url = url_for('login')
         raise UsernameTakenError(Markup(f"An account with that username already exists.<br>" 
@@ -52,13 +55,13 @@ def loginUser(userType: str, username: str, password: str):
                 session['userType'] = userType
                 session['username'] = faculty['username']
                 session['userID'] = faculty['id']
+                initPinnedCourses()
             else:
                 session['userType'] = "G"
                 session['username'] = ""
                 session['userID'] = ""
         else:
             raise IncorrectPasswordError("Password is incorrect.")
-
             
 def getCurrentUser():
     userType = session.get('userType')
@@ -68,15 +71,13 @@ def getCurrentUser():
     if userType == 'S':
         return Student(userID, username)
     elif userType == 'F':
-        return FacultyMember(userID, username, "", getCoursesTaught(userID))
+        return FacultyMember(userID, username, "", getPinnedCourses(userID))
     return None  # not logged in
 
-
-"""
-Checks if an account with username exists. Returns true if username isn't taken, false if it is.
-"""
-
 def checkUsername(userType: str, username: str) -> bool:
+    """
+    Checks if an account with username exists. Returns true if username isn't taken, false if it is.
+    """
     if userType == "S":
         sql = "select * from Students where username = ?"
         res = fetch_query(sql, username)
@@ -87,11 +88,10 @@ def checkUsername(userType: str, username: str) -> bool:
         return len(res) == 0
     return False
 
-"""
-Checks if an account with a given username gave the correct password. True if correct, false if not.
-"""
-
 def checkPassword(userType: str, username: str, password: str) -> bool:
+    """
+    Checks if an account with a given username gave the correct password. True if correct, false if not.
+    """
     # Hash the password
     p = hashlib.sha256(password.encode()).hexdigest()
     
@@ -167,3 +167,14 @@ def selectCourse(cid: str):
         raise SelectCourseError("Course not found in database. Reload the page and try again.")
 
 
+# FUNCTIONS FOR PINNED COURSES
+
+def initPinnedCourses():
+    """
+    Checks if the user has a pinned courses list, if not, initializes one for them.
+    """
+    if session.get('userType') != "F":
+        raise UserTypeError("User is of incorrect type, must be a faculty user to pin courses.")
+    
+    if 'pinned_courses' not in session:
+        session['pinned_courses'] = []

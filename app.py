@@ -8,7 +8,7 @@ from backend.Student import *
 from backend.StudentData import *
 from backend.Faculty import *
 from backend.FacultyData import *
-from backend.CoursesTaughtData import *
+from backend.PinnedCoursesData import *
 from backend.UserData import *
 from database.db_setup import *
 from frontend.forms import *
@@ -21,6 +21,8 @@ app = Flask(__name__, template_folder='frontend/templates', static_folder='front
 app.config["SECRET_KEY"] = "secretkeyoooooo"
 
 DB_FILE = "database/blueprintdb.db"
+
+# HOME PAGE
 
 @app.route('/', methods=["GET", "POST"])
 def index():
@@ -37,6 +39,7 @@ def index():
 
     return render_template("index.html", courses = courseData, announcementBoard = annBoard)
 
+# ACCOUNT SYSTEM ROUTES
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -82,6 +85,17 @@ def login():
     
     return render_template("login.html", loginForm = loginForm)
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    session['userType'] = "G"
+    session['username'] = ""
+    session['userID'] = ""
+    flash("You have logged out!")
+    return redirect(url_for('index'))
+
+# HELPER ROUTE, REMOVE LATER
+
 @app.route('/list_users', methods=['GET'])
 def list_users():
     conn = sqlite3.connect(DB_FILE)
@@ -97,10 +111,14 @@ def list_users():
 
     return render_template("list_users.html", students=students, faculty=faculty)
 
+# COURSE PAGES
+
 @app.route('/courses/<cid>', methods=['GET', 'POST'])
 def courses(cid):
     # Replacing hyphens from passed URL back to spaces for DB querying.
     cid = cid.replace("-", " ")
+
+    initSelectedCourses()
     
     # Get the course from cid as a dict.
     c = getCourse(cid)
@@ -132,6 +150,8 @@ def courses(cid):
 
     return render_template("course.html", course=course, reviews=reviews, announcements=announcements, stuReview = stuReview)
 
+# INFORMATIONAL PAGES
+
 @app.route('/about', methods=['GET'])
 def about():
     return render_template("about.html")
@@ -139,6 +159,8 @@ def about():
 @app.route('/help', methods=['GET'])
 def help():
     return render_template("help.html")
+
+# SEMESTER CALCULATOR ROUTES
 
 @app.route('/calculator', methods=['GET'])
 def calculator():
@@ -159,7 +181,6 @@ def calculator():
 
     return render_template("calculator.html", courses = courses, semesterData = semesterData)
     
-
 @app.route('/semester/process', methods=['POST'])
 def calculateSemester():
     # Initialize selected courses incase it doesn't exist.
@@ -224,17 +245,9 @@ def removeCourse(cid):
     # Will return back to page user visited this route from, or index if they accessed it directly.
     return redirect(request.referrer or url_for('index'))
 
+# REVIEW SYSTEM ROUTES
 
-@app.route('/logout')
-def logout():
-    session.clear()
-    session['userType'] = "G"
-    session['username'] = ""
-    session['userID'] = ""
-    flash("You have logged out!")
-    return redirect(url_for('index'))
-
-@app.route('/reviews/<int:stuID>')
+@app.route('/student/<int:stuID>/reviews', methods=['GET'])
 def reviews(stuID: int):
     # Sanity check, should never need this.
     if session.get('userType') != "S":
@@ -318,15 +331,90 @@ def deleteReview(reviewID):
     return redirect(url_for('reviews', stuID = session.get('userID')))
 
 
-
 @app.route('/submit-review/<int:stuID>/<cid>')
 def submitReview(stuID: int, cid: str, review: Review):
     cid = cid.replace("-", " ")
 
     writeReview(review, cid, stuID)
     
-
     return redirect(url_for('courses', cid = cid.replace(" ", "-")))
+
+
+
+# PINNED COURSE SYSTEM ROTUES
+
+@app.route('/faculty/<int:facID>/pinned-courses', methods=['POST'])
+def pinnedCourses(facID):
+    if session.get('userType') != "F":
+        flash("You must be a faculty member to have pinned courses.")
+
+    # Initialize pinned courses incase it doesn't exist.
+
+    courses = []
+
+    for course in getCoursesTaught(facID):
+        courses.append(courseToDict(course))
+
+    
+    return render_template('your_reviews.html', reviews = reviews)
+
+
+@app.route('/pin-course/<cid>', methods=['POST'])
+def pinCourse(cid):
+    # Replacing hyphens from passed URL back to spaces for DB querying.
+    cid = cid.replace("-", " ")
+
+    # Initialize pinned courses incase it doesn't exist.
+    try: 
+        initPinnedCourses()
+    except UserTypeError as e:
+        print(str(e))
+
+    try:
+        if cid not in session.get('pinned_courses'):
+            session['pinned_courses'].append(cid)
+            session['pinned_courses'] = session['pinned_courses']
+            addPinnedCourses(session.get('userID'), cid)
+    except Exception as e:
+        print(str(e))
+    
+
+
+    flash(f"{cid} pinned to your navigation bar!")
+
+    # Will return back to page user visited this route from, or index if they accessed it directly.
+    return redirect(request.referrer or url_for('index'))
+
+# Route to remove course from a student's selected courses.
+@app.route('/unpin-course/<cid>', methods=['POST'])
+def unpinCourse(cid):
+    # Replacing hyphens from passed URL back to spaces for DB querying.
+    cid = cid.replace("-", " ")
+
+    # Initialize pinned courses incase it doesn't exist.
+    try: 
+        initPinnedCourses()
+    except UserTypeError as e:
+        print(str(e))
+
+    try:
+        if cid in session.get('pinned_courses'):
+            session['pinned_courses'].remove(cid)
+            session['pinned_courses'] = session['pinned_courses']
+            delPinnedCourses(session.get('userID'), cid)
+    except Exception as e:
+        print(str(e))
+    
+    print("Pinned Courses:", session.get('pinned_courses'))
+
+
+    flash(f"{cid} unpinned from your navigation bar!")
+
+    # Will return back to page user visited this route from, or index if they accessed it directly.
+    return redirect(request.referrer or url_for('index'))
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

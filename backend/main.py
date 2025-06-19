@@ -8,7 +8,7 @@ from .Student import *
 from .StudentData import *
 from .Faculty import *
 from .FacultyData import *
-from .CoursesTaughtData import *
+from .PinnedCoursesData import *
 from datetime import datetime
 import time
 
